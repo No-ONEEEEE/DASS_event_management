@@ -24,6 +24,10 @@
       "dest": "/public/toast.js"
     },
     {
+      "src": "/dark-enforcer.js",
+      "dest": "/public/dark-enforcer.js"
+    },
+    {
       "src": "/public/(.*)",
       "dest": "/public/$1"
     },
