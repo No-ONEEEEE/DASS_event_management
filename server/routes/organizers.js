@@ -588,18 +588,28 @@ router.post('/events/:eventId/scan-attendance', verifyOrganizer, async (req, res
 
     // Parse decoded text to get ticketId
     let ticketIdToSearch = qrCode;
+    let fallbackSearch = qrCode;
+
     try {
       const qrData = JSON.parse(qrCode);
       if (qrData.ticketId) {
         ticketIdToSearch = qrData.ticketId;
       }
     } catch (e) {
-      // Could just be raw ticketId text
+      // If it's a team ticket, it might be in format 'QR-TKT-...'
+      if (qrCode.startsWith('QR-')) {
+        ticketIdToSearch = qrCode.substring(3); // Remove 'QR-' prefix to get 'TKT-...'
+      }
     }
 
-    // Find registration by ticketId
-    const registration = await Registration.findOne({ ticketId: ticketIdToSearch, eventId })
-      .populate('participantId', 'firstName lastName email');
+    // Find registration by ticketId or raw qrCode string
+    const registration = await Registration.findOne({
+      eventId,
+      $or: [
+        { ticketId: ticketIdToSearch },
+        { qrCode: fallbackSearch }
+      ]
+    }).populate('participantId', 'firstName lastName email');
 
     if (!registration) {
       return res.status(404).json({ message: 'Invalid QR code or registration not found' });

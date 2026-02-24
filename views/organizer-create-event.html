@@ -427,22 +427,13 @@
             </div>
 
             <div id="merchandiseSection" class="merchandise-section" style="background: var(--bg-hover) !important;">
-                <h3 style="color: var(--text-primary) !important;">Merchandise Details</h3>
-                <div class="form-group">
-                    <label style="color: var(--text-primary) !important;">Item Name *</label>
-                    <input type="text" id="merchandiseName">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="color: var(--text-primary) !important; margin: 0;">Merchandise Details</h3>
+                    <button type="button" class="btn btn-secondary" onclick="addMerchandiseItem()"
+                        style="padding: 5px 10px; font-size: 12px;">+ Add Item</button>
                 </div>
-                <div class="form-group">
-                    <label style="color: var(--text-primary) !important;">Item Description</label>
-                    <textarea id="merchandiseDescription"></textarea>
-                </div>
-                <div class="form-group">
-                    <label style="color: var(--text-primary) !important;">Price (₹) *</label>
-                    <input type="number" id="merchandisePrice" min="0">
-                </div>
-                <div class="form-group">
-                    <label style="color: var(--text-primary) !important;">Stock Quantity *</label>
-                    <input type="number" id="merchandiseStock" min="1">
+                <div id="merchandiseItemsContainer">
+                    <!-- Dynamic merchandise items will go here -->
                 </div>
             </div>
 
@@ -536,18 +527,60 @@
         // Event Type Change Handler
         document.getElementById('eventType').addEventListener('change', (e) => {
             const merchandiseSection = document.getElementById('merchandiseSection');
+            const container = document.getElementById('merchandiseItemsContainer');
             if (e.target.value === 'Merchandise') {
                 merchandiseSection.classList.add('show');
-                document.getElementById('merchandiseName').required = true;
-                document.getElementById('merchandisePrice').required = true;
-                document.getElementById('merchandiseStock').required = true;
+                if (container.children.length === 0) {
+                    addMerchandiseItem();
+                }
             } else {
                 merchandiseSection.classList.remove('show');
-                document.getElementById('merchandiseName').required = false;
-                document.getElementById('merchandisePrice').required = false;
-                document.getElementById('merchandiseStock').required = false;
             }
         });
+
+        // Add Merchandise Item
+        function addMerchandiseItem(itemData = null) {
+            const container = document.getElementById('merchandiseItemsContainer');
+            const index = container.children.length;
+
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'custom-field merchandise-item';
+            itemDiv.innerHTML = `
+                <div class="field-header">
+                    <h4 style="color: var(--text-primary) !important;">Item ${index + 1}</h4>
+                    <button type="button" class="btn btn-danger" onclick="this.parentElement.parentElement.remove()" style="padding: 4px 8px; font-size: 12px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">Remove</button>
+                </div>
+                <div class="field-controls">
+                    <div>
+                        <label style="color: var(--text-primary) !important; display: block; margin-bottom: 5px;">Item Name *</label>
+                        <input type="text" class="merch-name" value="${itemData ? itemData.itemName : ''}" required style="width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="color: var(--text-primary) !important; display: block; margin-bottom: 5px;">Price (₹) *</label>
+                        <input type="number" class="merch-price" value="${itemData ? itemData.pricePerItem : ''}" min="0" required style="width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px;">
+                    </div>
+                </div>
+                <div class="field-controls">
+                    <div>
+                        <label style="color: var(--text-primary) !important; display: block; margin-bottom: 5px;">Total Stock *</label>
+                        <input type="number" class="merch-stock" value="${itemData ? itemData.quantity : ''}" min="1" required style="width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="color: var(--text-primary) !important; display: block; margin-bottom: 5px;">Max Purchase Per Person *</label>
+                        <input type="number" class="merch-max" value="${itemData && itemData.maxPurchasePerParticipant ? itemData.maxPurchasePerParticipant : 1}" min="1" required style="width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px;">
+                    </div>
+                </div>
+                <div style="margin-top: 10px;">
+                    <label style="color: var(--text-primary) !important; display: block; margin-bottom: 5px;">Sizes (comma separated, e.g. S, M, L)</label>
+                    <input type="text" class="merch-sizes" value="${itemData && itemData.size ? itemData.size.join(', ') : ''}" style="width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px;">
+                </div>
+                <div style="margin-top: 10px;">
+                    <label style="color: var(--text-primary) !important; display: block; margin-bottom: 5px;">Colors (comma separated, e.g. Red, Blue)</label>
+                    <input type="text" class="merch-colors" value="${itemData && itemData.color ? itemData.color.join(', ') : ''}" style="width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px;">
+                </div>
+            `;
+            container.appendChild(itemDiv);
+        }
 
         // Team Event Toggle
         document.getElementById('isTeamEvent').addEventListener('change', (e) => {
@@ -832,11 +865,25 @@
             }
 
             if (formData.eventType === 'Merchandise') {
+                const merchItems = [];
+                const itemElements = document.querySelectorAll('.merchandise-item');
+
+                itemElements.forEach(el => {
+                    const sizesStr = el.querySelector('.merch-sizes').value;
+                    const colorsStr = el.querySelector('.merch-colors').value;
+
+                    merchItems.push({
+                        itemName: el.querySelector('.merch-name').value,
+                        quantity: parseInt(el.querySelector('.merch-stock').value),
+                        pricePerItem: parseFloat(el.querySelector('.merch-price').value),
+                        maxPurchasePerParticipant: parseInt(el.querySelector('.merch-max').value),
+                        size: sizesStr ? sizesStr.split(',').map(s => s.trim()).filter(s => s) : [],
+                        color: colorsStr ? colorsStr.split(',').map(c => c.trim()).filter(c => c) : []
+                    });
+                });
+
                 formData.merchandise = {
-                    itemName: document.getElementById('merchandiseName').value,
-                    description: document.getElementById('merchandiseDescription').value,
-                    price: parseFloat(document.getElementById('merchandisePrice').value),
-                    stock: parseInt(document.getElementById('merchandiseStock').value)
+                    items: merchItems
                 };
             }
 
@@ -894,12 +941,13 @@
             document.getElementById('venue').value = event.venue;
             document.getElementById('eventType').value = event.eventType;
 
-            if (event.eventType === 'Merchandise' && event.merchandise) {
+            if (event.eventType === 'Merchandise' && event.merchandise && event.merchandise.items) {
                 document.getElementById('merchandiseSection').classList.add('show');
-                document.getElementById('merchandiseName').value = event.merchandise.itemName || '';
-                document.getElementById('merchandiseDescription').value = event.merchandise.description || '';
-                document.getElementById('merchandisePrice').value = event.merchandise.price || '';
-                document.getElementById('merchandiseStock').value = event.merchandise.stock || '';
+                const container = document.getElementById('merchandiseItemsContainer');
+                container.innerHTML = ''; // clear existing
+                event.merchandise.items.forEach(item => {
+                    addMerchandiseItem(item);
+                });
             }
 
             document.getElementById('isTeamEvent').checked = event.isTeamEvent;
