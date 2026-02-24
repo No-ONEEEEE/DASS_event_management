@@ -5,41 +5,55 @@
 
 /* ─── Base / Reset ─────────────────────────────────────────── */
 :root {
-  --bg-base:       #0d1117;
-  --bg-surface:    #161b22;
-  --bg-card:       #1c2128;
-  --bg-hover:      #21262d;
-  --bg-input:      #0d1117;
-  --border:        #30363d;
-  --text-primary:  #e6edf3;
-  --text-secondary:#8b949e;
-  --text-muted:    #656d76;
-  --accent:        #667eea;
-  --accent2:       #764ba2;
-  --success:       #238636;
-  --danger:        #da3633;
-  --warning:       #9e6a03;
-  --info:          #1f6feb;
-  --gradient:      linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --bg-base: #0d1117;
+  --bg-surface: #161b22;
+  --bg-card: #1c2128;
+  --bg-hover: #21262d;
+  --bg-input: #0d1117;
+  --border: #30363d;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #656d76;
+  --accent: #667eea;
+  --accent2: #764ba2;
+  --success: #238636;
+  --danger: #da3633;
+  --warning: #9e6a03;
+  --info: #1f6feb;
+  --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-*,*::before,*::after { box-sizing: border-box; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-html, body {
+html,
+body {
   background: var(--bg-base) !important;
   color: var(--text-primary) !important;
   scrollbar-color: #30363d #0d1117;
 }
 
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #0d1117; }
-::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 4px;
+}
 
 /* ─── Navbar ────────────────────────────────────────────────── */
 .navbar {
   background: linear-gradient(135deg, #0f0c29, #302b63, #24243e) !important;
   border-bottom: 1px solid var(--border) !important;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.5) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5) !important;
 }
 
 /* ─── Containers / Cards ─────────────────────────────────────── */
@@ -126,47 +140,113 @@ html, body {
 }
 
 /* ─── Container whites (inner content wrappers) ──────────────── */
-.content, .content-section, .content-wrapper {
+.content,
+.content-section,
+.content-wrapper {
   background: var(--bg-surface) !important;
 }
 
 /* ─── Tables ─────────────────────────────────────────────────── */
-table { color: var(--text-primary) !important; border-color: var(--border) !important; }
-th { background: var(--bg-hover) !important; color: var(--text-primary) !important; border-color: var(--border) !important; }
-td { border-color: var(--border) !important; color: var(--text-secondary) !important; }
-tr:hover { background: var(--bg-hover) !important; }
+table {
+  color: var(--text-primary) !important;
+  border-color: var(--border) !important;
+}
+
+th {
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border) !important;
+}
+
+td {
+  border-color: var(--border) !important;
+  color: var(--text-secondary) !important;
+}
+
+tr:hover {
+  background: var(--bg-hover) !important;
+}
 
 /* ─── Forms / Inputs ──────────────────────────────────────────── */
-input, select, textarea {
+input,
+select,
+textarea {
   background: var(--bg-input) !important;
   color: var(--text-primary) !important;
   border-color: var(--border) !important;
 }
-input:focus, select:focus, textarea:focus {
+
+input:focus,
+select:focus,
+textarea:focus {
   border-color: var(--accent) !important;
   outline: none !important;
-  box-shadow: 0 0 0 3px rgba(102,126,234,0.15) !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15) !important;
 }
-input::placeholder, textarea::placeholder { color: var(--text-muted) !important; }
-input[readonly], input[disabled] {
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted) !important;
+}
+
+input[readonly],
+input[disabled] {
   background: var(--bg-hover) !important;
   color: var(--text-secondary) !important;
 }
 
 /* ─── Text Colors ─────────────────────────────────────────────── */
-h1,h2,h3,h4,h5,h6 { color: var(--text-primary) !important; }
-p, span, li, label { color: var(--text-secondary); }
-.text-muted, small, .help-text { color: var(--text-muted) !important; }
-a { color: var(--accent) !important; }
-a:hover { color: #8fa8ff !important; }
-strong { color: var(--text-primary) !important; }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text-primary) !important;
+}
+
+p,
+span,
+li,
+label {
+  color: var(--text-secondary);
+}
+
+.text-muted,
+small,
+.help-text {
+  color: var(--text-muted) !important;
+}
+
+a {
+  color: var(--accent) !important;
+}
+
+a:hover {
+  color: #8fa8ff !important;
+}
+
+strong {
+  color: var(--text-primary) !important;
+}
 
 /* Keep gradient text on headings that use it */
-.header h1, .header p, .navbar h2, .navbar-brand { color: #fff !important; }
+.header h1,
+.header p,
+.navbar h2,
+.navbar-brand {
+  color: #fff !important;
+}
 
 /* ─── Buttons ─────────────────────────────────────────────────── */
-.btn-danger,  .btn-warning, .btn-success,
-.btn-primary, .btn-secondary, .btn-sm     { /* keep their colors */ }
+.btn-danger,
+.btn-warning,
+.btn-success,
+.btn-primary,
+.btn-secondary,
+.btn-sm {
+  /* keep their colors */
+}
 
 /* Override plain white/light buttons */
 .btn:not([class*="btn-"]) {
@@ -174,6 +254,7 @@ strong { color: var(--text-primary) !important; }
   color: #fff !important;
   border: none !important;
 }
+
 .btn-secondary:not(.btn-danger):not(.btn-success) {
   background: var(--bg-hover) !important;
   color: var(--text-primary) !important;
@@ -181,30 +262,80 @@ strong { color: var(--text-primary) !important; }
 }
 
 /* ─── Status Badges ──────────────────────────────────────────── */
-.status-badge.status-approved, .badge.approved,  .status-complete   { background: #1b3a1b !important; color: #56d364 !important; }
-.status-badge.status-pending,  .badge.pending,   .status-forming    { background: #2d2000 !important; color: #e3b341 !important; }
-.status-badge.status-disabled, .badge.rejected,  .status-disabled   { background: #3d0000 !important; color: #ff7b72 !important; }
-.status-badge.status-registered                                       { background: #002d3d !important; color: #79c0ff !important; }
+.status-badge.status-approved,
+.badge.approved,
+.status-complete {
+  background: #1b3a1b !important;
+  color: #56d364 !important;
+}
+
+.status-badge.status-pending,
+.badge.pending,
+.status-forming {
+  background: #2d2000 !important;
+  color: #e3b341 !important;
+}
+
+.status-badge.status-disabled,
+.badge.rejected,
+.status-disabled {
+  background: #3d0000 !important;
+  color: #ff7b72 !important;
+}
+
+.status-badge.status-registered {
+  background: #002d3d !important;
+  color: #79c0ff !important;
+}
 
 /* ─── Messages / Alerts ────────────────────────────────────────── */
-.message.error, .error-message   { background: #2d0000 !important; color: #ff7b72 !important; border-color: #3d0000 !important; }
-.message.success, .success-message { background: #001b00 !important; color: #56d364 !important; border-color: #1b3a1b !important; }
+.message.error,
+.error-message {
+  background: #2d0000 !important;
+  color: #ff7b72 !important;
+  border-color: #3d0000 !important;
+}
+
+.message.success,
+.success-message {
+  background: #001b00 !important;
+  color: #56d364 !important;
+  border-color: #1b3a1b !important;
+}
 
 /* ─── Modals ──────────────────────────────────────────────────── */
-.modal-content { background: var(--bg-surface) !important; border: 1px solid var(--border) !important; }
-.modal         { background: rgba(0,0,0,0.75) !important; }
+.modal-content {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.modal {
+  background: rgba(0, 0, 0, 0.75) !important;
+}
 
 /* ─── Navigation Links ────────────────────────────────────────── */
-.nav-links a { color: rgba(255,255,255,0.85) !important; }
-.nav-links a:hover, .nav-links a.active { background: rgba(255,255,255,0.12) !important; color: #fff !important; }
-.nav-links a.logout-btn { background: #da3633 !important; }
+.nav-links a {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #fff !important;
+}
+
+.nav-links a.logout-btn {
+  background: #da3633 !important;
+}
 
 /* ─── Filter Tabs ─────────────────────────────────────────────── */
-.filter-tab, .filter-section select {
+.filter-tab,
+.filter-section select {
   background: var(--bg-hover) !important;
   color: var(--text-primary) !important;
   border-color: var(--border) !important;
 }
+
 .filter-tab.active {
   background: var(--gradient) !important;
   color: #fff !important;
@@ -212,46 +343,177 @@ strong { color: var(--text-primary) !important; }
 }
 
 /* ─── Login / Auth pages ──────────────────────────────────────── */
-.login-card, .auth-container > div, .login-box {
+.login-card,
+.auth-container>div,
+.login-box {
   background: var(--bg-surface) !important;
   border: 1px solid var(--border) !important;
 }
-.tab { color: var(--text-secondary) !important; border-bottom-color: var(--border) !important; }
-.tab.active { color: var(--accent) !important; border-bottom-color: var(--accent) !important; }
+
+.tab {
+  color: var(--text-secondary) !important;
+  border-bottom-color: var(--border) !important;
+}
+
+.tab.active {
+  color: var(--accent) !important;
+  border-bottom-color: var(--accent) !important;
+}
 
 /* ─── Progress Bars ───────────────────────────────────────────── */
-.progress-bar:not(.progress-fill) { background: var(--bg-hover) !important; }
+.progress-bar:not(.progress-fill) {
+  background: var(--bg-hover) !important;
+}
 
 /* ─── Event / Team Cards ──────────────────────────────────────── */
-.event-card:hover, .team-card:hover { box-shadow: 0 8px 24px rgba(102,126,234,0.2) !important; }
-.event-name { color: var(--accent) !important; }
+.event-card:hover,
+.team-card:hover {
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2) !important;
+}
+
+.event-name {
+  color: var(--accent) !important;
+}
 
 /* ─── Copy/Invite boxes ───────────────────────────────────────── */
-.invite-code { background: var(--bg-base) !important; color: var(--accent) !important; border-color: var(--accent) !important; }
+.invite-code {
+  background: var(--bg-base) !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
 
 /* ─── Organizer Profile / Settings sections ───────────────────── */
-.profile-section, .settings-section, .stats, .stat-card {
+.profile-section,
+.settings-section,
+.stats,
+.stat-card {
   background: var(--bg-card) !important;
   border-color: var(--border) !important;
 }
 
 /* ─── Dashboard stats ─────────────────────────────────────────── */
-.stat-card.pending h3 { color: #e3b341 !important; }
-.stat-card.approved h3 { color: #56d364 !important; }
-.stat-card.rejected h3 { color: #ff7b72 !important; }
+.stat-card.pending h3 {
+  color: #e3b341 !important;
+}
+
+.stat-card.approved h3 {
+  color: #56d364 !important;
+}
+
+.stat-card.rejected h3 {
+  color: #ff7b72 !important;
+}
 
 /* ─── Landing / Index page ────────────────────────────────────── */
-.hero, .hero-section, .features, .feature-card {
+.hero,
+.hero-section,
+.features,
+.feature-card {
   background: var(--bg-surface) !important;
   color: var(--text-primary) !important;
 }
 
 /* ─── Close modals ────────────────────────────────────────────── */
-.close-modal { color: var(--text-secondary) !important; }
-.close-modal:hover { color: var(--text-primary) !important; }
+.close-modal {
+  color: var(--text-secondary) !important;
+}
+
+.close-modal:hover {
+  color: var(--text-primary) !important;
+}
 
 /* ─── reCAPTCHA container ─────────────────────────────────────── */
-.g-recaptcha > div { filter: invert(0.85) hue-rotate(180deg); }
+.g-recaptcha>div {
+  filter: invert(0.85) hue-rotate(180deg);
+}
 
 /* ─── Scrollable list items ───────────────────────────────────── */
-.no-data { color: var(--text-muted) !important; }
+.no-data {
+  color: var(--text-muted) !important;
+}
+
+/* ─── Explicit page container overrides (highest specificity) ─── */
+/* These match the inline <style> blocks that external CSS can't easily beat */
+body .login-container,
+body .signup-container,
+body .onboarding-container,
+body .ticket-container,
+body .scanner-container,
+body .admin-container,
+body .profile-container,
+body .team-container,
+body .event-container {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ─── Universal inline-style white/light bg killer ───────────── */
+/* Catches any div/section/aside that has an inline white background */
+div[style*="background: white"],
+div[style*="background:white"],
+div[style*="background-color: white"],
+div[style*="background-color:white"],
+div[style*="background: #fff"],
+div[style*="background:#fff"],
+div[style*="background-color: #fff"],
+div[style*="background-color:#fff"],
+section[style*="background: white"],
+section[style*="background: #fff"] {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Light grey inline backgrounds */
+div[style*="background: #f8f9fa"],
+div[style*="background: #f5f5f5"],
+div[style*="background: #f0f"],
+div[style*="background: rgb(248"],
+div[style*="background: rgb(245"] {
+  background: var(--bg-hover) !important;
+}
+
+/* ─── Border colors on all elements ──────────────────────────── */
+div[style*="border: 1px solid #"],
+div[style*="border: 2px solid #e"],
+div[style*="border-color: #e"] {
+  border-color: var(--border) !important;
+}
+
+/* ─── Inline color text overrides ────────────────────────────── */
+*[style*="color: #333"],
+*[style*="color: #666"],
+*[style*="color: #999"],
+*[style*="color: #444"],
+*[style*="color: #555"] {
+  color: var(--text-secondary) !important;
+}
+
+/* ─── User-type-tabs / tab borders ──────────────────────────── */
+.user-type-tabs {
+  border-bottom-color: var(--border) !important;
+}
+
+.tab:hover {
+  background: var(--bg-hover) !important;
+  color: var(--accent) !important;
+}
+
+/* ─── Signup container specific ─────────────────────────────── */
+.signup-container h1,
+.login-container h1 {
+  color: var(--text-primary) !important;
+}
+
+.signup-link {
+  color: var(--text-secondary) !important;
+}
+
+.login-link {
+  color: var(--text-secondary) !important;
+}
+
+/* ─── Input group labels ─────────────────────────────────────── */
+.input-group label {
+  color: var(--text-primary) !important;
+}
