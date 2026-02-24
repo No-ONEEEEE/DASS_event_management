@@ -22,28 +22,26 @@ router.get('/dashboard', verifyOrganizer, async (req, res) => {
 
     for (let event of events) {
       const registrations = await Registration.find({ eventId: event._id });
-      totalRegistrations += registrations.length;
-
-      if (event.eventType === 'Normal' && event.registrationFee) {
-        totalRevenue += registrations.filter(r => r.paymentStatus === 'Completed').length * event.registrationFee;
-      } else if (event.eventType === 'Merchandise') {
-        registrations.forEach(r => {
-          if (r.paymentStatus === 'Completed' && r.merchandisePurchase) {
-            totalRevenue += r.merchandisePurchase.totalAmount || 0;
-          }
-        });
-      }
 
       if (event.status === 'Completed') {
         completedEvents++;
+
+        let eventRevenue = 0;
+        if (event.eventType === 'Normal' && event.registrationFee) {
+          eventRevenue = registrations.filter(r => r.paymentStatus === 'Completed').length * event.registrationFee;
+        } else if (event.eventType === 'Merchandise') {
+          eventRevenue = registrations.reduce((sum, r) => sum + (r.merchandisePurchase?.totalAmount || 0), 0);
+        }
+
+        totalRegistrations += registrations.length;
+        totalRevenue += eventRevenue;
+
         const attendedCount = registrations.filter(r => r.attendance).length;
         completedEventsAnalytics.push({
           eventId: event._id,
           eventName: event.eventName,
           totalRegistrations: registrations.length,
-          totalRevenue: event.eventType === 'Normal'
-            ? registrations.filter(r => r.paymentStatus === 'Completed').length * event.registrationFee
-            : registrations.reduce((sum, r) => sum + (r.merchandisePurchase?.totalAmount || 0), 0),
+          totalRevenue: eventRevenue,
           attendance: attendedCount,
           attendanceRate: registrations.length > 0 ? ((attendedCount / registrations.length) * 100).toFixed(2) : 0
         });
