@@ -32,10 +32,6 @@
       "dest": "/public/$1"
     },
     {
-      "src": "/login",
-      "dest": "/views/login.html"
-    },
-    {
       "src": "/auth/login",
       "dest": "/views/login.html"
     },
@@ -124,23 +120,11 @@
       "dest": "/views/organizer-dashboard.html"
     },
     {
-      "src": "/organizer-dashboard",
-      "dest": "/views/organizer-dashboard.html"
-    },
-    {
       "src": "/organizer/create-event",
       "dest": "/views/organizer-create-event.html"
     },
     {
-      "src": "/organizer-create-event",
-      "dest": "/views/organizer-create-event.html"
-    },
-    {
       "src": "/organizer/ongoing-events",
-      "dest": "/views/organizer-ongoing-events.html"
-    },
-    {
-      "src": "/organizer-ongoing-events",
       "dest": "/views/organizer-ongoing-events.html"
     },
     {
@@ -157,10 +141,6 @@
     },
     {
       "src": "/organizer/profile",
-      "dest": "/views/organizer-profile.html"
-    },
-    {
-      "src": "/organizer-profile",
       "dest": "/views/organizer-profile.html"
     },
     {

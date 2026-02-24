@@ -115,38 +115,27 @@
 
     .badge.draft {
       background: #ffd93d;
-      color: #1c2128;
-      font-weight: bold;
-      text-transform: uppercase;
+      color: #e6edf3;
     }
 
     .badge.published {
       background: #6bcf7f;
       color: white;
-      font-weight: bold;
-      text-transform: uppercase;
     }
 
     .badge.ongoing {
       background: #4d9de0;
       color: white;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
     .badge.completed {
       background: #888;
       color: white;
-      font-weight: bold;
-      text-transform: uppercase;
     }
 
     .badge.closed {
       background: #e15554;
       color: white;
-      font-weight: bold;
-      text-transform: uppercase;
     }
 
     .analytics-grid {
@@ -593,8 +582,7 @@
         filteredParticipants = participants;
 
         // Render event overview
-        const statusBadge = `<span class="badge ${eventData.status.toLowerCase()}" style="margin-left: 10px; font-size: 16px;">${eventData.status}</span>`;
-        document.getElementById('eventTitle').innerHTML = `${eventData.eventName} ${statusBadge}`;
+        document.getElementById('eventTitle').textContent = eventData.eventName;
 
         const overviewHTML = `
           <div class="overview-item">
