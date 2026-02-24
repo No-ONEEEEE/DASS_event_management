@@ -7,7 +7,7 @@ const getApiUrl = () => {
   
   // Production: Use your deployed backend URL
   if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
-    return 'https://event-management-system-backend-r4d4.onrender.com/api'; // Replace with your actual backend URL
+    return 'https://dass-event-management.onrender.com/api'; // Replace with your actual backend URL
   }
   
   // Development: Use localhost
@@ -19,7 +19,7 @@ const getSocketUrl = () => {
   
   // Production
   if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
-    return 'https://event-management-system-backend-r4d4.onrender.com'; // Replace with your actual backend URL
+    return 'https://dass-event-management.onrender.com'; // Replace with your actual backend URL
   }
   
   // Development
