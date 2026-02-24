@@ -2,10 +2,10 @@
          EVENT MANAGEMENT SYSTEM - DEPLOYMENT INFORMATION
 ====================================================================
 
-📌 EVALUATION URLS (Update these after deployment):
+📌 EVALUATION URLS:
 
-Frontend URL: https://your-event-management.vercel.app
-Backend API URL: https://your-backend-api.onrender.com/api
+Frontend URL: https://dass-event-management-atcy4yeak-no-oneeeees-projects.vercel.app
+Backend API URL: https://dass-event-management.onrender.com/api
 
 ====================================================================
 
@@ -16,46 +16,24 @@ Backend API URL: https://your-backend-api.onrender.com/api
 - Status: ✅ Already configured and running
 
 🖥️ BACKEND DEPLOYMENT:
-- Platform: Render / Railway / Fly.io (Choose one)
+- Platform: Render
 - Runtime: Node.js
 - Start Command: npm start
 - Build Command: npm install
-- Environment Variables Required:
+- Live URL: https://dass-event-management.onrender.com
+- Environment Variables:
   * MONGO_URI (MongoDB connection string)
   * JWT_SECRET (Secret key for authentication)
   * PORT (Default: 5000)
   * NODE_ENV (Set to: production)
-  * FRONTEND_URL (Your Vercel/Netlify URL)
+  * FRONTEND_URL (Vercel URL above)
 
 🌐 FRONTEND DEPLOYMENT:
-- Platform: Vercel / Netlify (Choose one)
-- Type: Static Site
-- Root Directory: ./
-- Output Directory: views
-- Build Command: None (static files)
-
-📝 DEPLOYMENT STEPS:
-
-1. Setup GitHub Repository
-   - Push code to GitHub
-   - Ensure .env is in .gitignore
-
-2. Deploy Backend (Render):
-   - Connect GitHub repository
-   - Add environment variables
-   - Deploy automatically
-
-3. Deploy Frontend (Vercel):
-   - Connect GitHub repository  
-   - Update config.js with backend URL
-   - Deploy automatically
-
-4. Update This File:
-   - Add your actual deployment URLs above
-   - Submit for evaluation
-
-📖 Detailed Instructions: See DEPLOYMENT_GUIDE.md
+- Platform: Vercel
+- Type: Static Site (via vercel.json routing)
+- Live URL: https://dass-event-management-atcy4yeak-no-oneeeees-projects.vercel.app
+- Auth Page: https://dass-event-management-atcy4yeak-no-oneeeees-projects.vercel.app/auth/login
 
 ====================================================================
-Last Updated: 2026-02-21
+Last Updated: 2026-02-24
 ====================================================================
