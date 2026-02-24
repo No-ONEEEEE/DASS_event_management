@@ -5,6 +5,7 @@
 
 /* ─── Base / Reset ─────────────────────────────────────────── */
 :root {
+  color-scheme: dark;
   --bg-base: #0d1117;
   --bg-surface: #161b22;
   --bg-card: #1c2128;
@@ -516,4 +517,12 @@ div[style*="border-color: #e"] {
 /* ─── Input group labels ─────────────────────────────────────── */
 .input-group label {
   color: var(--text-primary) !important;
+}
+
+/* ─── Native Input Icons (Date/Time) ────────────────────────── */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
 }
