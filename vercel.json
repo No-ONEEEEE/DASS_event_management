@@ -16,8 +16,92 @@
       "dest": "/public/$1"
     },
     {
-      "src": "/(.*)",
-      "dest": "/views/$1"
+      "src": "/auth/login",
+      "dest": "/views/login.html"
+    },
+    {
+      "src": "/auth/signup",
+      "dest": "/views/signup.html"
+    },
+    {
+      "src": "/onboarding",
+      "dest": "/views/onboarding.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/views/dashboard.html"
+    },
+    {
+      "src": "/profile",
+      "dest": "/views/profile.html"
+    },
+    {
+      "src": "/events",
+      "dest": "/views/browse-events.html"
+    },
+    {
+      "src": "/events/(.*)",
+      "dest": "/views/event-details.html"
+    },
+    {
+      "src": "/ticket",
+      "dest": "/views/ticket.html"
+    },
+    {
+      "src": "/teams",
+      "dest": "/views/my-teams.html"
+    },
+    {
+      "src": "/teams/create",
+      "dest": "/views/team-create.html"
+    },
+    {
+      "src": "/teams/join",
+      "dest": "/views/team-join.html"
+    },
+    {
+      "src": "/teams/manage",
+      "dest": "/views/team-manage.html"
+    },
+    {
+      "src": "/teams/chat",
+      "dest": "/views/team-chat.html"
+    },
+    {
+      "src": "/organizer/dashboard",
+      "dest": "/views/organizer-dashboard.html"
+    },
+    {
+      "src": "/organizer/create-event",
+      "dest": "/views/organizer-create-event.html"
+    },
+    {
+      "src": "/organizer/events",
+      "dest": "/views/organizer-ongoing-events.html"
+    },
+    {
+      "src": "/organizer/events/(.*)",
+      "dest": "/views/organizer-event-detail.html"
+    },
+    {
+      "src": "/organizer/profile",
+      "dest": "/views/organizer-profile.html"
+    },
+    {
+      "src": "/organizer/attendance",
+      "dest": "/views/organizer-attendance-scanner.html"
+    },
+    {
+      "src": "/admin/dashboard",
+      "dest": "/views/admin-dashboard.html"
+    },
+    {
+      "src": "/admin/clubs",
+      "dest": "/views/admin-manage-clubs.html"
+    },
+    {
+      "src": "/admin/password-resets",
+      "dest": "/views/admin-password-resets.html"
     },
     {
       "src": "/",
