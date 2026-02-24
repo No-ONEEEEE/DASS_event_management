@@ -165,12 +165,12 @@ router.put('/events/:eventId', verifyOrganizer, async (req, res) => {
       allowedUpdates = [
         'eventName', 'description', 'eventStartDate', 'eventEndDate',
         'registrationDeadline', 'registrationFee', 'registrationLimit',
-        'eligibility', 'eventTags', 'venue', 'eventType', 'registrationFormFields', 'isTeamEvent', 'minTeamSize', 'maxTeamSize', 'merchandise'
+        'eligibility', 'eventTags', 'venue', 'eventType', 'registrationFormFields', 'customForm', 'isTeamEvent', 'minTeamSize', 'maxTeamSize', 'merchandise'
       ];
       
-      // Cannot edit registration form if registrations exist
-      if (hasRegistrations && req.body.registrationFormFields) {
-        return res.status(400).json({ message: 'Cannot modify registration form fields after receiving registrations' });
+      // Cannot edit registration form if registrations exist (form locking)
+      if (hasRegistrations && (req.body.registrationFormFields || req.body.customForm)) {
+        return res.status(400).json({ message: 'Registration form is locked after receiving the first registration. Cannot modify form fields.' });
       }
     } else if (event.status === 'Published') {
       // Published: description update, extend deadline, increase limit
