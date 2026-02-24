@@ -347,8 +347,8 @@
         <div class="logo">EventHub</div>
         <ul>
             <li><a href="/organizer/dashboard">Dashboard</a></li>
-            <li><a href="/organizer/ongoing-events">Ongoing Events</a></li>
             <li><a href="/organizer/create-event">Create Event</a></li>
+            <li><a href="/organizer/ongoing-events">Ongoing Events</a></li>
             <li><a href="/organizer/profile">Profile</a></li>
             <li><a href="#" class="logout-link" onclick="logout()">Logout</a></li>
         </ul>
@@ -404,8 +404,13 @@
             </div>
 
             <div class="form-group">
-                <label style="color: var(--text-primary) !important;">Eligibility</label>
-                <input type="text" id="eligibility" placeholder="e.g., Open to all, Students only">
+                <label style="color: var(--text-primary) !important;">Eligibility *</label>
+                <select id="eligibility" required>
+                    <option value="All">All</option>
+                    <option value="Open to All">Open to All</option>
+                    <option value="Students Only">Students Only</option>
+                    <option value="Faculty Only">Faculty Only</option>
+                </select>
             </div>
 
             <div class="form-group">
@@ -528,13 +533,24 @@
         document.getElementById('eventType').addEventListener('change', (e) => {
             const merchandiseSection = document.getElementById('merchandiseSection');
             const container = document.getElementById('merchandiseItemsContainer');
+            const isTeamEventCheckbox = document.getElementById('isTeamEvent');
+            const teamSizeInputs = document.getElementById('teamSizeInputs');
+
             if (e.target.value === 'Merchandise') {
                 merchandiseSection.classList.add('show');
                 if (container.children.length === 0) {
                     addMerchandiseItem();
                 }
+                // Disable team event for merchandise
+                isTeamEventCheckbox.checked = false;
+                isTeamEventCheckbox.disabled = true;
+                teamSizeInputs.classList.remove('show');
+                document.getElementById('minTeamSize').required = false;
+                document.getElementById('maxTeamSize').required = false;
             } else {
                 merchandiseSection.classList.remove('show');
+                // Re-enable team event
+                isTeamEventCheckbox.disabled = false;
             }
         });
 
