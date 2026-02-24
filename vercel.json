@@ -12,6 +12,10 @@
   ],
   "routes": [
     {
+      "src": "/config.js",
+      "dest": "/public/config.js"
+    },
+    {
       "src": "/public/(.*)",
       "dest": "/public/$1"
     },
