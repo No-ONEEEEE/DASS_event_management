@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,7 +27,7 @@
       max-width: 1400px;
       margin: 0 auto;
       background: #1c2128;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     }
 
     .sidebar {
@@ -233,6 +234,7 @@
         opacity: 0;
         transform: translateY(10px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -283,7 +285,7 @@
       background: #1c2128;
       padding: 12px 15px;
       border-radius: 12px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
       word-wrap: break-word;
     }
 
@@ -387,8 +389,16 @@
     }
 
     @keyframes blink {
-      0%, 80%, 100% { opacity: 0; }
-      40% { opacity: 1; }
+
+      0%,
+      80%,
+      100% {
+        opacity: 0;
+      }
+
+      40% {
+        opacity: 1;
+      }
     }
 
     .input-container {
@@ -475,7 +485,7 @@
       padding: 8px 15px;
       font-size: 12px;
       color: #7f8c8d;
-      background: rgba(0,0,0,0.05);
+      background: rgba(0, 0, 0, 0.05);
       border-radius: 15px;
       align-self: center;
       max-width: 80%;
@@ -498,8 +508,13 @@
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     .modal {
@@ -509,7 +524,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0, 0, 0, 0.5);
       z-index: 1000;
       align-items: center;
       justify-content: center;
@@ -587,30 +602,120 @@
         max-width: 85%;
       }
     }
-  
+
     /* === DARK THEME INLINE OVERRIDE === */
-    body { background: #0d1117 !important; color: #e6edf3 !important; }
-    header, nav, .navbar { background: #161b22 !important; border-bottom: 1px solid #30363d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.6) !important; }
-    header h1, header h2, nav a { color: #e6edf3 !important; }
-    .card, .events-section, .section, .panel, .box, .wrapper { background: #1c2128 !important; border-color: #30363d !important; color: #e6edf3 !important; box-shadow: 0 2px 10px rgba(0,0,0,0.4) !important; }
-    .card h3, .card h2, .events-section h2, .section h2, .section h3 { color: #e6edf3 !important; }
-    .card .number { color: #79c0ff !important; }
-    .event-item { border-color: #30363d !important; background: #21262d !important; }
-    .event-item:hover { background: #2d333b !important; }
-    .event-info h4 { color: #e6edf3 !important; }
-    .event-info p { color: #8b949e !important; }
-    .btn-secondary { background: #21262d !important; color: #e6edf3 !important; border: 1px solid #30363d !important; }
-    .btn-secondary:hover { background: #2d333b !important; }
-    .tabs { border-bottom-color: #30363d !important; }
-    .tab { color: #8b949e !important; border-bottom-color: transparent !important; background: transparent !important; }
-    .tab.active { color: #667eea !important; border-bottom-color: #667eea !important; }
-    .tab:hover { background: #21262d !important; color: #e6edf3 !important; }
-    table, th, td { background: #1c2128 !important; color: #e6edf3 !important; border-color: #30363d !important; }
-    tr:hover td { background: #21262d !important; }
-    .no-events, .empty, .no-data { color: #8b949e !important; }
+    body {
+      background: #0d1117 !important;
+      color: #e6edf3 !important;
+    }
+
+    header,
+    nav,
+    .navbar {
+      background: #161b22 !important;
+      border-bottom: 1px solid #30363d !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    header h1,
+    header h2,
+    nav a {
+      color: #e6edf3 !important;
+    }
+
+    .card,
+    .events-section,
+    .section,
+    .panel,
+    .box,
+    .wrapper {
+      background: #1c2128 !important;
+      border-color: #30363d !important;
+      color: #e6edf3 !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .card h3,
+    .card h2,
+    .events-section h2,
+    .section h2,
+    .section h3 {
+      color: #e6edf3 !important;
+    }
+
+    .card .number {
+      color: #79c0ff !important;
+    }
+
+    .event-item {
+      border-color: #30363d !important;
+      background: #21262d !important;
+    }
+
+    .event-item:hover {
+      background: #2d333b !important;
+    }
+
+    .event-info h4 {
+      color: #e6edf3 !important;
+    }
+
+    .event-info p {
+      color: #8b949e !important;
+    }
+
+    .btn-secondary {
+      background: #21262d !important;
+      color: #e6edf3 !important;
+      border: 1px solid #30363d !important;
+    }
+
+    .btn-secondary:hover {
+      background: #2d333b !important;
+    }
+
+    .tabs {
+      border-bottom-color: #30363d !important;
+    }
+
+    .tab {
+      color: #8b949e !important;
+      border-bottom-color: transparent !important;
+      background: transparent !important;
+    }
+
+    .tab.active {
+      color: #667eea !important;
+      border-bottom-color: #667eea !important;
+    }
+
+    .tab:hover {
+      background: #21262d !important;
+      color: #e6edf3 !important;
+    }
+
+    table,
+    th,
+    td {
+      background: #1c2128 !important;
+      color: #e6edf3 !important;
+      border-color: #30363d !important;
+    }
+
+    tr:hover td {
+      background: #21262d !important;
+    }
+
+    .no-events,
+    .empty,
+    .no-data {
+      color: #8b949e !important;
+    }
+
     /* === END DARK THEME === */
   </style>
 </head>
+
 <body>
   <div class="chat-container">
     <!-- Sidebar -->
@@ -657,12 +762,7 @@
             <button class="action-btn" onclick="shareLink()" title="Share link">🔗</button>
             <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect()" />
           </div>
-          <textarea 
-            id="messageInput" 
-            class="message-input" 
-            placeholder="Type a message..."
-            rows="1"
-          ></textarea>
+          <textarea id="messageInput" class="message-input" placeholder="Type a message..." rows="1"></textarea>
           <button class="send-btn" id="sendBtn" onclick="sendMessage()">
             ➤
           </button>
@@ -693,7 +793,7 @@
     const API_URL = isProduction ? 'https://dass-event-management.onrender.com/api' : 'http://localhost:5000/api';
     const SOCKET_URL = isProduction ? 'https://dass-event-management.onrender.com' : 'http://localhost:5000';
     console.log('API_URL:', API_URL);
-    
+
     const token = localStorage.getItem('token');
     let socket = null;
     let teamData = null;
@@ -790,7 +890,7 @@
 
     // Initialize Socket.IO
     function initSocket() {
-      socket = io('http://localhost:5000', {
+      socket = io(SOCKET_URL, {
         auth: { token }
       });
 
@@ -820,7 +920,7 @@
         messages.push(data.message);
         renderMessages();
         scrollToBottom();
-        
+
         // Play notification sound for messages from others
         if (data.message.senderId._id !== currentUserId) {
           playNotification();
@@ -886,13 +986,13 @@
       div.className = `message ${isOwn ? 'own' : ''}`;
 
       const initials = message.senderId.firstName.charAt(0) + message.senderId.lastName.charAt(0);
-      const time = new Date(message.createdAt).toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit' 
+      const time = new Date(message.createdAt).toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit'
       });
 
       let bubbleContent = '';
-      
+
       if (message.messageType === 'file') {
         const fileIcon = getFileIcon(message.fileName);
         bubbleContent = `
@@ -987,7 +1087,7 @@
 
     function updateTypingIndicator(data) {
       const indicator = document.getElementById('typingIndicator');
-      
+
       if (data.isTyping && data.userId !== currentUserId) {
         indicator.innerHTML = `
           <span>${data.userName} is typing</span>
@@ -1039,7 +1139,7 @@
     async function handleFileSelect() {
       const fileInput = document.getElementById('fileInput');
       const file = fileInput.files[0];
-      
+
       if (!file) return;
 
       // Check file size (10MB max)
@@ -1074,10 +1174,10 @@
         }
 
         const data = await response.json();
-        
+
         // Add sender name to message
         data.fileMessage.senderName = `${data.fileMessage.senderId.firstName} ${data.fileMessage.senderId.lastName}`;
-        
+
         // Emit file message via socket
         socket.emit('send-message', {
           teamId,
@@ -1098,12 +1198,12 @@
       } catch (error) {
         console.error('Error uploading file:', error);
         alert('Failed to upload file: ' + error.message);
-        
+
         // Reset send button
         const sendBtn = document.getElementById('sendBtn');
         sendBtn.disabled = false;
         sendBtn.innerHTML = '➤';
-        
+
         fileInput.value = '';
       }
     }
@@ -1136,7 +1236,7 @@
         // Archives
         'zip': '🗜️', 'rar': '🗜️', '7z': '🗜️',
         // Media
-        'mp4': '🎥', 'avi': '🎥', 'mov': '🎥', 
+        'mp4': '🎥', 'avi': '🎥', 'mov': '🎥',
         'mp3': '🎵', 'wav': '🎵', 'flac': '🎵',
         // Code
         'js': '💻', 'html': '💻', 'css': '💻', 'py': '💻', 'java': '💻'
@@ -1170,13 +1270,13 @@
     }
 
     // Event listeners
-    document.getElementById('messageInput').addEventListener('input', function() {
+    document.getElementById('messageInput').addEventListener('input', function () {
       this.style.height = 'auto';
       this.style.height = (this.scrollHeight) + 'px';
       startTyping();
     });
 
-    document.getElementById('messageInput').addEventListener('keypress', function(e) {
+    document.getElementById('messageInput').addEventListener('keypress', function (e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         sendMessage();
@@ -1203,4 +1303,5 @@
   <script src="/dark-enforcer.js"></script>
   <script src="/toast.js"></script>
 </body>
+
 </html>
