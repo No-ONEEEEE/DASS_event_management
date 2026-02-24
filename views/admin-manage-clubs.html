@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Clubs/Organizers - Admin</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+    .navbar {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 15px 30px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .navbar h2 {
+      font-size: 24px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      background: rgba(255,255,255,0.2);
+    }
+    .nav-links a.logout-btn {
+      background: #dc3545;
+      font-weight: bold;
+    }
+    .nav-links a.logout-btn:hover {
+      background: #c82333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .header-section {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-section h1 {
+      color: #333;
+    }
+    .btn {
+      padding: 12px 25px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.3s;
+      text-decoration: none;
+    }
+    .btn:hover {
+      background: #5568d3;
+    }
+    .btn-danger {
+      background: #dc3545;
+    }
+    .btn-danger:hover {
+      background: #c82333;
+    }
+    .btn-warning {
+      background: #ffc107;
+      color: #333;
+    }
+    .btn-warning:hover {
+      background: #e0a800;
+    }
+    .btn-success {
+      background: #28a745;
+    }
+    .btn-success:hover {
+      background: #218838;
+    }
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+      margin: 0 3px;
+    }
+    .filter-section {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 25px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    .filter-section select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    .organizers-list {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .organizers-list h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      background: #f8f9fa;
+      color: #333;
+      font-weight: bold;
+    }
+    tr:hover {
+      background: #f8f9fa;
+    }
+    .status-badge {
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .status-approved {
+      background: #d4edda;
+      color: #155724;
+    }
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+    .status-disabled {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: 100px auto;
+      position: relative;
+    }
+    .modal-content h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+      font-weight: bold;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #999;
+    }
+    .close-modal:hover {
+      color: #333;
+    }
+    .message {
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      display: none;
+    }
+    .message.error {
+      background: #fee;
+      color: #c33;
+      border: 1px solid #fcc;
+    }
+    .message.success {
+      background: #efe;
+      color: #3c3;
+      border: 1px solid #cfc;
+    }
+    .credentials-box {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 15px;
+      border: 1px solid #ddd;
+    }
+    .credentials-box strong {
+      color: #dc3545;
+    }
+    .no-data {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <div class="navbar">
+    <h2>Manage Clubs/Organizers</h2>
+    <div class="nav-links">
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/manage-clubs" class="active">Manage Clubs/Organizers</a>
+      <a href="/admin/password-resets">Password Reset Requests</a>
+      <a href="#" onclick="logout()" class="logout-btn">Logout</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="msg" class="message"></div>
+
+    <!-- Header -->
+    <div class="header-section">
+      <h1>Clubs/Organizers Management</h1>
+      <button class="btn" onclick="openAddModal()">+ Add New Club/Organizer</button>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+      <label><strong>Filter:</strong></label>
+      <select id="filterStatus" onchange="filterOrganizers()">
+        <option value="all">All Organizers</option>
+        <option value="approved">Approved</option>
+        <option value="pending">Pending</option>
+        <option value="disabled">Disabled</option>
+      </select>
+    </div>
+
+    <!-- Organizers List -->
+    <div class="organizers-list">
+      <h2>Organizers List</h2>
+      <table id="organizersTable">
+        <thead>
+          <tr>
+            <th>Club/Organizer Name</th>
+            <th>Login Email</th>
+            <th>Category</th>
+            <th>Contact Email</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="organizersBody">
+          <tr>
+            <td colspan="6" class="no-data">Loading organizers...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Add/Edit Organizer Modal -->
+  <div id="addModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeAddModal()">&times;</span>
+      <h2>Add New Club/Organizer</h2>
+      <form id="addOrganizerForm">
+        <div class="form-group">
+          <label>Club/Organizer Name *</label>
+          <input type="text" id="organizerName" required onblur="generateCredentials()">
+          <small style="color: #666;">Credentials will be auto-generated based on this name</small>
+        </div>
+        <div class="form-group">
+          <label>Login Email (Auto-generated)</label>
+          <input type="email" id="email" required readonly style="background: #f0f0f0;">
+        </div>
+        <div class="form-group">
+          <label>Password (Auto-generated)</label>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <input type="text" id="password" required readonly style="background: #f0f0f0; flex: 1;">
+            <button type="button" onclick="copyFormPasswordToClipboard()" class="btn btn-sm" style="background: #6c757d; padding: 5px 15px; white-space: nowrap;">
+              📋 Copy
+            </button>
+          </div>
+          <div id="copySuccessForm" style="display: none; color: #28a745; margin-top: 5px; font-weight: bold; font-size: 14px;">
+            ✓ Password copied to clipboard!
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="category" required>
+            <option value="">Select Category</option>
+            <option value="Technical">Technical</option>
+            <option value="Cultural">Cultural</option>
+            <option value="Sports">Sports</option>
+            <option value="Academic">Academic</option>
+            <option value="Social">Social</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="description"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Contact Email *</label>
+          <input type="email" id="contactEmail" required>
+        </div>
+        <div id="credentialsDisplay" class="credentials-box" style="display: none;">
+          <strong>IMPORTANT:</strong> Please share these credentials with the organizer:
+          <br><br>
+          <strong>Email:</strong> <span id="displayEmail"></span><br>
+          <strong>Password:</strong> 
+          <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+            <span id="displayPassword" style="font-size: 18px; color: #dc3545; font-weight: bold;"></span>
+            <button type="button" onclick="copyCreatedPasswordToClipboard()" class="btn btn-sm" style="background: #6c757d; padding: 5px 15px;">
+              📋 Copy
+            </button>
+          </div>
+          <div id="copySuccessCreate" style="display: none; color: #28a745; margin-top: 10px; font-weight: bold;">
+            ✓ Password copied to clipboard!
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn">Create Organizer</button>
+          <button type="button" class="btn btn-danger" onclick="closeAddModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeDeleteModal()">&times;</span>
+      <h2>Remove/Delete Organizer</h2>
+      <p>Are you sure you want to remove this organizer?</p>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="permanentDelete"> Permanently delete (cannot be recovered)
+        </label>
+        <br><small>If unchecked, the organizer will be archived and can be restored later.</small>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+        <button class="btn" onclick="closeDeleteModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Password Reset Modal -->
+  <div id="passwordResetModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closePasswordResetModal()">&times;</span>
+      <h2>Reset Organizer Password</h2>
+      <div id="resetOrgInfo" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+        <p><strong>Club/Organizer:</strong> <span id="resetOrgName"></span></p>
+        <p><strong>Login Email:</strong> <span id="resetOrgEmail"></span></p>
+      </div>
+      <p style="color: #666; margin-bottom: 15px;">Click the button below to generate a new password for this organizer.</p>
+      <div id="newPasswordDisplay" class="credentials-box" style="display: none;">
+        <strong>New Password Generated:</strong>
+        <br><br>
+        <strong>Login Email:</strong> <span id="displayResetEmail"></span><br>
+        <strong>New Password:</strong> 
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+          <span id="displayResetPassword" style="font-size: 18px; color: #dc3545; font-weight: bold;"></span>
+          <button type="button" onclick="copyResetPasswordToClipboard()" class="btn btn-sm" style="background: #6c757d; padding: 5px 15px;">
+            📋 Copy
+          </button>
+        </div>
+        <div id="copySuccessReset" style="display: none; color: #28a745; margin-top: 10px; font-weight: bold;">
+          ✓ Password copied to clipboard!
+        </div>
+        <br>
+        <small style="color: #666;">Please copy and share these credentials with the organizer immediately.</small>
+      </div>
+      <div class="modal-actions">
+        <button id="generatePasswordBtn" class="btn btn-success" onclick="generateAndResetPassword()">Generate New Password</button>
+        <button class="btn" onclick="closePasswordResetModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api';
+    let allOrganizers = [];
+    let currentFilter = 'all';
+    let deleteTargetId = null;
+    let resetTargetOrganizer = null;
+
+    function showMessage(msg, type = 'error') {
+      const msgEl = document.getElementById('msg');
+      msgEl.textContent = msg;
+      msgEl.className = 'message ' + type;
+      msgEl.style.display = 'block';
+      setTimeout(() => msgEl.style.display = 'none', 5000);
+    }
+
+    function checkAuth() {
+      const token = localStorage.getItem('token');
+      const userType = localStorage.getItem('userType');
+      
+      if (!token || userType !== 'admin') {
+        window.location.href = '/auth/login';
+        return false;
+      }
+      return token;
+    }
+
+    function generateCredentials() {
+      const organizerName = document.getElementById('organizerName').value.trim();
+      if (!organizerName) return;
+
+      // Generate email from organizer name
+      // Convert to lowercase, replace spaces with dots, remove special characters
+      const cleanName = organizerName.toLowerCase()
+        .replace(/[^a-z0-9\s]/g, '')
+        .replace(/\s+/g, '.')
+        .substring(0, 30); // Limit length
+      
+      const email = `${cleanName}@event.system.com`;
+      
+      // Generate random password (8 characters: letters and numbers)
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+      let password = '';
+      for (let i = 0; i < 8; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      
+      // Set the auto-generated values
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = password;
+    }
+
+    async function loadOrganizers() {
+      const token = checkAuth();
+      if (!token) return;
+
+      try {
+        const response = await fetch(`${API_URL}/admin/organizers`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          allOrganizers = await response.json();
+          // Check URL params for filter
+          const urlParams = new URLSearchParams(window.location.search);
+          const filterParam = urlParams.get('filter');
+          if (filterParam) {
+            document.getElementById('filterStatus').value = filterParam;
+            currentFilter = filterParam;
+          }
+          filterOrganizers();
+        } else if (response.status === 401) {
+          showMessage('Session expired. Please login again.', 'error');
+          setTimeout(() => window.location.href = '/auth/login', 2000);
+        } else {
+          showMessage('Failed to load organizers', 'error');
+        }
+      } catch (error) {
+        showMessage('Error loading organizers: ' + error.message, 'error');
+      }
+    }
+
+    function filterOrganizers() {
+      currentFilter = document.getElementById('filterStatus').value;
+      let filtered = allOrganizers;
+
+      if (currentFilter === 'approved') {
+        filtered = allOrganizers.filter(o => o.isApproved === true);
+      } else if (currentFilter === 'pending') {
+        filtered = allOrganizers.filter(o => o.isApproved === false);
+      } else if (currentFilter === 'disabled') {
+        filtered = allOrganizers.filter(o => o.isApproved === false);
+      }
+
+      displayOrganizers(filtered);
+    }
+
+    function displayOrganizers(organizers) {
+      const tbody = document.getElementById('organizersBody');
+      
+      if (organizers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="no-data">No organizers found</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = organizers.map(org => `
+        <tr>
+          <td><strong>${org.organizerName}</strong></td>
+          <td><strong>${org.email}</strong><br><small style="color: #666;">Password: Only visible at creation/reset</small></td>
+          <td>${org.category || 'N/A'}</td>
+          <td>${org.contactEmail || 'N/A'}</td>
+          <td>
+            <span class="status-badge status-${org.isApproved ? 'approved' : 'pending'}">
+              ${org.isApproved ? 'Approved' : 'Pending'}
+            </span>
+          </td>
+          <td>
+            ${!org.isApproved ? `<button class="btn btn-success btn-sm" onclick="approveOrganizer('${org._id}')" style="margin-right: 8px;">Approve</button>` : ''}
+            ${org.isApproved ? `<button class="btn btn-warning btn-sm" onclick="disableOrganizer('${org._id}')" style="margin-right: 8px;">Disable</button>` : ''}
+            <button class="btn btn-sm" onclick='openPasswordResetModal(${JSON.stringify(org)})' style="background: #17a2b8; color: white; margin-right: 8px;">Reset Password</button>
+            <button class="btn btn-danger btn-sm" onclick="openDeleteModal('${org._id}')">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openAddModal() {
+      document.getElementById('addModal').style.display = 'block';
+      document.getElementById('addOrganizerForm').reset();
+      document.getElementById('credentialsDisplay').style.display = 'none';
+    }
+
+    function closeAddModal() {
+      document.getElementById('addModal').style.display = 'none';
+    }
+
+    function openDeleteModal(organizerId) {
+      deleteTargetId = organizerId;
+      document.getElementById('deleteModal').style.display = 'block';
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('deleteModal').style.display = 'none';
+      deleteTargetId = null;
+    }
+
+    function openPasswordResetModal(organizer) {
+      resetTargetOrganizer = organizer;
+      document.getElementById('passwordResetModal').style.display = 'block';
+      document.getElementById('resetOrgName').textContent = organizer.organizerName;
+      document.getElementById('resetOrgEmail').textContent = organizer.email;
+      document.getElementById('newPasswordDisplay').style.display = 'none';
+      document.getElementById('generatePasswordBtn').style.display = 'block';
+    }
+
+    function closePasswordResetModal() {
+      document.getElementById('passwordResetModal').style.display = 'none';
+      resetTargetOrganizer = null;
+    }
+
+    async function generateAndResetPassword() {
+      if (!resetTargetOrganizer) return;
+      const token = checkAuth();
+      if (!token) return;
+
+      // Generate new random password
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+      let newPassword = '';
+      for (let i = 0; i < 8; i++) {
+        newPassword += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/admin/organizers/${resetTargetOrganizer._id}/reset-password`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ newPassword })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          showMessage(data.message, 'success');
+          // Display the new credentials
+          document.getElementById('displayResetEmail').textContent = resetTargetOrganizer.email;
+          document.getElementById('displayResetPassword').textContent = newPassword;
+          document.getElementById('newPasswordDisplay').style.display = 'block';
+          document.getElementById('generatePasswordBtn').style.display = 'none';
+        } else {
+          showMessage(data.message, 'error');
+        }
+      } catch (error) {
+        showMessage('Error resetting password: ' + error.message, 'error');
+      }
+    }
+
+    document.getElementById('addOrganizerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const token = checkAuth();
+      if (!token) return;
+
+      const organizerData = {
+        organizerName: document.getElementById('organizerName').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        category: document.getElementById('category').value,
+        description: document.getElementById('description').value,
+        contactEmail: document.getElementById('contactEmail').value
+      };
+
+      try {
+        const response = await fetch(`${API_URL}/admin/organizers/create`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(organizerData)
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          showMessage(data.message, 'success');
+          // Display credentials
+          document.getElementById('displayEmail').textContent = data.credentials.email;
+          document.getElementById('displayPassword').textContent = data.credentials.password;
+          document.getElementById('credentialsDisplay').style.display = 'block';
+          
+          setTimeout(() => {
+            closeAddModal();
+            loadOrganizers();
+          }, 5000);
+        } else {
+          showMessage(data.message, 'error');
+        }
+      } catch (error) {
+        showMessage('Error creating organizer: ' + error.message, 'error');
+      }
+    });
+
+    async function approveOrganizer(organizerId) {
+      const token = checkAuth();
+      if (!token) return;
+
+      try {
+        const response = await fetch(`${API_URL}/admin/organizers/${organizerId}/approve`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          showMessage(data.message, 'success');
+          loadOrganizers();
+        } else {
+          showMessage(data.message, 'error');
+        }
+      } catch (error) {
+        showMessage('Error approving organizer: ' + error.message, 'error');
+      }
+    }
+
+    async function disableOrganizer(organizerId) {
+      const token = checkAuth();
+      if (!token) return;
+
+      if (!confirm('Are you sure you want to disable this organizer?')) return;
+
+      try {
+        const response = await fetch(`${API_URL}/admin/organizers/${organizerId}/disable`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          showMessage(data.message, 'success');
+          loadOrganizers();
+        } else {
+          showMessage(data.message, 'error');
+        }
+      } catch (error) {
+        showMessage('Error disabling organizer: ' + error.message, 'error');
+      }
+    }
+
+    async function confirmDelete() {
+      const token = checkAuth();
+      if (!token || !deleteTargetId) return;
+
+      const permanent = document.getElementById('permanentDelete').checked;
+
+      try {
+        const response = await fetch(`${API_URL}/admin/organizers/${deleteTargetId}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ permanent })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          showMessage(data.message, 'success');
+          closeDeleteModal();
+          loadOrganizers();
+        } else {
+          showMessage(data.message, 'error');
+        }
+      } catch (error) {
+        showMessage('Error deleting organizer: ' + error.message, 'error');
+      }
+    }
+
+    function copyFormPasswordToClipboard() {
+      const password = document.getElementById('password').value;
+      copyToClipboard(password, 'copySuccessForm');
+    }
+
+    function copyCreatedPasswordToClipboard() {
+      const password = document.getElementById('displayPassword').textContent;
+      copyToClipboard(password, 'copySuccessCreate');
+    }
+
+    function copyResetPasswordToClipboard() {
+      const password = document.getElementById('displayResetPassword').textContent;
+      copyToClipboard(password, 'copySuccessReset');
+    }
+
+    function copyToClipboard(text, successElementId) {
+      // Modern clipboard API
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          document.getElementById(successElementId).style.display = 'block';
+          setTimeout(() => {
+            document.getElementById(successElementId).style.display = 'none';
+          }, 3000);
+        }).catch(err => {
+          // Fallback for older browsers
+          fallbackCopyToClipboard(text, successElementId);
+        });
+      } else {
+        // Fallback for older browsers
+        fallbackCopyToClipboard(text, successElementId);
+      }
+    }
+
+    function fallbackCopyToClipboard(text, successElementId) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        document.getElementById(successElementId).style.display = 'block';
+        setTimeout(() => {
+          document.getElementById(successElementId).style.display = 'none';
+        }, 3000);
+      } catch (err) {
+        showMessage('Failed to copy password', 'error');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userType');
+      window.location.href = '/auth/login';
+    }
+
+    // Load organizers on page load
+    window.addEventListener('DOMContentLoaded', loadOrganizers);
+  </script>
+</body>
+</html>

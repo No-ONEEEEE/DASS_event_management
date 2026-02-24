@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Details - Event Management System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+    header {
+      background: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .nav a {
+      text-decoration: none;
+      color: #667eea;
+      font-weight: bold;
+      margin-right: 20px;
+    }
+    .logout-btn {
+      background: #dc3545;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .logout-btn:hover {
+      background: #c82333;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .event-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px;
+      border-radius: 10px 10px 0 0;
+    }
+    .event-header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .event-type {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    .event-body {
+      background: white;
+      padding: 40px;
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .info-item {
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    .info-item label {
+      display: block;
+      color: #666;
+      font-size: 12px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .info-item strong {
+      color: #333;
+      font-size: 16px;
+    }
+    .description {
+      margin: 30px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      line-height: 1.6;
+      color: #555;
+    }
+    .section-title {
+      color: #333;
+      font-size: 20px;
+      margin: 30px 0 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #667eea;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .tag {
+      background: #667eea;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+    .form-fields {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    .form-field {
+      padding: 10px;
+      margin-bottom: 10px;
+      background: white;
+      border-left: 3px solid #667eea;
+      border-radius: 4px;
+    }
+    .btn-register {
+      background: #667eea;
+      color: white;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 30px;
+    }
+    .btn-register:hover {
+      background: #5568d3;
+    }
+    .btn-back {
+      background: #6c757d;
+      color: white;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 30px;
+      margin-left: 10px;
+    }
+    .btn-back:hover {
+      background: #5a6268;
+    }
+    .loading {
+      text-align: center;
+      padding: 100px;
+      color: #999;
+      font-size: 18px;
+    }
+    .error {
+      text-align: center;
+      padding: 100px;
+      color: #dc3545;
+      font-size: 18px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .badge.published {
+      background: #28a745;
+      color: white;
+    }
+    .badge.ongoing {
+      background: #17a2b8;
+      color: white;
+    }
+    .badge.draft {
+      background: #6c757d;
+      color: white;
+    }
+    .badge.completed {
+      background: #6c757d;
+      color: white;
+    }
+    /* Registration Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      overflow-y: auto;
+    }
+    .modal-content {
+      background: white;
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 600px;
+      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .modal-header h2 {
+      color: #333;
+      font-size: 24px;
+    }
+    .close-btn {
+      font-size: 28px;
+      font-weight: bold;
+      color: #999;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+    }
+    .close-btn:hover {
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: bold;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 25px;
+    }
+    .btn-submit {
+      background: #667eea;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .btn-submit:hover {
+      background: #5568d3;
+    }
+    .btn-cancel {
+      background: #6c757d;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .btn-cancel:hover {
+      background: #5a6268;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Event Details</h1>
+    <nav class="nav">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/browse-events">Browse Events</a>
+      <a href="/profile">Profile</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div id="loadingSection" class="loading">Loading event details...</div>
+    <div id="errorSection" class="error" style="display: none;"></div>
+    <div id="eventSection" style="display: none;">
+      <!-- Event details will be populated here -->
+    </div>
+  </div>
+
+  <!-- Registration Modal -->
+  <div id="registrationModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Register for Event</h2>
+        <button class="close-btn" onclick="closeRegistrationModal()">&times;</button>
+      </div>
+      
+      <form id="registrationForm" onsubmit="submitRegistration(event)">
+        <div id="formFieldsContainer">
+          <!-- Dynamic form fields will be added here -->
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeRegistrationModal()">Cancel</button>
+          <button type="submit" class="btn-submit">Submit Registration</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api';
+    const token = localStorage.getItem('token');
+    let currentEvent = null;
+
+    if (!token) {
+      window.location.href = '/login.html';
+    }
+
+    // Get event ID from URL
+    const eventId = window.location.pathname.split('/event/')[1];
+
+    async function loadEventDetails() {
+      try {
+        const response = await fetch(`${API_URL}/events/${eventId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.status === 401) {
+          localStorage.clear();
+          window.location.href = '/login.html';
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error('Event not found');
+        }
+
+        const event = await response.json();
+        currentEvent = event;
+        displayEventDetails(event);
+      } catch (error) {
+        console.error('Error loading event:', error);
+        document.getElementById('loadingSection').style.display = 'none';
+        document.getElementById('errorSection').style.display = 'block';
+        document.getElementById('errorSection').textContent = 'Failed to load event details. Event may not exist.';
+      }
+    }
+
+    function displayEventDetails(event) {
+      document.getElementById('loadingSection').style.display = 'none';
+      document.getElementById('eventSection').style.display = 'block';
+
+      const startDate = new Date(event.eventStartDate).toLocaleDateString();
+      const endDate = new Date(event.eventEndDate).toLocaleDateString();
+      const deadline = new Date(event.registrationDeadline).toLocaleDateString();
+
+      let statusBadge = `<span class="badge ${event.status.toLowerCase()}">${event.status}</span>`;
+
+      let tagsHtml = '';
+      if (event.eventTags && event.eventTags.length > 0) {
+        tagsHtml = event.eventTags.map(tag => `<span class="tag">${tag}</span>`).join('');
+      }
+
+      let formFieldsHtml = '';
+      if (event.registrationFormFields && event.registrationFormFields.length > 0) {
+        formFieldsHtml = event.registrationFormFields.map(field => 
+          `<div class="form-field">
+            <strong>${field.fieldLabel}</strong> 
+            ${field.isRequired ? '<span style="color: red;">*</span>' : ''}
+            <br><small style="color: #666;">${field.fieldType || 'text'}</small>
+          </div>`
+        ).join('');
+      } else {
+        formFieldsHtml = '<p style="color: #666;">No additional information required for registration.</p>';
+      }
+
+      const html = `
+        <div class="event-header">
+          <h1>${event.eventName}</h1>
+          <span class="event-type">${event.eventType} Event</span>
+          ${statusBadge}
+        </div>
+        <div class="event-body">
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Organizer</label>
+              <strong>${event.organizerId?.organizerName || 'N/A'}</strong>
+            </div>
+            <div class="info-item">
+              <label>Category</label>
+              <strong>${event.organizerId?.category || 'N/A'}</strong>
+            </div>
+            <div class="info-item">
+              <label>Event Start Date</label>
+              <strong>${startDate}</strong>
+            </div>
+            <div class="info-item">
+              <label>Event End Date</label>
+              <strong>${endDate}</strong>
+            </div>
+            <div class="info-item">
+              <label>Registration Deadline</label>
+              <strong>${deadline}</strong>
+            </div>
+            <div class="info-item">
+              <label>Registration Fee</label>
+              <strong>₹${event.registrationFee || 0}</strong>
+            </div>
+            <div class="info-item">
+              <label>Eligibility</label>
+              <strong>${event.eligibility || 'N/A'}</strong>
+            </div>
+            <div class="info-item">
+              <label>Team Event</label>
+              <strong>${event.isTeamEvent ? 'Yes' : 'No'}</strong>
+            </div>
+            <div class="info-item">
+              <label>Registrations</label>
+              <strong>${event.currentRegistrations || 0} ${event.registrationLimit ? '/ ' + event.registrationLimit : ''}</strong>
+            </div>
+            <div class="info-item">
+              <label>Venue</label>
+              <strong>${event.venue || 'N/A'}</strong>
+            </div>
+          </div>
+
+          ${event.description ? `
+            <h3 class="section-title">Description</h3>
+            <div class="description">${event.description}</div>
+          ` : ''}
+
+          ${event.eventTags && event.eventTags.length > 0 ? `
+            <h3 class="section-title">Tags</h3>
+            <div class="tags">${tagsHtml}</div>
+          ` : ''}
+
+          <h3 class="section-title">Registration Form Fields</h3>
+          <div class="form-fields">
+            ${formFieldsHtml}
+          </div>
+
+          ${event.eventType === 'Merchandise' && event.merchandise && event.merchandise.items && event.merchandise.items.length > 0 ? `
+            <h3 class="section-title">🛒 Available Merchandise</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px;">
+              ${event.merchandise.items.map((item, idx) => `
+                <div style="background: white; border: 2px solid #ddd; border-radius: 10px; padding: 20px; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                  <h4 style="color: #333; margin-bottom: 10px; font-size: 18px;">${item.itemName}</h4>
+                  <p style="color: #667eea; font-size: 22px; font-weight: bold; margin-bottom: 10px;">₹${item.pricePerItem}</p>
+                  ${item.size && item.size.length > 0 ? `
+                    <p style="color: #666; margin-bottom: 8px;">
+                      <strong>Sizes:</strong> ${item.size.join(', ')}
+                    </p>
+                  ` : ''}
+                  ${item.color && item.color.length > 0 ? `
+                    <p style="color: #666; margin-bottom: 8px;">
+                      <strong>Colors:</strong> ${item.color.join(', ')}
+                    </p>
+                  ` : ''}
+                  <p style="color: #666; margin-bottom: 8px;">
+                    <strong>Available:</strong> ${item.quantity} items
+                  </p>
+                  ${item.maxPurchasePerParticipant ? `
+                    <p style="color: #666; font-size: 13px;">
+                      <em>Max ${item.maxPurchasePerParticipant} per person</em>
+                    </p>
+                  ` : ''}
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          ${event.isTeamEvent ? `
+            <div style="background: #e7f3ff; border-left: 4px solid #667eea; padding: 20px; border-radius: 8px; margin-top: 25px;">
+              <h3 style="font-size: 18px; color: #333; margin-bottom: 10px;">🎯 Team Event</h3>
+              <p style="color: #666; margin-bottom: 15px;">This is a team-based event. Team size: ${event.minTeamSize} - ${event.maxTeamSize} members</p>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn-register" onclick="createTeam()">Create New Team</button>
+                <button class="btn-register" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);" onclick="joinExistingTeam()">Join with Invite Code</button>
+              </div>
+              <p style="font-size: 13px; color: #666; margin-top: 10px;">
+                <strong>Note:</strong> Create a team and invite members, or join an existing team using an invite code.
+              </p>
+            </div>
+          ` : `
+            <div style="margin-top: 30px;">
+              <button class="btn-register" onclick="openRegistrationModal()">Register Now</button>
+            </div>
+          `}
+
+          <div style="margin-top: 20px;">
+            <button class="btn-back" onclick="goBack()">Back to Events</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('eventSection').innerHTML = html;
+    }
+
+    function toggleMerchandiseItem(itemIndex) {
+      const checkbox = document.getElementById(`merch_select_${itemIndex}`);
+      const optionsDiv = document.getElementById(`merch_options_${itemIndex}`);
+      
+      if (checkbox.checked) {
+        optionsDiv.style.display = 'block';
+      } else {
+        optionsDiv.style.display = 'none';
+      }
+    }
+
+    function openRegistrationModal() {
+      if (!currentEvent) return;
+
+      console.log('Opening registration modal for event:', currentEvent);
+      console.log('Registration form fields:', currentEvent.registrationFormFields);
+
+      // Check if registration is still open
+      if (new Date() > new Date(currentEvent.registrationDeadline)) {
+        alert('Registration deadline has passed for this event.');
+        return;
+      }
+
+      if (currentEvent.status !== 'Published' && currentEvent.status !== 'Ongoing') {
+        alert('This event is not open for registration.');
+        return;
+      }
+
+      // Generate form fields
+      let formFieldsHtml = '';
+      
+      // Add merchandise items selector if it's a merchandise event
+      if (currentEvent.eventType === 'Merchandise' && currentEvent.merchandise && currentEvent.merchandise.items && currentEvent.merchandise.items.length > 0) {
+        formFieldsHtml += `
+          <h3 style="color: #333; margin-bottom: 15px; border-bottom: 2px solid #667eea; padding-bottom: 10px;">🛒 Select Items to Purchase</h3>
+          <div id="merchandiseSelection">
+        `;
+        
+        currentEvent.merchandise.items.forEach((item, itemIndex) => {
+          const isOutOfStock = item.quantity <= 0;
+          const borderColor = isOutOfStock ? '#dc3545' : '#ddd';
+          const backgroundColor = isOutOfStock ? '#ffe6e6' : '#f8f9fa';
+          
+          formFieldsHtml += `
+            <div style="background: ${backgroundColor}; border: 2px solid ${borderColor}; border-radius: 8px; padding: 15px; margin-bottom: 20px; opacity: ${isOutOfStock ? '0.6' : '1'};" id="merch_item_${itemIndex}">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h4 style="color: #333; margin: 0;">${item.itemName} ${isOutOfStock ? '<span style="color: #dc3545; font-size: 14px; font-weight: bold;">[OUT OF STOCK]</span>' : ''}</h4>
+                <span style="color: #667eea; font-size: 18px; font-weight: bold;">₹${item.pricePerItem}</span>
+              </div>
+              
+              <label style="display: flex; align-items: center; margin-bottom: 15px; cursor: ${isOutOfStock ? 'not-allowed' : 'pointer'};">
+                <input type="checkbox" 
+                       id="merch_select_${itemIndex}" 
+                       onchange="toggleMerchandiseItem(${itemIndex})"
+                       ${isOutOfStock ? 'disabled' : ''}
+                       style="width: 18px; height: 18px; margin-right: 10px; cursor: ${isOutOfStock ? 'not-allowed' : 'pointer'};">
+                <span style="font-weight: 600;">${isOutOfStock ? 'Currently unavailable' : 'I want to purchase this item'}</span>
+              </label>
+              
+              <div id="merch_options_${itemIndex}" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+                ${item.size && item.size.length > 0 ? `
+                  <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                      Size <span style="color: red;">*</span>
+                    </label>
+                    <select id="merch_size_${itemIndex}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                      <option value="">Select Size</option>
+                      ${item.size.map(s => `<option value="${s}">${s}</option>`).join('')}
+                    </select>
+                  </div>
+                ` : ''}
+                
+                ${item.color && item.color.length > 0 ? `
+                  <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                      Color <span style="color: red;">*</span>
+                    </label>
+                    <select id="merch_color_${itemIndex}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                      <option value="">Select Color</option>
+                      ${item.color.map(c => `<option value="${c}">${c}</option>`).join('')}
+                    </select>
+                  </div>
+                ` : ''}
+                
+                <div style="margin-bottom: 10px;">
+                  <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                    Quantity <span style="color: red;">*</span>
+                  </label>
+                  <input type="number" 
+                         id="merch_qty_${itemIndex}" 
+                         min="1" 
+                         max="${Math.min(item.maxPurchasePerParticipant || item.quantity, item.quantity)}" 
+                         value="1"
+                         style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                  <small style="color: ${item.quantity < 10 && item.quantity > 0 ? '#dc3545' : '#666'};">
+                    Available: <strong>${item.quantity}</strong> ${item.quantity < 10 && item.quantity > 0 ? '(Limited Stock!)' : ''} | 
+                    ${item.maxPurchasePerParticipant ? `Max per person: ${item.maxPurchasePerParticipant}` : 'No limit per person'}
+                  </small>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        
+        formFieldsHtml += `</div><hr style="margin: 25px 0; border: none; border-top: 2px solid #eee;">`;
+      }
+      
+      if (currentEvent.registrationFormFields && currentEvent.registrationFormFields.length > 0) {
+        currentEvent.registrationFormFields.forEach((field, index) => {
+          const fieldType = field.fieldType || 'text';
+          let fieldHtml = '';
+          
+          if (fieldType === 'textarea') {
+            fieldHtml = `<textarea id="field_${index}" 
+                                   data-field-label="${field.fieldLabel}"
+                                   ${field.isRequired ? 'required' : ''}
+                                   placeholder="Enter ${field.fieldLabel.toLowerCase()}"
+                                   rows="4"
+                                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>`;
+          } else if (fieldType === 'dropdown') {
+            fieldHtml = `<select id="field_${index}" 
+                                 data-field-label="${field.fieldLabel}"
+                                 ${field.isRequired ? 'required' : ''}
+                                 style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                           <option value="">Select ${field.fieldLabel}</option>
+                           ${field.options ? field.options.map(opt => `<option value="${opt}">${opt}</option>`).join('') : ''}
+                         </select>`;
+          } else if (fieldType === 'radio' || fieldType === 'checkbox') {
+            const inputType = fieldType;
+            fieldHtml = '<div style="margin-top: 10px;">';
+            if (field.options && field.options.length > 0) {
+              field.options.forEach((option, optIndex) => {
+                fieldHtml += `
+                  <label style="display: block; margin-bottom: 8px; cursor: pointer;">
+                    <input type="${inputType}" 
+                           name="field_${index}" 
+                           id="field_${index}_${optIndex}"
+                           value="${option}"
+                           data-field-label="${field.fieldLabel}"
+                           ${field.isRequired && optIndex === 0 ? 'required' : ''}
+                           style="margin-right: 8px;">
+                    ${option}
+                  </label>
+                `;
+              });
+            }
+            fieldHtml += '</div>';
+          } else {
+            // Regular input types: text, number, email, tel, date
+            fieldHtml = `<input type="${fieldType}" 
+                                id="field_${index}" 
+                                data-field-label="${field.fieldLabel}"
+                                ${field.isRequired ? 'required' : ''}
+                                placeholder="Enter ${field.fieldLabel.toLowerCase()}"
+                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">`;
+          }
+          
+          formFieldsHtml += `
+            <div class="form-group" style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                ${field.fieldLabel}${field.isRequired ? ' <span style="color: red;">*</span>' : ''}
+              </label>
+              ${fieldHtml}
+            </div>
+          `;
+        });
+      } else if (!currentEvent.eventType || currentEvent.eventType !== 'Merchandise') {
+        // Only show "no info required" if it's NOT a merchandise event
+        formFieldsHtml += '<p style="color: #666;">No additional information required.</p>';
+      }
+      document.getElementById('formFieldsContainer').innerHTML = formFieldsHtml;
+
+      // Open modal
+      document.getElementById('registrationModal').style.display = 'block';
+    }
+
+    function closeRegistrationModal() {
+      document.getElementById('registrationModal').style.display = 'none';
+      document.getElementById('registrationForm').reset();
+    }
+
+    async function submitRegistration(event) {
+      event.preventDefault();
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Session expired. Please login again.');
+        window.location.href = '/login.html';
+        return;
+      }
+
+      try {
+        // Collect merchandise selections if it's a merchandise event
+        let merchandisePurchase = null;
+        if (currentEvent.eventType === 'Merchandise' && currentEvent.merchandise && currentEvent.merchandise.items) {
+          const selectedItems = [];
+          let totalAmount = 0;
+          
+          currentEvent.merchandise.items.forEach((item, itemIndex) => {
+            const checkbox = document.getElementById(`merch_select_${itemIndex}`);
+            if (checkbox && checkbox.checked) {
+              // Check stock availability
+              if (item.quantity <= 0) {
+                alert(`${item.itemName} is out of stock. Please deselect it.`);
+                return;
+              }
+              
+              const sizeSelect = document.getElementById(`merch_size_${itemIndex}`);
+              const colorSelect = document.getElementById(`merch_color_${itemIndex}`);
+              const qtyInput = document.getElementById(`merch_qty_${itemIndex}`);
+              
+              const quantity = qtyInput ? parseInt(qtyInput.value) : 1;
+              
+              // Validate quantity against stock
+              if (quantity > item.quantity) {
+                alert(`Requested quantity for ${item.itemName} exceeds available stock (${item.quantity})`);
+                return;
+              }
+              
+              const itemId = item._id || item.itemName;
+              
+              const selection = {
+                itemId: itemId,
+                quantity: quantity
+              };
+              
+              if (sizeSelect && sizeSelect.value) {
+                selection.selectedSize = sizeSelect.value;
+              }
+              if (colorSelect && colorSelect.value) {
+                selection.selectedColor = colorSelect.value;
+              }
+              
+              selectedItems.push(selection);
+              totalAmount += item.pricePerItem * quantity;
+            }
+          });
+          
+          if (selectedItems.length > 0) {
+            merchandisePurchase = {
+              items: selectedItems,
+              totalAmount: totalAmount,
+              paymentStatus: 'Pending'
+            };
+          }
+        }
+        
+        // Collect form responses
+        const formResponses = [];
+        if (currentEvent.registrationFormFields && currentEvent.registrationFormFields.length > 0) {
+          currentEvent.registrationFormFields.forEach((field, index) => {
+            const fieldType = field.fieldType || 'text';
+            let fieldValue = '';
+            
+            if (fieldType === 'radio') {
+              // For radio buttons, find the checked one
+              const checkedRadio = document.querySelector(`input[name="field_${index}"]:checked`);
+              fieldValue = checkedRadio ? checkedRadio.value : '';
+            } else if (fieldType === 'checkbox') {
+              // For checkboxes, collect all checked values
+              const checkedBoxes = document.querySelectorAll(`input[name="field_${index}"]:checked`);
+              fieldValue = Array.from(checkedBoxes).map(cb => cb.value).join(', ');
+            } else {
+              // For all other field types (text, textarea, dropdown, etc.)
+              const input = document.getElementById(`field_${index}`);
+              fieldValue = input ? input.value : '';
+            }
+            
+            formResponses.push({
+              fieldLabel: field.fieldLabel,
+              fieldValue: fieldValue
+            });
+          });
+        }
+
+        // Prepare registration data
+        const registrationData = {
+          formResponses
+        };
+        
+        // Add merchandise purchase data if any
+        if (merchandisePurchase) {
+          registrationData.merchandisePurchase = merchandisePurchase;
+        }
+
+        // Submit registration
+        const response = await fetch(`${API_URL}/events/${eventId}/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(registrationData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          alert('Registration successful! Your Ticket ID: ' + result.ticketId);
+          closeRegistrationModal();
+          // Redirect to previous page
+          setTimeout(() => {
+            window.history.back();
+          }, 1000);
+        } else {
+          alert(result.message || 'Registration failed. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error submitting registration:', error);
+        alert('Failed to submit registration. Please try again.');
+      }
+    }
+
+    function goBack() {
+      window.location.href = '/browse-events';
+    }
+
+    function createTeam() {
+      if (!currentEvent) return;
+      window.location.href = `/team/create/${currentEvent._id}`;
+    }
+
+    function joinExistingTeam() {
+      const inviteCode = prompt('Enter your team invite code:');
+      if (inviteCode && inviteCode.trim()) {
+        window.location.href = `/team/join/${inviteCode.trim().toUpperCase()}`;
+      }
+    }
+
+    function logout() {
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.replace('/login.html');
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('registrationModal');
+      if (event.target === modal) {
+        closeRegistrationModal();
+      }
+    }
+
+    loadEventDetails();
+  </script>
+</body>
+</html>

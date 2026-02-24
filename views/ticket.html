@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Ticket - Event Management System</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+    }
+    .ticket {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+    .ticket-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    .ticket-header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .ticket-header p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+    .ticket-body {
+      padding: 30px;
+    }
+    .qr-container {
+      text-align: center;
+      padding: 30px;
+      background: #f9f9f9;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+    #qrcode {
+      display: inline-block;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .qr-label {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #667eea;
+      font-size: 14px;
+    }
+    .info-section {
+      margin-bottom: 20px;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    .info-label {
+      font-weight: bold;
+      color: #666;
+    }
+    .info-value {
+      color: #333;
+      text-align: right;
+    }
+    .ticket-id {
+      background: #667eea;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .badge-registered {
+      background: #6bcf7f;
+      color: white;
+    }
+    .badge-completed {
+      background: #888;
+      color: white;
+    }
+    .badge-cancelled {
+      background: #e15554;
+      color: white;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: #667eea;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      margin-top: 20px;
+      transition: background 0.3s;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .btn:hover {
+      background: #5568d3;
+    }
+    .btn-secondary {
+      background: #888;
+    }
+    .btn-secondary:hover {
+      background: #777;
+    }
+    .loading {
+      text-align: center;
+      padding: 60px;
+      color: white;
+      font-size: 18px;
+    }
+    .instructions {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+    .instructions h3 {
+      color: #856404;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    .instructions ul {
+      margin-left: 20px;
+      color: #856404;
+    }
+    .instructions li {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+    @media print {
+      body {
+        background: white;
+      }
+      .btn {
+        display: none;
+      }
+      .instructions {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="loading" class="loading">Loading your ticket...</div>
+
+    <div id="ticketContent" style="display: none;">
+      <div class="ticket">
+        <div class="ticket-header">
+          <h1>🎫 Event Ticket</h1>
+          <p id="eventName">Event Name</p>
+        </div>
+
+        <div class="ticket-body">
+          <!-- Ticket ID -->
+          <div class="ticket-id" id="ticketId">TICKET-ID</div>
+
+          <!-- QR Code -->
+          <div class="qr-container">
+            <div id="qrcode"></div>
+            <div class="qr-label">Present this QR code at the event for attendance</div>
+          </div>
+
+          <!-- Instructions -->
+          <div class="instructions">
+            <h3>📋 Instructions:</h3>
+            <ul>
+              <li>Show this QR code at the event entrance</li>
+              <li>Keep this ticket safe until the event</li>
+              <li>You can take a screenshot for easy access</li>
+              <li>Do not share this QR code with others</li>
+            </ul>
+          </div>
+
+          <!-- Event Details -->
+          <div class="info-section">
+            <h3 style="margin-bottom: 15px; color: #333;">Event Details</h3>
+            <div class="info-row">
+              <span class="info-label">Event</span>
+              <span class="info-value" id="eventNameDetail"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Start Date</span>
+              <span class="info-value" id="eventStartDate"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">End Date</span>
+              <span class="info-value" id="eventEndDate"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Venue</span>
+              <span class="info-value" id="eventVenue"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Status</span>
+              <span class="info-value"><span id="registrationStatus" class="badge"></span></span>
+            </div>
+          </div>
+
+          <!-- Participant Details -->
+          <div class="info-section">
+            <h3 style="margin-bottom: 15px; color: #333;">Participant Details</h3>
+            <div class="info-row">
+              <span class="info-label">Name</span>
+              <span class="info-value" id="participantName"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Email</span>
+              <span class="info-value" id="participantEmail"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Registration Date</span>
+              <span class="info-value" id="registrationDate"></span>
+            </div>
+          </div>
+
+          <!-- Team Details (if applicable) -->
+          <div class="info-section" id="teamSection" style="display: none;">
+            <h3 style="margin-bottom: 15px; color: #333;">👥 Team Details</h3>
+            <div class="info-row">
+              <span class="info-label">Team Name</span>
+              <span class="info-value" id="teamName"></span>
+            </div>
+            <div id="teamMembersContainer"></div>
+          </div>
+
+          <!-- Merchandise Purchase (if applicable) -->
+          <div class="info-section" id="merchandiseSection" style="display: none;">
+            <h3 style="margin-bottom: 15px; color: #333;">🛒 Merchandise Purchased</h3>
+            <div id="merchandiseContainer"></div>
+            <div class="info-row" style="background: #f0f8ff; font-weight: bold; margin-top: 10px;">
+              <span class="info-label">Total Amount</span>
+              <span class="info-value" id="merchandiseTotal">₹0</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Payment Status</span>
+              <span class="info-value" id="merchandisePaymentStatus">Pending</span>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <button class="btn" onclick="window.print()">🖨️ Print Ticket</button>
+          <button class="btn btn-secondary" onclick="downloadQR()">📥 Download QR Code</button>
+          <a href="/dashboard" class="btn btn-secondary">← Back to Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api';
+    const token = localStorage.getItem('token');
+    let registrationData = null;
+
+    if (!token) {
+      window.location.href = '/auth/login';
+    }
+
+    // Get registration ID from URL
+    const registrationId = window.location.pathname.split('/').pop();
+
+    async function loadTicket() {
+      try {
+        const response = await fetch(`${API_URL}/participants/registrations/${registrationId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to load ticket');
+        }
+
+        registrationData = await response.json();
+
+        // Display ticket details
+        document.getElementById('ticketId').textContent = registrationData.ticketId;
+        document.getElementById('eventName').textContent = registrationData.eventId.eventName;
+        document.getElementById('eventNameDetail').textContent = registrationData.eventId.eventName;
+        document.getElementById('eventStartDate').textContent = new Date(registrationData.eventId.eventStartDate).toLocaleString();
+        document.getElementById('eventEndDate').textContent = new Date(registrationData.eventId.eventEndDate).toLocaleString();
+        document.getElementById('eventVenue').textContent = registrationData.eventId.venue || 'TBA';
+        
+        const statusBadge = document.getElementById('registrationStatus');
+        statusBadge.textContent = registrationData.status;
+        statusBadge.className = `badge badge-${registrationData.status.toLowerCase()}`;
+
+        document.getElementById('participantName').textContent = 
+          `${registrationData.participantId.firstName} ${registrationData.participantId.lastName}`;
+        document.getElementById('participantEmail').textContent = registrationData.participantId.email;
+        document.getElementById('registrationDate').textContent = new Date(registrationData.registrationDate).toLocaleString();
+
+        // Display team information if applicable
+        if (registrationData.teamName && registrationData.teamMembers && registrationData.teamMembers.length > 0) {
+          document.getElementById('teamSection').style.display = 'block';
+          document.getElementById('teamName').textContent = registrationData.teamName;
+          
+          const teamMembersContainer = document.getElementById('teamMembersContainer');
+          registrationData.teamMembers.forEach((member, index) => {
+            const memberRow = document.createElement('div');
+            memberRow.className = 'info-row';
+            memberRow.innerHTML = `
+              <span class="info-label">Member ${index + 1}</span>
+              <span class="info-value">${member.name} (${member.email})</span>
+            `;
+            teamMembersContainer.appendChild(memberRow);
+          });
+        }
+
+        // Display merchandise purchase information if applicable
+        if (registrationData.merchandisePurchase && registrationData.merchandisePurchase.items && registrationData.merchandisePurchase.items.length > 0) {
+          document.getElementById('merchandiseSection').style.display = 'block';
+          
+          const merchandiseContainer = document.getElementById('merchandiseContainer');
+          registrationData.merchandisePurchase.items.forEach((item, index) => {
+            const itemRow = document.createElement('div');
+            itemRow.className = 'info-row';
+            
+            // Try to find item name from event merchandise data
+            let itemName = item.itemId || 'Item';
+            if (registrationData.eventId && registrationData.eventId.merchandise && registrationData.eventId.merchandise.items) {
+              const merchandiseItem = registrationData.eventId.merchandise.items.find(
+                m => m._id && m._id.toString() === item.itemId.toString()
+              );
+              if (merchandiseItem) {
+                itemName = merchandiseItem.itemName;
+              }
+            }
+            
+            let itemDetails = `${itemName} x ${item.quantity}`;
+            if (item.selectedSize) itemDetails += ` (Size: ${item.selectedSize})`;
+            if (item.selectedColor) itemDetails += ` (Color: ${item.selectedColor})`;
+            
+            itemRow.innerHTML = `
+              <span class="info-label">Item ${index + 1}</span>
+              <span class="info-value">${itemDetails}</span>
+            `;
+            merchandiseContainer.appendChild(itemRow);
+          });
+          
+          document.getElementById('merchandiseTotal').textContent = `₹${registrationData.merchandisePurchase.totalAmount || 0}`;
+          document.getElementById('merchandisePaymentStatus').textContent = registrationData.merchandisePurchase.paymentStatus || 'Pending';
+        }
+
+        // Generate or display QR code
+        const qrcodeContainer = document.getElementById('qrcode');
+        
+        // Check if qrCode is already a data URL (base64 image)
+        if (registrationData.qrCode && registrationData.qrCode.startsWith('data:image')) {
+          // Display the QR code image directly
+          const img = document.createElement('img');
+          img.src = registrationData.qrCode;
+          img.alt = 'Ticket QR Code';
+          img.style.width = '200px';
+          img.style.height = '200px';
+          qrcodeContainer.appendChild(img);
+        } else {
+          // Generate QR code using the library (fallback for old tickets)
+          const qrcode = new QRCode(qrcodeContainer, {
+            text: registrationData.qrCode || registrationData.ticketId,
+            width: 200,
+            height: 200,
+            colorDark: '#000000',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+          });
+        }
+
+        // Show ticket
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('ticketContent').style.display = 'block';
+
+      } catch (error) {
+        document.getElementById('loading').textContent = 'Error loading ticket: ' + error.message;
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 3000);
+      }
+    }
+
+    function downloadQR() {
+      // Try to get canvas (for library-generated QR codes)
+      const canvas = document.querySelector('#qrcode canvas');
+      if (canvas) {
+        const url = canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ticket_${registrationData.ticketId}_qr.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } else {
+        // For data URL images
+        const img = document.querySelector('#qrcode img');
+        if (img) {
+          const a = document.createElement('a');
+          a.href = img.src;
+          a.download = `ticket_${registrationData.ticketId}_qr.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+      }
+    }
+
+    // Load ticket on page load
+    loadTicket();
+  </script>
+</body>
+</html>

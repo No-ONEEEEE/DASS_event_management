@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Team - Event Management</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    .event-info {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .event-info h2 {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .event-info p {
+      color: #666;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e1e8ed;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .help-text {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .error-message {
+      background: #fee;
+      border: 1px solid #fcc;
+      color: #c33;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .info-box {
+      background: #e7f3ff;
+      border-left: 4px solid #667eea;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 25px;
+    }
+
+    .info-box h3 {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .info-box ul {
+      margin-left: 20px;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .info-box li {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎯 Create Your Team</h1>
+      <p>Form your team and invite members to join</p>
+    </div>
+
+    <div class="content">
+      <a href="#" class="back-link" onclick="goBack()">← Back to Event</a>
+
+      <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+      <div class="event-info" id="eventInfo">
+        <h2>Loading event details...</h2>
+      </div>
+
+      <div class="info-box">
+        <h3>📋 How Team Registration Works:</h3>
+        <ul>
+          <li>You (team leader) create the team and set the team size</li>
+          <li>Share the invite code or link with your team members</li>
+          <li>Team members join using the code/link</li>
+          <li>Registration is automatically created when all members join</li>
+          <li>All team members receive tickets upon completion</li>
+        </ul>
+      </div>
+
+      <form id="createTeamForm">
+        <div class="form-group">
+          <label for="teamName">Team Name *</label>
+          <input type="text" id="teamName" name="teamName" required placeholder="Enter a creative team name">
+        </div>
+
+        <div class="form-group">
+          <label for="teamSize">Team Size *</label>
+          <select id="teamSize" name="teamSize" required>
+            <!-- Options will be populated dynamically -->
+          </select>
+          <div class="help-text" id="teamSizeHelp"></div>
+        </div>
+
+        <button type="submit" class="btn" id="submitBtn">Create Team</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let eventData = null;
+    const eventId = window.location.pathname.split('/').pop();
+
+    async function loadEventDetails() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          window.location.href = '/auth/login';
+          return;
+        }
+
+        const response = await fetch(`/api/events/${eventId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch event');
+
+        eventData = await response.json();
+        displayEventInfo();
+        populateTeamSizeOptions();
+
+      } catch (error) {
+        showError('Error loading event details: ' + error.message);
+      }
+    }
+
+    function displayEventInfo() {
+      const eventInfo = document.getElementById('eventInfo');
+      eventInfo.innerHTML = `
+        <h2>${eventData.eventName}</h2>
+        <p><strong>Date:</strong> ${new Date(eventData.eventStartDate).toLocaleDateString()}</p>
+        <p><strong>Team Size:</strong> ${eventData.minTeamSize} - ${eventData.maxTeamSize} members</p>
+      `;
+    }
+
+    function populateTeamSizeOptions() {
+      const teamSizeSelect = document.getElementById('teamSize');
+      const helpText = document.getElementById('teamSizeHelp');
+      
+      teamSizeSelect.innerHTML = '';
+      
+      for (let i = eventData.minTeamSize; i <= eventData.maxTeamSize; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `${i} members`;
+        teamSizeSelect.appendChild(option);
+      }
+
+      helpText.textContent = `Choose between ${eventData.minTeamSize} and ${eventData.maxTeamSize} members`;
+    }
+
+    async function handleSubmit(e) {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating Team...';
+
+      try {
+        const token = localStorage.getItem('token');
+        const formData = {
+          eventId: eventId,
+          teamName: document.getElementById('teamName').value,
+          teamSize: parseInt(document.getElementById('teamSize').value)
+        };
+
+        const response = await fetch('/api/teams/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to create team');
+        }
+
+        // Redirect to team management page
+        window.location.href = `/team/manage/${data.team._id}`;
+
+      } catch (error) {
+        showError(error.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create Team';
+      }
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      setTimeout(() => {
+        errorDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+
+    document.getElementById('createTeamForm').addEventListener('submit', handleSubmit);
+
+    // Load event details on page load
+    loadEventDetails();
+  </script>
+</body>
+</html>

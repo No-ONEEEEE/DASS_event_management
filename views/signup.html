@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Event Management System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .signup-container {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 500px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      color: #999;
+      font-weight: bold;
+    }
+    .tab.active {
+      color: #667eea;
+      border-bottom-color: #667eea;
+    }
+    .form-group {
+      display: none;
+    }
+    .form-group.active {
+      display: block;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #5568d3;
+    }
+    .login-link {
+      text-align: center;
+      margin-top: 15px;
+      color: #666;
+    }
+    .login-link a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .message {
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      display: none;
+    }
+    .message.error {
+      background: #fee;
+      color: #c33;
+      border: 1px solid #fcc;
+    }
+    .message.success {
+      background: #efe;
+      color: #3c3;
+      border: 1px solid #cfc;
+    }
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 80px;
+    }
+    .password-wrapper {
+      position: relative;
+    }
+    .password-wrapper input {
+      padding-right: 40px;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #666;
+      font-size: 18px;
+      user-select: none;
+    }
+    .toggle-password:hover {
+      color: #667eea;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <h1>Participant Sign Up</h1>
+    
+    <div id="msg" class="message"></div>
+
+    <!-- Participant Signup -->
+    <form class="form-group active" id="participantForm">
+      <div class="input-group">
+        <label>First Name*</label>
+        <input type="text" id="p_firstName" required>
+      </div>
+      <div class="input-group">
+        <label>Last Name*</label>
+        <input type="text" id="p_lastName" required>
+      </div>
+      <div class="input-group">
+        <label>Email*</label>
+        <input type="email" id="p_email" required>
+      </div>
+      <div class="input-group">
+        <label>Password*</label>
+        <div class="password-wrapper">
+          <input type="password" id="p_password" required minlength="6">
+          <span class="toggle-password" onclick="togglePasswordVisibility('p_password')">👁️</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Confirm Password*</label>
+        <div class="password-wrapper">
+          <input type="password" id="p_confirmPassword" required minlength="6">
+          <span class="toggle-password" onclick="togglePasswordVisibility('p_confirmPassword')">👁️</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Contact Number*</label>
+        <input type="tel" id="p_contactNumber" required>
+      </div>
+      <div class="input-group">
+        <label>Participant Category*</label>
+        <select id="p_category" onchange="handleCategoryChange()">
+          <option value="">Select Category</option>
+          <option value="IIIT">IIIT Student</option>
+          <option value="Non-IIIT">Non-IIIT (External)</option>
+        </select>
+      </div>
+      <div class="input-group" id="collegeNameGroup" style="display:none;">
+        <label>College/Organization Name</label>
+        <input type="text" id="p_collegeName">
+      </div>
+      <div id="emailHint" style="color: #667eea; font-size: 12px; margin-top: -10px; margin-bottom: 10px; display:none;">
+        Please use your IIIT-issued email ID (@iiit.ac.in or @students.iiit.ac.in)
+      </div>
+      <button type="button" onclick="signupParticipant()">Sign Up</button>
+      <div class="login-link">
+        Already have an account? <a href="/auth/login">Login</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api';
+
+    function togglePasswordVisibility(fieldId) {
+      const passwordField = document.getElementById(fieldId);
+      const toggleIcon = passwordField.parentElement.querySelector('.toggle-password');
+      
+      if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleIcon.textContent = '🙈';
+      } else {
+        passwordField.type = 'password';
+        toggleIcon.textContent = '👁️';
+      }
+    }
+
+    function showMessage(msg, type = 'error') {
+      const msgEl = document.getElementById('msg');
+      msgEl.textContent = msg;
+      msgEl.className = 'message ' + type;
+      msgEl.style.display = 'block';
+    }
+
+    function handleCategoryChange() {
+      const category = document.getElementById('p_category').value;
+      const emailHint = document.getElementById('emailHint');
+      const collegeNameGroup = document.getElementById('collegeNameGroup');
+      
+      if (category === 'IIIT') {
+        emailHint.style.display = 'block';
+        collegeNameGroup.style.display = 'none';
+        document.getElementById('p_collegeName').value = 'IIIT Hyderabad';
+      } else if (category === 'Non-IIIT') {
+        emailHint.style.display = 'none';
+        collegeNameGroup.style.display = 'block';
+        document.getElementById('p_collegeName').value = '';
+      } else {
+        emailHint.style.display = 'none';
+        collegeNameGroup.style.display = 'none';
+      }
+    }
+
+    async function signupParticipant() {
+      const category = document.getElementById('p_category').value;
+      const email = document.getElementById('p_email').value;
+      const password = document.getElementById('p_password').value;
+      const confirmPassword = document.getElementById('p_confirmPassword').value;
+      
+      // Validate password match
+      if (password !== confirmPassword) {
+        showMessage('Passwords do not match. Please re-enter your password.', 'error');
+        return;
+      }
+      
+      // Validate password length
+      if (password.length < 6) {
+        showMessage('Password must be at least 6 characters long', 'error');
+        return;
+      }
+      
+      // Validate category selection
+      if (!category) {
+        showMessage('Please select your participant category', 'error');
+        return;
+      }
+      
+      // Validate IIIT email domain
+      if (category === 'IIIT') {
+        const iiitDomains = ['@iiit.ac.in', '@students.iiit.ac.in', '@research.iiit.ac.in'];
+        const isValidIIITEmail = iiitDomains.some(domain => email.toLowerCase().endsWith(domain));
+        
+        if (!isValidIIITEmail) {
+          showMessage('IIIT participants must use an IIIT-issued email ID (@iiit.ac.in, @students.iiit.ac.in, or @research.iiit.ac.in)', 'error');
+          return;
+        }
+      }
+      
+      const data = {
+        firstName: document.getElementById('p_firstName').value,
+        lastName: document.getElementById('p_lastName').value,
+        email: email,
+        password: password,
+        contactNumber: document.getElementById('p_contactNumber').value,
+        participantType: category === 'IIIT' ? 'Student' : 'Professional',
+        collegeName: document.getElementById('p_collegeName').value,
+        isIIITStudent: category === 'IIIT'
+      };
+
+      try {
+        const response = await fetch(`${API_URL}/auth/participant/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          showMessage('Account created successfully! Redirecting to login...', 'success');
+          setTimeout(() => window.location.href = '/auth/login', 2000);
+        } else {
+          showMessage(result.message, 'error');
+        }
+      } catch (error) {
+        showMessage('Signup failed: ' + error.message, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

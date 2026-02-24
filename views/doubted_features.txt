@@ -1,0 +1,2 @@
+Remove Club/Organizer: Admin can view list of all clubs/organizers; remove or disable
+accounts (removed clubs cannot log in); option to archive or permanently delete.

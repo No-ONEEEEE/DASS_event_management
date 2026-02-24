@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Event Management System</title>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-container {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .form-group {
+      display: block;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #5568d3;
+    }
+    .signup-link {
+      text-align: center;
+      margin-top: 15px;
+      color: #666;
+    }
+    .signup-link a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .message {
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      display: none;
+    }
+    .message.error {
+      background: #fee;
+      color: #c33;
+      border: 1px solid #fcc;
+    }
+    .message.success {
+      background: #efe;
+      color: #3c3;
+      border: 1px solid #cfc;
+    }
+    .recaptcha-container {
+      margin: 15px 0;
+      display: flex;
+      justify-content: center;
+    }
+    .user-type-tabs {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #eee;
+    }
+    .tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: #666;
+      font-size: 14px;
+      font-weight: bold;
+      transition: all 0.3s;
+      border-bottom: 3px solid transparent;
+    }
+    .tab:hover {
+      color: #667eea;
+      background: #f5f5f5;
+    }
+    .tab.active {
+      color: #667eea;
+      border-bottom-color: #667eea;
+    }
+    .password-wrapper {
+      position: relative;
+    }
+    .password-wrapper input {
+      padding-right: 40px;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #666;
+      font-size: 18px;
+      user-select: none;
+    }
+    .toggle-password:hover {
+      color: #667eea;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1 id="loginTitle">Login Portal</h1>
+
+    <!-- User Type Tabs -->
+    <div class="user-type-tabs">
+      <button class="tab active" onclick="switchTab('participant')">Participant</button>
+      <button class="tab" onclick="switchTab('organizer')">Organizer</button>
+      <button class="tab" onclick="switchTab('admin')">Admin</button>
+    </div>
+
+    <div id="msg" class="message"></div>
+
+    <!-- Login Form (same for all types) -->
+    <form class="form-group active" id="loginForm">
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" id="email" required>
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="password" required>
+          <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
+        </div>
+      </div>
+      <div class="recaptcha-container">
+        <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+      </div>
+      <button type="button" onclick="login()">Login</button>
+      <div class="signup-link" id="signupLink">
+        Don't have an account? <a href="/auth/signup">Sign up</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api';
+    let currentUserType = 'participant';
+
+    function showMessage(msg, type = 'error') {
+      const msgEl = document.getElementById('msg');
+      msgEl.textContent = msg;
+      msgEl.className = 'message ' + type;
+      msgEl.style.display = 'block';
+      setTimeout(() => msgEl.style.display = 'none', 5000);
+    }
+
+    function togglePasswordVisibility() {
+      const passwordField = document.getElementById('password');
+      const toggleIcon = document.querySelector('.toggle-password');
+      
+      if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleIcon.textContent = '🙈';
+      } else {
+        passwordField.type = 'password';
+        toggleIcon.textContent = '👁️';
+      }
+    }
+
+    function switchTab(userType) {
+      currentUserType = userType;
+      
+      // Update tab active state
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      // Show/hide signup link (only for participants)
+      const signupLink = document.getElementById('signupLink');
+      if (userType === 'participant') {
+        signupLink.style.display = 'block';
+      } else {
+        signupLink.style.display = 'none';
+      }
+      
+      // Clear form
+      document.getElementById('email').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('password').type = 'password';
+      document.querySelector('.toggle-password').textContent = '👁️';
+      if (typeof grecaptcha !== 'undefined') {
+        grecaptcha.reset();
+      }
+    }
+
+    async function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      // Validate reCAPTCHA
+      const recaptchaResponse = grecaptcha.getResponse();
+      if (!recaptchaResponse) {
+        showMessage('Please complete the reCAPTCHA verification', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/auth/${currentUserType}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('userType', data.userType);
+          
+          // Redirect based on user type
+          if (data.userType === 'participant') {
+            window.location.href = '/dashboard';
+          } else if (data.userType === 'organizer') {
+            window.location.href = '/organizer/dashboard';
+          } else if (data.userType === 'admin') {
+            window.location.href = '/admin/dashboard';
+          }
+        } else {
+          showMessage(data.message, 'error');
+        }
+      } catch (error) {
+        showMessage('Login failed: ' + error.message, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

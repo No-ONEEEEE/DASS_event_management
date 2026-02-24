@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>My Events Dashboard - Event Management System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+    header {
+      background: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    header h1 {
+      color: #333;
+    }
+    nav {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    nav a {
+      text-decoration: none;
+      color: #667eea;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .card h3 {
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+    .card .number {
+      font-size: 32px;
+      font-weight: bold;
+      color: #333;
+    }
+    .events-section {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .events-section h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .event-item {
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .event-item:hover {
+      background: #f9f9f9;
+    }
+    .event-info h4 {
+      color: #333;
+      margin-bottom: 5px;
+    }
+    .event-info p {
+      color: #999;
+      font-size: 14px;
+    }
+    .event-action {
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #5568d3;
+    }
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+    .logout-btn {
+      background: #dc3545;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .logout-btn:hover {
+      background: #c82333;
+    }
+    .logout-btn:hover {
+      background: #ee5a52;
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+    /* Tabs Style */
+    .tabs-container {
+      margin-top: 30px;
+    }
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid #e0e0e0;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 12px 24px;
+      background: transparent;
+      border: none;
+      color: #666;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+    }
+    .tab:hover {
+      color: #667eea;
+      background: #f5f7ff;
+    }
+    .tab.active {
+      color: #667eea;
+      border-bottom-color: #667eea;
+      background: #f5f7ff;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .ticket-id {
+      font-family: monospace;
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 12px;
+      color: #667eea;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .ticket-id:hover {
+      background: #e0e0e0;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+    .badge.registered { background: #28a745; color: white; }
+    .badge.completed { background: #6c757d; color: white; }
+    .badge.cancelled { background: #dc3545; color: white; }
+    .badge.rejected { background: #e15554; color: white; }
+    .badge.pending { background: #ffc107; color: #333; }
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Events Dashboard</h1>
+    <nav>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/browse-events">Browse Events</a>
+      <a href="/my-teams">My Teams</a>
+      <a href="/profile">Profile</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="grid" id="statsGrid">
+      <div class="loading">Loading...</div>
+    </div>
+
+    <div class="events-section">
+      <h2>My Upcoming Events</h2>
+      <div id="eventsContainer">
+        <div class="loading">Loading events...</div>
+      </div>
+    </div>
+
+    <div class="events-section tabs-container">
+      <h2>Participation History</h2>
+      <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Categorized record of your event participation</p>
+      
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('normal')">Normal</button>
+        <button class="tab" onclick="switchTab('merchandise')">Merchandise</button>
+        <button class="tab" onclick="switchTab('completed')">Completed</button>
+        <button class="tab" onclick="switchTab('cancelled')">Cancelled/Rejected</button>
+      </div>
+
+      <div id="normal-tab" class="tab-content active">
+        <div id="normalContainer" class="loading">Loading...</div>
+      </div>
+
+      <div id="merchandise-tab" class="tab-content">
+        <div id="merchandiseContainer" class="loading">Loading...</div>
+      </div>
+
+      <div id="completed-tab" class="tab-content">
+        <div id="completedContainer" class="loading">Loading...</div>
+      </div>
+
+      <div id="cancelled-tab" class="tab-content">
+        <div id="cancelledContainer" class="loading">Loading...</div>
+      </div>
+    </div>
+
+    <div class="events-section" style="margin-top: 20px;">
+      <h2>Recommended for You</h2>
+      <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Based on your interests and followed clubs</p>
+      <div id="recommendedContainer">
+        <div class="loading">Loading recommendations...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/config.js"></script>
+  <script>
+    const token = localStorage.getItem('token');
+    const userType = localStorage.getItem('userType');
+
+    if (!token) {
+      window.location.href = '/auth/login';
+    }
+
+    async function loadDashboard() {
+      try {
+        const response = await fetch(`${API_URL}/participants/dashboard`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            localStorage.clear();
+            window.location.href = '/auth/login';
+          }
+          return;
+        }
+
+        const data = await response.json();
+        displayStats(data.stats);
+        displayEvents(data.upcomingEvents);
+        displayParticipationHistory(data.participationHistory);
+        loadRecommendedEvents();
+      } catch (error) {
+        console.error('Error loading dashboard:', error);
+      }
+    }
+
+    function displayStats(stats) {
+      const html = `
+        <div class="card">
+          <h3>Upcoming Events</h3>
+          <div class="number">${stats.upcomingCount}</div>
+        </div>
+        <div class="card">
+          <h3>Completed Events</h3>
+          <div class="number">${stats.completedCount}</div>
+        </div>
+        <div class="card">
+          <h3>Followed Clubs</h3>
+          <div class="number">${stats.followedClubsCount}</div>
+        </div>
+        <div class="card">
+          <h3>Cancelled Events</h3>
+          <div class="number">${stats.cancelledCount}</div>
+        </div>
+      `;
+      document.getElementById('statsGrid').innerHTML = html;
+    }
+
+    function displayEvents(events) {
+      if (events.length === 0) {
+        document.getElementById('eventsContainer').innerHTML = '<p>No upcoming events</p>';
+        return;
+      }
+
+      let html = '';
+      events.forEach(event => {
+        const eventDate = new Date(event.eventId.eventStartDate).toLocaleDateString();
+        const organizer = event.eventId.organizerId?.organizerName || 'Unknown';
+        html += `
+          <div class="event-item">
+            <div class="event-info">
+              <h4>${event.eventId.eventName}</h4>
+              <p>📅 ${eventDate} | 🎯 ${event.eventId.eventType} | By: ${organizer} | Status: ${event.status}</p>
+            </div>
+            <div class="event-action">
+              <button class="btn-primary" onclick="viewEvent('${event.eventId._id}')">View</button>
+              <button class="btn-secondary" onclick="viewTicket('${event._id}')">Ticket</button>
+            </div>
+          </div>
+        `;
+      });
+      document.getElementById('eventsContainer').innerHTML = html;
+    }
+
+    function displayParticipationHistory(history) {
+      displayCategoryEvents(history.normal, 'normalContainer');
+      displayCategoryEvents(history.merchandise, 'merchandiseContainer');
+      displayCategoryEvents(history.completed, 'completedContainer');
+      displayCategoryEvents(history.cancelled, 'cancelledContainer');
+    }
+
+    function displayCategoryEvents(events, containerId) {
+      const container = document.getElementById(containerId);
+      
+      // Debug logging
+      if (containerId === 'merchandiseContainer') {
+        console.log('Merchandise events:', events);
+        events.forEach(event => {
+          console.log('Event details:', {
+            name: event.eventId?.eventName,
+            eventType: event.eventId?.eventType,
+            eventStatus: event.eventId?.status,
+            registrationStatus: event.status,
+            hasMerchandise: !!event.eventId?.merchandise,
+            merchandiseItems: event.eventId?.merchandise?.items?.length
+          });
+        });
+      }
+      
+      if (events.length === 0) {
+        container.innerHTML = '<div class="empty-state">No events in this category</div>';
+        return;
+      }
+
+      let html = '';
+      events.forEach(event => {
+        if (!event.eventId) return;
+        
+        const eventDate = new Date(event.eventId.eventStartDate).toLocaleDateString();
+        const organizer = event.eventId.organizerId?.organizerName || 'Unknown';
+        const teamName = event.teamName ? `<br>👥 Team: ${event.teamName}` : '';
+        const statusClass = event.status.toLowerCase().replace(' ', '-');
+        
+        // Check if this is an ongoing merchandise event
+        const isMerchandiseOngoing = event.eventId.eventType === 'Merchandise' && 
+                                      event.eventId.status === 'Ongoing' &&
+                                      event.status === 'Registered';
+        
+        console.log(`Event ${event.eventId.eventName}: isMerchandiseOngoing = ${isMerchandiseOngoing}`);
+        
+        const shopButton = isMerchandiseOngoing ? 
+          `<button class="btn-primary" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);" onclick="openMerchandiseShop('${event.eventId._id}', '${event._id}')">🛒 Shop Now</button>` : '';
+        
+        html += `
+          <div class="event-item">
+            <div class="event-info">
+              <h4>${event.eventId.eventName} <span class="badge ${statusClass}">${event.status}</span></h4>
+              <p>
+                📅 ${eventDate} | 🎯 ${event.eventId.eventType} | By: ${organizer} ${teamName}<br>
+                🎫 Ticket ID: <span class="ticket-id" onclick="viewTicket('${event._id}')">${event._id.substring(0, 8)}...</span>
+                ${event.eventId.status ? `| Event Status: ${event.eventId.status}` : ''}
+              </p>
+            </div>
+            <div class="event-action" style="display: flex; gap: 10px;">
+              ${shopButton}
+              <button class="btn-primary" onclick="viewEvent('${event.eventId._id}')">View Event</button>
+              <button class="btn-secondary" onclick="viewTicket('${event._id}')">Full Ticket</button>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function switchTab(tabName) {
+      // Update tab buttons
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // Update tab content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById(`${tabName}-tab`).classList.add('active');
+    }
+
+    function viewEvent(eventId) {
+      window.location.href = `/event/${eventId}`;
+    }
+
+    function viewTicket(registrationId) {
+      window.location.href = `/ticket/${registrationId}`;
+    }
+
+    async function loadRecommendedEvents() {
+      try {
+        const response = await fetch(`${API_URL}/participants/recommended-events`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.status === 401) {
+          return;
+        }
+
+        if (response.ok) {
+          const events = await response.json();
+          displayRecommendedEvents(events);
+        } else {
+          document.getElementById('recommendedContainer').innerHTML = '<p style="color: #666;">Set your preferences to get personalized recommendations</p>';
+        }
+      } catch (error) {
+        console.error('Error loading recommended events:', error);
+        document.getElementById('recommendedContainer').innerHTML = '<p style="color: #c33;">Failed to load recommendations</p>';
+      }
+    }
+
+    function displayRecommendedEvents(events) {
+      if (events.length === 0) {
+        document.getElementById('recommendedContainer').innerHTML = '<p style="color: #666;">No recommendations yet. <a href="/onboarding" style="color: #667eea;">Set your preferences</a> or <a href="/browse-events" style="color: #667eea;">browse all events</a></p>';
+        return;
+      }
+
+      let html = '';
+      events.forEach(event => {
+        const eventDate = new Date(event.eventStartDate).toLocaleDateString();
+        const organizer = event.organizerId?.organizerName || 'Unknown';
+        const category = event.organizerId?.category || '';
+        html += `
+          <div class="event-item">
+            <div class="event-info">
+              <h4>${event.eventName}</h4>
+              <p>📅 ${eventDate} | 🎯 ${category} | By: ${organizer}</p>
+            </div>
+            <div class="event-action">
+              <button class="btn-primary" onclick="viewEvent('${event._id}')">View Details</button>
+            </div>
+          </div>
+        `;
+      });
+      document.getElementById('recommendedContainer').innerHTML = html;
+    }
+
+    function logout() {
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.replace('/login.html');
+    }
+
+    // Check authentication on page visibility
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          window.location.replace('/login.html');
+        }
+      }
+    });
+
+    // Prevent back button after logout
+    window.history.pushState(null, null, window.location.href);
+    window.onpopstate = function() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.replace('/login.html');
+      } else {
+        window.history.pushState(null, null, window.location.href);
+      }
+    };
+
+    // Merchandise shopping cart state
+    let shoppingCart = [];
+    let currentMerchandiseEvent = null;
+    let currentRegistrationId = null;
+
+    async function openMerchandiseShop(eventId, registrationId) {
+      try {
+        console.log('Opening shop for event:', eventId, 'registration:', registrationId);
+        
+        // Fetch event details with merchandise items
+        const response = await fetch(`${API_URL}/events/${eventId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch event details');
+        }
+
+        const event = await response.json();
+        console.log('Event data received:', event);
+        
+        // Validate merchandise data
+        if (!event.merchandise || !event.merchandise.items || event.merchandise.items.length === 0) {
+          alert('No merchandise items available for this event');
+          return;
+        }
+        
+        currentMerchandiseEvent = event;
+        currentRegistrationId = registrationId;
+        shoppingCart = [];
+
+        // Create modal HTML
+        const modalHTML = `
+          <div id="merchandiseShopModal" style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; overflow-y: auto;">
+            <div style="background: white; max-width: 900px; margin: 50px auto; border-radius: 15px; padding: 30px; position: relative;">
+              <button onclick="closeMerchandiseShop()" style="position: absolute; top: 20px; right: 20px; background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">✕ Close</button>
+              
+              <h2 style="color: #333; margin-bottom: 10px; padding-right: 80px;">🛒 ${event.eventName} - Shop</h2>
+              <p style="color: #666; margin-bottom: 30px;">Select items and quantities to purchase</p>
+              
+              <div id="merchandiseItemsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                ${renderMerchandiseItems(event.merchandise.items)}
+              </div>
+              
+              <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #667eea;">
+                <h3 style="color: #333; margin-bottom: 15px;">🛍️ Shopping Cart</h3>
+                <div id="cartItemsContainer" style="min-height: 60px;">
+                  <p style="color: #999; text-align: center; padding: 20px;">Your cart is empty</p>
+                </div>
+                <div style="border-top: 2px solid #ddd; margin-top: 15px; padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                  <h3 style="color: #333;">Total: ₹<span id="cartTotal">0</span></h3>
+                  <button onclick="submitMerchandisePurchase()" id="checkoutBtn" disabled style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border: none; padding: 15px 40px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s;">
+                    Checkout & Pay
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+      } catch (error) {
+        console.error('Error opening merchandise shop:', error);
+        alert('Failed to load merchandise shop: ' + error.message);
+      }
+    }
+
+    function renderMerchandiseItems(items) {
+      return items.map((item, index) => `
+        <div style="background: white; border: 2px solid #ddd; border-radius: 10px; padding: 20px; transition: all 0.3s;" onmouseover="this.style.borderColor='#667eea'; this.style.boxShadow='0 4px 12px rgba(102,126,234,0.3)';" onmouseout="this.style.borderColor='#ddd'; this.style.boxShadow='none';">
+          <h4 style="color: #333; margin-bottom: 10px; font-size: 18px;">${item.itemName}</h4>
+          <p style="color: #667eea; font-size: 24px; font-weight: bold; margin-bottom: 15px;">₹${item.pricePerItem}</p>
+          
+          ${item.size && item.size.length > 0 ? `
+            <div style="margin-bottom: 15px;">
+              <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333; font-size: 13px;">Size:</label>
+              <select id="size_${index}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                <option value="">Select Size</option>
+                ${item.size.map(s => `<option value="${s}">${s}</option>`).join('')}
+              </select>
+            </div>
+          ` : ''}
+          
+          ${item.color && item.color.length > 0 ? `
+            <div style="margin-bottom: 15px;">
+              <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333; font-size: 13px;">Color:</label>
+              <select id="color_${index}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                <option value="">Select Color</option>
+                ${item.color.map(c => `<option value="${c}">${c}</option>`).join('')}
+              </select>
+            </div>
+          ` : ''}
+          
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333; font-size: 13px;">Quantity:</label>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <button onclick="changeQuantity(${index}, -1)" style="background: #dc3545; color: white; border: none; width: 35px; height: 35px; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold;">−</button>
+              <input type="number" id="qty_${index}" value="0" min="0" max="${item.maxPurchasePerParticipant || item.quantity}" readonly style="width: 60px; text-align: center; padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; font-weight: bold;">
+              <button onclick="changeQuantity(${index}, 1)" style="background: #28a745; color: white; border: none; width: 35px; height: 35px; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold;">+</button>
+            </div>
+            <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+              Available: ${item.quantity} | Max: ${item.maxPurchasePerParticipant || item.quantity}
+            </small>
+          </div>
+          
+          <button onclick="addToCart(${index})" style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s;">
+            Add to Cart
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function changeQuantity(itemIndex, delta) {
+      const qtyInput = document.getElementById(`qty_${itemIndex}`);
+      const currentQty = parseInt(qtyInput.value) || 0;
+      const maxQty = parseInt(qtyInput.max);
+      const newQty = Math.max(0, Math.min(maxQty, currentQty + delta));
+      qtyInput.value = newQty;
+    }
+
+    function addToCart(itemIndex) {
+      const item = currentMerchandiseEvent.merchandise.items[itemIndex];
+      const qtyInput = document.getElementById(`qty_${itemIndex}`);
+      const quantity = parseInt(qtyInput.value) || 0;
+
+      if (quantity === 0) {
+        alert('Please select a quantity greater than 0');
+        return;
+      }
+
+      // Get size and color if applicable
+      const sizeSelect = document.getElementById(`size_${itemIndex}`);
+      const colorSelect = document.getElementById(`color_${itemIndex}`);
+      
+      const size = sizeSelect ? sizeSelect.value : null;
+      const color = colorSelect ? colorSelect.value : null;
+
+      // Validate size and color if required
+      if (item.size && item.size.length > 0 && !size) {
+        alert('Please select a size');
+        return;
+      }
+      if (item.color && item.color.length > 0 && !color) {
+        alert('Please select a color');
+        return;
+      }
+
+      // Add to cart
+      const cartItem = {
+        itemIndex: itemIndex,
+        itemId: item._id,
+        itemName: item.itemName,
+        pricePerItem: item.pricePerItem,
+        quantity: quantity,
+        size: size,
+        color: color,
+        subtotal: item.pricePerItem * quantity
+      };
+
+      // Check if item already in cart (same item, size, color)
+      const existingIndex = shoppingCart.findIndex(ci => 
+        ci.itemIndex === itemIndex && ci.size === size && ci.color === color
+      );
+
+      if (existingIndex >= 0) {
+        shoppingCart[existingIndex].quantity += quantity;
+        shoppingCart[existingIndex].subtotal = shoppingCart[existingIndex].quantity * item.pricePerItem;
+      } else {
+        shoppingCart.push(cartItem);
+      }
+
+      // Reset quantity selector
+      qtyInput.value = 0;
+      if (sizeSelect) sizeSelect.value = '';
+      if (colorSelect) colorSelect.value = '';
+
+      updateCartDisplay();
+    }
+
+    function updateCartDisplay() {
+      const cartContainer = document.getElementById('cartItemsContainer');
+      const totalElement = document.getElementById('cartTotal');
+      const checkoutBtn = document.getElementById('checkoutBtn');
+
+      if (shoppingCart.length === 0) {
+        cartContainer.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Your cart is empty</p>';
+        totalElement.textContent = '0';
+        checkoutBtn.disabled = true;
+        checkoutBtn.style.opacity = '0.5';
+        checkoutBtn.style.cursor = 'not-allowed';
+        return;
+      }
+
+      let total = 0;
+      let html = '';
+      
+      shoppingCart.forEach((item, index) => {
+        total += item.subtotal;
+        const sizeColor = [item.size, item.color].filter(Boolean).join(', ');
+        html += `
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border-radius: 5px; margin-bottom: 10px;">
+            <div style="flex: 1;">
+              <strong style="color: #333;">${item.itemName}</strong>
+              ${sizeColor ? `<span style="color: #666; font-size: 13px;"> (${sizeColor})</span>` : ''}
+              <br>
+              <small style="color: #666;">₹${item.pricePerItem} × ${item.quantity} = ₹${item.subtotal}</small>
+            </div>
+            <button onclick="removeFromCart(${index})" style="background: #dc3545; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer;">Remove</button>
+          </div>
+        `;
+      });
+
+      cartContainer.innerHTML = html;
+      totalElement.textContent = total;
+      checkoutBtn.disabled = false;
+      checkoutBtn.style.opacity = '1';
+      checkoutBtn.style.cursor = 'pointer';
+    }
+
+    function removeFromCart(index) {
+      shoppingCart.splice(index, 1);
+      updateCartDisplay();
+    }
+
+    async function submitMerchandisePurchase() {
+      if (shoppingCart.length === 0) {
+        alert('Your cart is empty');
+        return;
+      }
+
+      if (!confirm(`Confirm purchase of ${shoppingCart.length} item(s) for ₹${document.getElementById('cartTotal').textContent}?`)) {
+        return;
+      }
+
+      try {
+        // Prepare purchase data
+        const purchaseData = {
+          items: shoppingCart.map(item => ({
+            itemId: item.itemId,
+            quantity: item.quantity,
+            selectedSize: item.size,
+            selectedColor: item.color
+          })),
+          totalAmount: parseInt(document.getElementById('cartTotal').textContent),
+          paymentStatus: 'Pending'
+        };
+
+        // Update registration with merchandise purchase
+        const response = await fetch(`${API_URL}/registrations/${currentRegistrationId}/add-merchandise`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ merchandisePurchase: purchaseData })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          alert('Merchandise purchase successful! Total: ₹' + purchaseData.totalAmount);
+          closeMerchandiseShop();
+          loadDashboard(); // Refresh dashboard
+        } else {
+          alert(result.message || 'Failed to complete purchase');
+        }
+      } catch (error) {
+        console.error('Error submitting purchase:', error);
+        alert('Failed to submit purchase. Please try again.');
+      }
+    }
+
+    function closeMerchandiseShop() {
+      const modal = document.getElementById('merchandiseShopModal');
+      if (modal) {
+        modal.remove();
+      }
+      shoppingCart = [];
+      currentMerchandiseEvent = null;
+      currentRegistrationId = null;
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>

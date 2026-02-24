@@ -1,0 +1,61 @@
+====================================================================
+         EVENT MANAGEMENT SYSTEM - DEPLOYMENT INFORMATION
+====================================================================
+
+📌 EVALUATION URLS (Update these after deployment):
+
+Frontend URL: https://your-event-management.vercel.app
+Backend API URL: https://your-backend-api.onrender.com/api
+
+====================================================================
+
+🗄️ DATABASE:
+- Platform: MongoDB Atlas (Free Tier)
+- Database Name: event_management
+- Connection: Via MONGO_URI environment variable
+- Status: ✅ Already configured and running
+
+🖥️ BACKEND DEPLOYMENT:
+- Platform: Render / Railway / Fly.io (Choose one)
+- Runtime: Node.js
+- Start Command: npm start
+- Build Command: npm install
+- Environment Variables Required:
+  * MONGO_URI (MongoDB connection string)
+  * JWT_SECRET (Secret key for authentication)
+  * PORT (Default: 5000)
+  * NODE_ENV (Set to: production)
+  * FRONTEND_URL (Your Vercel/Netlify URL)
+
+🌐 FRONTEND DEPLOYMENT:
+- Platform: Vercel / Netlify (Choose one)
+- Type: Static Site
+- Root Directory: ./
+- Output Directory: views
+- Build Command: None (static files)
+
+📝 DEPLOYMENT STEPS:
+
+1. Setup GitHub Repository
+   - Push code to GitHub
+   - Ensure .env is in .gitignore
+
+2. Deploy Backend (Render):
+   - Connect GitHub repository
+   - Add environment variables
+   - Deploy automatically
+
+3. Deploy Frontend (Vercel):
+   - Connect GitHub repository  
+   - Update config.js with backend URL
+   - Deploy automatically
+
+4. Update This File:
+   - Add your actual deployment URLs above
+   - Submit for evaluation
+
+📖 Detailed Instructions: See DEPLOYMENT_GUIDE.md
+
+====================================================================
+Last Updated: 2026-02-21
+====================================================================

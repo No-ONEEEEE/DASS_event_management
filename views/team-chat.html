@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Chat - Event Management</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .chat-container {
+      display: flex;
+      height: 100vh;
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .sidebar {
+      width: 300px;
+      background: #2c3e50;
+      color: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-header {
+      padding: 20px;
+      background: #34495e;
+      border-bottom: 1px solid #1a252f;
+    }
+
+    .team-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .event-name {
+      font-size: 13px;
+      color: #bdc3c7;
+    }
+
+    .members-section {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+    }
+
+    .members-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #95a5a6;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .member-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 5px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .member-item:hover {
+      background: #34495e;
+    }
+
+    .member-avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: #667eea;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-right: 12px;
+      position: relative;
+    }
+
+    .online-indicator {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      background: #2ecc71;
+      border: 2px solid #2c3e50;
+      border-radius: 50%;
+    }
+
+    .offline-indicator {
+      background: #95a5a6;
+    }
+
+    .member-info {
+      flex: 1;
+    }
+
+    .member-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .member-status {
+      font-size: 11px;
+      color: #2ecc71;
+    }
+
+    .member-status.offline {
+      color: #95a5a6;
+    }
+
+    .leader-badge {
+      background: #f39c12;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .sidebar-footer {
+      padding: 15px;
+      background: #34495e;
+      border-top: 1px solid #1a252f;
+    }
+
+    .back-btn {
+      width: 100%;
+      padding: 10px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .back-btn:hover {
+      background: #5568d3;
+    }
+
+    .chat-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #ecf0f1;
+    }
+
+    .chat-header {
+      padding: 20px 25px;
+      background: white;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .chat-info {
+      font-size: 13px;
+      color: #7f8c8d;
+      margin-top: 3px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .notification-badge {
+      position: relative;
+    }
+
+    .badge-count {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #e74c3c;
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .messages-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .message {
+      display: flex;
+      gap: 12px;
+      max-width: 70%;
+      animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.own {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #667eea;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .message-content {
+      flex: 1;
+    }
+
+    .message-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .message-sender {
+      font-weight: 600;
+      font-size: 14px;
+      color: #2c3e50;
+    }
+
+    .message-time {
+      font-size: 11px;
+      color: #95a5a6;
+    }
+
+    .message-bubble {
+      background: white;
+      padding: 12px 15px;
+      border-radius: 12px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      word-wrap: break-word;
+    }
+
+    .message.own .message-bubble {
+      background: #667eea;
+      color: white;
+    }
+
+    .message-bubble.file {
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+    }
+
+    .message.own .message-bubble.file {
+      background: #5568d3;
+      border-left: 4px solid #3949ab;
+    }
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+
+    .file-info:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .message.own .file-info:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .file-icon {
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+
+    .file-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .file-name {
+      font-weight: 600;
+      margin-bottom: 2px;
+      word-break: break-word;
+    }
+
+    .file-size {
+      font-size: 11px;
+      opacity: 0.8;
+    }
+
+    .link-preview {
+      background: #e3f2fd;
+      border-left: 4px solid #2196f3;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+
+    .link-title {
+      font-weight: 600;
+      margin-bottom: 3px;
+      color: #1976d2;
+    }
+
+    .link-url {
+      font-size: 12px;
+      color: #666;
+      word-break: break-all;
+    }
+
+    .typing-indicator {
+      padding: 10px 25px;
+      font-size: 13px;
+      color: #7f8c8d;
+      font-style: italic;
+      min-height: 30px;
+    }
+
+    .typing-dots {
+      display: inline-block;
+    }
+
+    .typing-dots span {
+      animation: blink 1.4s infinite;
+      animation-fill-mode: both;
+    }
+
+    .typing-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes blink {
+      0%, 80%, 100% { opacity: 0; }
+      40% { opacity: 1; }
+    }
+
+    .input-container {
+      padding: 20px 25px;
+      background: white;
+      border-top: 1px solid #ddd;
+    }
+
+    .input-wrapper {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .input-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .action-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid #ddd;
+      background: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #7f8c8d;
+      transition: all 0.3s;
+    }
+
+    .action-btn:hover {
+      background: #ecf0f1;
+      color: #2c3e50;
+    }
+
+    .message-input {
+      flex: 1;
+      min-height: 40px;
+      max-height: 120px;
+      padding: 10px 15px;
+      border: 2px solid #ddd;
+      border-radius: 20px;
+      font-family: inherit;
+      font-size: 14px;
+      resize: none;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .message-input:focus {
+      border-color: #667eea;
+    }
+
+    .send-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: #667eea;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: background 0.3s;
+    }
+
+    .send-btn:hover {
+      background: #5568d3;
+    }
+
+    .send-btn:disabled {
+      background: #95a5a6;
+      cursor: not-allowed;
+    }
+
+    .system-message {
+      text-align: center;
+      padding: 8px 15px;
+      font-size: 12px;
+      color: #7f8c8d;
+      background: rgba(0,0,0,0.05);
+      border-radius: 15px;
+      align-self: center;
+      max-width: 80%;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #7f8c8d;
+    }
+
+    .loading-spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .modal-header {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .modal-body input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+    }
+
+    .btn-secondary {
+      background: #ecf0f1;
+      color: #2c3e50;
+    }
+
+    .btn-secondary:hover {
+      background: #bdc3c7;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: absolute;
+        left: -300px;
+        transition: left 0.3s;
+        z-index: 100;
+      }
+
+      .sidebar.show {
+        left: 0;
+      }
+
+      .message {
+        max-width: 85%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="team-name" id="teamName">Loading...</div>
+        <div class="event-name" id="eventName">Event Name</div>
+      </div>
+
+      <div class="members-section">
+        <div class="members-title">TEAM MEMBERS</div>
+        <div id="membersList">
+          <!-- Members will be populated here -->
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="back-btn" onclick="goBack()">← Back to Team</button>
+      </div>
+    </div>
+
+    <!-- Main Chat Area -->
+    <div class="chat-main">
+      <div class="chat-header">
+        <div>
+          <div class="chat-title" id="chatTitle">Team Chat</div>
+          <div class="chat-info"><span id="onlineCount">0</span> members online</div>
+        </div>
+      </div>
+
+      <div id="messagesContainer" class="messages-container">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <p>Connecting to chat...</p>
+        </div>
+      </div>
+
+      <div class="typing-indicator" id="typingIndicator"></div>
+
+      <div class="input-container">
+        <div class="input-wrapper">
+          <div class="input-actions">
+            <button class="action-btn" onclick="attachFile()" title="Attach file">📎</button>
+            <button class="action-btn" onclick="shareLink()" title="Share link">🔗</button>
+            <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect()" />
+          </div>
+          <textarea 
+            id="messageInput" 
+            class="message-input" 
+            placeholder="Type a message..."
+            rows="1"
+          ></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+            ➤
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Link Share Modal -->
+  <div id="linkModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">Share a Link</div>
+      <div class="modal-body">
+        <input type="text" id="linkUrlInput" placeholder="Enter URL" />
+        <input type="text" id="linkTitleInput" placeholder="Link title (optional)" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeLinkModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitLink()">Share</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api';
+    const token = localStorage.getItem('token');
+    let socket = null;
+    let teamData = null;
+    let currentUserId = null;
+    let messages = [];
+    let onlineUsers = new Set();
+    let typingTimeout = null;
+    let isTyping = false;
+
+    const teamId = window.location.pathname.split('/')[2];
+
+    if (!token) {
+      window.location.href = '/auth/login';
+    }
+
+    // Get current user ID from token
+    currentUserId = JSON.parse(atob(token.split('.')[1])).id;
+
+    // Initialize
+    async function init() {
+      try {
+        await loadTeamData();
+        await initSocket();
+        await loadMessages();
+      } catch (error) {
+        console.error('Initialization error:', error);
+        showError('Failed to initialize chat');
+      }
+    }
+
+    // Load team data
+    async function loadTeamData() {
+      const response = await fetch(`${API_URL}/teams/${teamId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (!response.ok) throw new Error('Failed to load team');
+
+      const data = await response.json();
+      teamData = data.team;
+
+      document.getElementById('teamName').textContent = teamData.teamName;
+      document.getElementById('eventName').textContent = teamData.eventId.eventName;
+      document.getElementById('chatTitle').textContent = `${teamData.teamName} Chat`;
+
+      renderMembers();
+    }
+
+    // Render team members
+    function renderMembers() {
+      const container = document.getElementById('membersList');
+      let html = '';
+
+      // Add leader
+      const isLeaderOnline = onlineUsers.has(teamData.teamLeaderId._id);
+      html += `
+        <div class="member-item">
+          <div class="member-avatar">
+            ${teamData.teamLeaderId.firstName.charAt(0)}${teamData.teamLeaderId.lastName.charAt(0)}
+            <div class="online-indicator ${isLeaderOnline ? '' : 'offline-indicator'}"></div>
+          </div>
+          <div class="member-info">
+            <div class="member-name">${teamData.teamLeaderId.firstName} ${teamData.teamLeaderId.lastName}</div>
+            <div class="member-status ${isLeaderOnline ? '' : 'offline'}">
+              ${isLeaderOnline ? 'Online' : 'Offline'}
+            </div>
+          </div>
+          <span class="leader-badge">👑 Leader</span>
+        </div>
+      `;
+
+      // Add members
+      teamData.members.filter(m => m.status === 'accepted').forEach(member => {
+        const isOnline = onlineUsers.has(member.participantId._id);
+        html += `
+          <div class="member-item">
+            <div class="member-avatar">
+              ${member.participantId.firstName.charAt(0)}${member.participantId.lastName.charAt(0)}
+              <div class="online-indicator ${isOnline ? '' : 'offline-indicator'}"></div>
+            </div>
+            <div class="member-info">
+              <div class="member-name">${member.participantId.firstName} ${member.participantId.lastName}</div>
+              <div class="member-status ${isOnline ? '' : 'offline'}">
+                ${isOnline ? 'Online' : 'Offline'}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      updateOnlineCount();
+    }
+
+    // Initialize Socket.IO
+    function initSocket() {
+      socket = io('http://localhost:5000', {
+        auth: { token }
+      });
+
+      socket.on('connect', () => {
+        console.log('Connected to chat server');
+        socket.emit('join-team', teamId);
+      });
+
+      socket.on('online-users', (data) => {
+        onlineUsers = new Set(data.users.map(u => u.userId));
+        renderMembers();
+      });
+
+      socket.on('user-joined', (data) => {
+        onlineUsers.add(data.userId);
+        renderMembers();
+        addSystemMessage(`${data.userName} joined the chat`);
+      });
+
+      socket.on('user-left', (data) => {
+        onlineUsers.delete(data.userId);
+        renderMembers();
+        addSystemMessage(`${data.userName} left the chat`);
+      });
+
+      socket.on('new-message', (data) => {
+        messages.push(data.message);
+        renderMessages();
+        scrollToBottom();
+        
+        // Play notification sound for messages from others
+        if (data.message.senderId._id !== currentUserId) {
+          playNotification();
+        }
+      });
+
+      socket.on('typing-update', (data) => {
+        updateTypingIndicator(data);
+      });
+
+      socket.on('error', (error) => {
+        console.error('Socket error:', error);
+        showError(error.message);
+      });
+
+      socket.on('disconnect', () => {
+        console.log('Disconnected from chat server');
+        showError('Disconnected from chat. Reconnecting...');
+      });
+    }
+
+    // Load message history
+    async function loadMessages() {
+      try {
+        const response = await fetch(`${API_URL}/chat/team/${teamId}/messages`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) throw new Error('Failed to load messages');
+
+        const data = await response.json();
+        messages = data.messages;
+        renderMessages();
+        scrollToBottom();
+      } catch (error) {
+        console.error('Error loading messages:', error);
+        showError('Failed to load messages');
+      }
+    }
+
+    // Render messages
+    function renderMessages() {
+      const container = document.getElementById('messagesContainer');
+      container.innerHTML = '';
+
+      messages.forEach(message => {
+        const messageEl = createMessageElement(message);
+        container.appendChild(messageEl);
+      });
+    }
+
+    // Create message element
+    function createMessageElement(message) {
+      const div = document.createElement('div');
+      const isOwn = message.senderId._id === currentUserId;
+
+      if (message.messageType === 'system') {
+        div.className = 'system-message';
+        div.textContent = message.content;
+        return div;
+      }
+
+      div.className = `message ${isOwn ? 'own' : ''}`;
+
+      const initials = message.senderId.firstName.charAt(0) + message.senderId.lastName.charAt(0);
+      const time = new Date(message.createdAt).toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+
+      let bubbleContent = '';
+      
+      if (message.messageType === 'file') {
+        const fileIcon = getFileIcon(message.fileName);
+        bubbleContent = `
+          <a href="${message.fileUrl}" download="${message.fileName}" target="_blank" style="text-decoration: none; color: inherit;">
+            <div class="file-info">
+              <div class="file-icon">${fileIcon}</div>
+              <div class="file-details">
+                <div class="file-name">${escapeHtml(message.fileName)}</div>
+                <div class="file-size">${formatFileSize(message.fileSize)} • Click to download</div>
+              </div>
+            </div>
+          </a>
+        `;
+      } else if (message.messageType === 'link') {
+        bubbleContent = `
+          <div>${message.content}</div>
+          <div class="link-preview">
+            <div class="link-title">${message.linkTitle || 'Shared Link'}</div>
+            <div class="link-url">
+              <a href="${message.linkUrl}" target="_blank">${message.linkUrl}</a>
+            </div>
+          </div>
+        `;
+      } else {
+        bubbleContent = escapeHtml(message.content);
+      }
+
+      div.innerHTML = `
+        <div class="message-avatar">${initials}</div>
+        <div class="message-content">
+          <div class="message-header">
+            <span class="message-sender">${message.senderName}</span>
+            <span class="message-time">${time}</span>
+          </div>
+          <div class="message-bubble ${message.messageType}">${bubbleContent}</div>
+        </div>
+      `;
+
+      return div;
+    }
+
+    // Add system message
+    function addSystemMessage(text) {
+      const systemMsg = {
+        messageType: 'system',
+        content: text,
+        createdAt: new Date(),
+        senderId: { _id: 'system' }
+      };
+      messages.push(systemMsg);
+      renderMessages();
+      scrollToBottom();
+    }
+
+    // Send message
+    function sendMessage() {
+      const input = document.getElementById('messageInput');
+      const content = input.value.trim();
+
+      if (!content) return;
+
+      socket.emit('send-message', {
+        teamId,
+        content,
+        messageType: 'text'
+      });
+
+      input.value = '';
+      input.style.height = 'auto';
+      stopTyping();
+    }
+
+    // Typing indicators
+    function startTyping() {
+      if (!isTyping) {
+        isTyping = true;
+        socket.emit('typing-start', { teamId });
+      }
+
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(() => {
+        stopTyping();
+      }, 3000);
+    }
+
+    function stopTyping() {
+      if (isTyping) {
+        isTyping = false;
+        socket.emit('typing-stop', { teamId });
+      }
+    }
+
+    function updateTypingIndicator(data) {
+      const indicator = document.getElementById('typingIndicator');
+      
+      if (data.isTyping && data.userId !== currentUserId) {
+        indicator.innerHTML = `
+          <span>${data.userName} is typing</span>
+          <span class="typing-dots">
+            <span>.</span><span>.</span><span>.</span>
+          </span>
+        `;
+      } else {
+        indicator.innerHTML = '';
+      }
+    }
+
+    // Share link
+    function shareLink() {
+      document.getElementById('linkModal').style.display = 'flex';
+    }
+
+    function closeLinkModal() {
+      document.getElementById('linkModal').style.display = 'none';
+      document.getElementById('linkUrlInput').value = '';
+      document.getElementById('linkTitleInput').value = '';
+    }
+
+    function submitLink() {
+      const url = document.getElementById('linkUrlInput').value.trim();
+      const title = document.getElementById('linkTitleInput').value.trim();
+
+      if (!url) {
+        alert('Please enter a URL');
+        return;
+      }
+
+      socket.emit('send-message', {
+        teamId,
+        content: title || 'Shared a link',
+        messageType: 'link',
+        linkUrl: url,
+        linkTitle: title
+      });
+
+      closeLinkModal();
+    }
+
+    // File attachment
+    function attachFile() {
+      document.getElementById('fileInput').click();
+    }
+
+    async function handleFileSelect() {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+      
+      if (!file) return;
+
+      // Check file size (10MB max)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('File size must be less than 10MB');
+        fileInput.value = '';
+        return;
+      }
+
+      try {
+        // Show uploading indicator
+        const sendBtn = document.getElementById('sendBtn');
+        sendBtn.disabled = true;
+        sendBtn.innerHTML = '⏳';
+
+        // Create FormData
+        const formData = new FormData();
+        formData.append('file', file);
+
+        // Upload file
+        const response = await fetch(`${API_URL}/chat/team/${teamId}/upload`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message || 'Upload failed');
+        }
+
+        const data = await response.json();
+        
+        // Add sender name to message
+        data.fileMessage.senderName = `${data.fileMessage.senderId.firstName} ${data.fileMessage.senderId.lastName}`;
+        
+        // Emit file message via socket
+        socket.emit('send-message', {
+          teamId,
+          content: data.fileMessage.content,
+          messageType: 'file',
+          fileName: data.fileMessage.fileName,
+          fileUrl: data.fileMessage.fileUrl,
+          fileSize: data.fileMessage.fileSize
+        });
+
+        // Clear file input
+        fileInput.value = '';
+
+        // Reset send button
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = '➤';
+
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        alert('Failed to upload file: ' + error.message);
+        
+        // Reset send button
+        const sendBtn = document.getElementById('sendBtn');
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = '➤';
+        
+        fileInput.value = '';
+      }
+    }
+
+    // Helper functions
+    function updateOnlineCount() {
+      document.getElementById('onlineCount').textContent = onlineUsers.size;
+    }
+
+    function scrollToBottom() {
+      const container = document.getElementById('messagesContainer');
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    function getFileIcon(fileName) {
+      const ext = fileName.split('.').pop().toLowerCase();
+      const iconMap = {
+        // Images
+        'jpg': '🖼️', 'jpeg': '🖼️', 'png': '🖼️', 'gif': '🖼️', 'svg': '🖼️',
+        // Documents
+        'pdf': '📕', 'doc': '📘', 'docx': '📘', 'txt': '📄',
+        // Spreadsheets
+        'xls': '📊', 'xlsx': '📊', 'csv': '📊',
+        // Archives
+        'zip': '🗜️', 'rar': '🗜️', '7z': '🗜️',
+        // Media
+        'mp4': '🎥', 'avi': '🎥', 'mov': '🎥', 
+        'mp3': '🎵', 'wav': '🎵', 'flac': '🎵',
+        // Code
+        'js': '💻', 'html': '💻', 'css': '💻', 'py': '💻', 'java': '💻'
+      };
+      return iconMap[ext] || '📎';
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function playNotification() {
+      // Simple notification sound (can be replaced with actual audio)
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('New message in ' + teamData.teamName, {
+          body: 'You have a new message',
+          icon: '/favicon.ico'
+        });
+      }
+    }
+
+    function showError(message) {
+      // Could show a toast notification
+      console.error(message);
+    }
+
+    function goBack() {
+      window.location.href = `/team/manage/${teamId}`;
+    }
+
+    // Event listeners
+    document.getElementById('messageInput').addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+      startTyping();
+    });
+
+    document.getElementById('messageInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // Request notification permission
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+
+    // Initialize chat
+    init();
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      if (socket) {
+        socket.emit('leave-team', teamId);
+        socket.disconnect();
+      }
+    });
+  </script>
+</body>
+</html>

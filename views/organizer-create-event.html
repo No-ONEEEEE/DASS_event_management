@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Event - Event Management System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    nav {
+      background: white;
+      padding: 15px 30px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #667eea;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #667eea;
+    }
+    nav a.logout-link {
+      color: #dc3545;
+    }
+    nav a.logout-link:hover {
+      color: #c82333;
+    }
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .form-container {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .form-section {
+      margin-bottom: 30px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #eee;
+    }
+    .form-section:last-child {
+      border-bottom: none;
+    }
+    .form-section h2 {
+      color: #667eea;
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .btn {
+      padding: 12px 24px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-right: 10px;
+    }
+    .btn:hover {
+      background: #5568d3;
+    }
+    .btn-secondary {
+      background: #888;
+    }
+    .btn-secondary:hover {
+      background: #777;
+    }
+    .btn-success {
+      background: #6bcf7f;
+    }
+    .btn-success:hover {
+      background: #5ab86d;
+    }
+    .btn-danger {
+      background: #e15554;
+    }
+    .btn-danger:hover {
+      background: #d04544;
+    }
+    .message {
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      display: none;
+    }
+    .message.error {
+      background: #fee;
+      color: #c33;
+      border: 1px solid #fcc;
+    }
+    .message.success {
+      background: #efe;
+      color: #3c3;
+      border: 1px solid #cfc;
+    }
+    .custom-form-builder {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+    .form-field {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 15px;
+      position: relative;
+    }
+    .form-field .remove-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #e15554;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .merchandise-item {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 15px;
+      position: relative;
+    }
+    .tag-input-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      min-height: 42px;
+    }
+    .tag {
+      background: #667eea;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 3px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .tag .remove-tag {
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .tag-input {
+      border: none;
+      outline: none;
+      flex: 1;
+      min-width: 100px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">Event Manager</div>
+    <ul>
+      <li><a href="/organizer/dashboard">Dashboard</a></li>
+      <li><a href="/organizer/create-event">Create Event</a></li>
+      <li><a href="/organizer/ongoing-events">Ongoing Events</a></li>
+      <li><a href="/organizer/profile">Profile</a></li>
+      <li><a href="#" class="logout-link" onclick="logout()">Logout</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <div class="form-container">
+      <h1 id="pageTitle">Create New Event</h1>
+      
+      <div id="msg" class="message"></div>
+
+      <form id="eventForm">
+        <!-- Basic Information -->
+        <div class="form-section">
+          <h2>Basic Information</h2>
+          
+          <div class="form-group">
+            <label>Event Name *</label>
+            <input type="text" id="eventName" required>
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="description"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Event Type *</label>
+            <select id="eventType" required onchange="toggleEventTypeFields()">
+              <option value="">Select Type</option>
+              <option value="Normal">Normal Event</option>
+              <option value="Merchandise">Merchandise</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="isTeamEvent" onchange="toggleTeamSizeFields()">
+              This is a Team Event
+            </label>
+            <small style="color: #666; display: block; margin-top: 5px;">Check this if participants can register as teams with multiple members</small>
+          </div>
+
+          <div class="form-row hidden" id="teamSizeSection">
+            <div class="form-group">
+              <label>Minimum Team Size *</label>
+              <input type="number" id="minTeamSize" min="1" value="2" placeholder="e.g., 2">
+            </div>
+            <div class="form-group">
+              <label>Maximum Team Size *</label>
+              <input type="number" id="maxTeamSize" min="1" value="4" placeholder="e.g., 4">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Venue</label>
+            <input type="text" id="venue">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Event Start Date *</label>
+              <input type="datetime-local" id="eventStartDate" required>
+            </div>
+            <div class="form-group">
+              <label>Event End Date *</label>
+              <input type="datetime-local" id="eventEndDate" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Registration Deadline *</label>
+            <input type="datetime-local" id="registrationDeadline" required>
+          </div>
+        </div>
+
+        <!-- Registration Details -->
+        <div class="form-section">
+          <h2>Registration Details</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Registration Fee (₹)</label>
+              <input type="number" id="registrationFee" min="0" value="0">
+            </div>
+            <div class="form-group">
+              <label>Registration Limit</label>
+              <input type="number" id="registrationLimit" min="0" placeholder="Leave empty for unlimited">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Eligibility</label>
+            <select id="eligibility">
+              <option value="">Any</option>
+              <option value="IIIT Students Only">IIIT Students Only</option>
+              <option value="External Only">External Only</option>
+              <option value="All">All</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Event Tags (Press Enter to add)</label>
+            <div class="tag-input-container" id="tagContainer" onclick="focusTagInput()">
+              <input type="text" class="tag-input" id="tagInput" onkeydown="handleTagInput(event)" placeholder="Add tags...">
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Form Builder (Normal Events Only) -->
+        <div class="form-section hidden" id="customFormSection">
+          <h2>Custom Registration Form</h2>
+          <p style="color: #666; margin-bottom: 15px;">Create custom fields for participant registration. Note: Form cannot be edited after first registration.</p>
+          
+          <div class="custom-form-builder" id="customFormBuilder">
+            <div id="formFields">
+              <!-- Form fields will be added here -->
+            </div>
+            
+            <button type="button" class="btn" onclick="addFormField()">+ Add Form Field</button>
+            
+            <div id="formPreview" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px; display: none;">
+              <h3 style="color: #667eea; margin-bottom: 10px;">Form Preview</h3>
+              <div id="formPreviewContent"></div>
+              <p style="color: #28a745; margin-top: 10px; font-weight: bold;">✓ Form fields will be saved when you Save Draft or Publish</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Merchandise Builder (Merchandise Events Only) -->
+        <div class="form-section hidden" id="merchandiseSection">
+          <h2>Merchandise Items</h2>
+          
+          <div id="merchandiseItems">
+            <!-- Merchandise items will be added here -->
+          </div>
+          
+          <button type="button" class="btn" onclick="addMerchandiseItem()">+ Add Merchandise Item</button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-section" style="text-align: center; border-bottom: none;">
+          <!-- Status indicator -->
+          <div id="statusIndicator" style="display: none; margin-bottom: 20px; padding: 10px; border-radius: 5px; font-weight: bold;"></div>
+          
+          <!-- Buttons will be shown/hidden based on event status -->
+          <div id="draftActions">
+            <button type="button" class="btn btn-secondary" onclick="saveDraft()" style="margin-right: 10px;">Save as Draft</button>
+            <button type="button" class="btn btn-success" onclick="publishEvent()" style="margin-right: 10px;">Publish Event</button>
+          </div>
+          
+          <div id="publishedActions" style="display: none;">
+            <button type="button" class="btn btn-secondary" onclick="savePublishedChanges()" style="margin-right: 10px;">Save Changes</button>
+            <button type="button" class="btn btn-danger" onclick="closeRegistrations()" style="margin-right: 10px;">Close Registrations</button>
+          </div>
+          
+          <div id="ongoingActions" style="display: none;">
+            <button type="button" class="btn btn-success" onclick="markCompleted()" style="margin-right: 10px;">Mark as Completed</button>
+            <button type="button" class="btn btn-danger" onclick="closeEvent()" style="margin-right: 10px;">Close Event</button>
+          </div>
+          
+          <div id="completedActions" style="display: none;">
+            <p style="color: #666;">This event is completed. No further edits allowed.</p>
+          </div>
+          
+          <a href="/organizer/dashboard" class="btn btn-danger" style="margin-left: 10px;">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api';
+    const token = localStorage.getItem('token');
+    let eventTags = [];
+    let eventId = null;
+    let isEditMode = false;
+
+    if (!token) {
+      window.location.href = '/auth/login';
+    }
+
+    // Check if editing existing event
+    const urlParams = new URLSearchParams(window.location.search);
+    eventId = urlParams.get('id');
+    if (eventId) {
+      isEditMode = true;
+      document.getElementById('pageTitle').textContent = 'Edit Event';
+      loadEvent(eventId);
+    }
+
+    function showMessage(msg, type = 'error') {
+      const msgEl = document.getElementById('msg');
+      msgEl.textContent = msg;
+      msgEl.className = 'message ' + type;
+      msgEl.style.display = 'block';
+      setTimeout(() => msgEl.style.display = 'none', 5000);
+      window.scrollTo(0, 0);
+    }
+
+    function toggleEventTypeFields() {
+      const eventType = document.getElementById('eventType').value;
+      const customFormSection = document.getElementById('customFormSection');
+      const merchandiseSection = document.getElementById('merchandiseSection');
+
+      if (eventType === 'Normal') {
+        customFormSection.classList.remove('hidden');
+        merchandiseSection.classList.add('hidden');
+      } else if (eventType === 'Merchandise') {
+        customFormSection.classList.remove('hidden'); // Show form fields for merchandise too
+        merchandiseSection.classList.remove('hidden');
+      } else {
+        customFormSection.classList.add('hidden');
+        merchandiseSection.classList.add('hidden');
+      }
+    }
+
+    function toggleTeamSizeFields() {
+      const isTeamEvent = document.getElementById('isTeamEvent').checked;
+      const teamSizeSection = document.getElementById('teamSizeSection');
+      
+      if (isTeamEvent) {
+        teamSizeSection.classList.remove('hidden');
+      } else {
+        teamSizeSection.classList.add('hidden');
+      }
+    }
+
+    // Tag input handling
+    function focusTagInput() {
+      document.getElementById('tagInput').focus();
+    }
+
+    function handleTagInput(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        const input = event.target;
+        const tag = input.value.trim();
+        if (tag && !eventTags.includes(tag)) {
+          eventTags.push(tag);
+          renderTags();
+          input.value = '';
+        }
+      }
+    }
+
+    function removeTag(tag) {
+      eventTags = eventTags.filter(t => t !== tag);
+      renderTags();
+    }
+
+    function renderTags() {
+      const container = document.getElementById('tagContainer');
+      const input = document.getElementById('tagInput');
+      container.innerHTML = '';
+      
+      eventTags.forEach(tag => {
+        const tagEl = document.createElement('div');
+        tagEl.className = 'tag';
+        tagEl.innerHTML = `${tag} <span class="remove-tag" onclick="removeTag('${tag}')">&times;</span>`;
+        container.appendChild(tagEl);
+      });
+      
+      container.appendChild(input);
+    }
+
+    // Custom Form Builder
+    let formFieldCounter = 0;
+
+    function addFormField() {
+      const fieldId = formFieldCounter++;
+      const fieldsContainer = document.getElementById('formFields');
+      
+      const fieldHTML = `
+        <div class="form-field" id="field-${fieldId}">
+          <button type="button" class="remove-btn" onclick="removeFormField(${fieldId})">Remove</button>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Field Name</label>
+              <input type="text" id="fieldName-${fieldId}" placeholder="e.g., College Name" onblur="updateFormPreview()">
+            </div>
+            <div class="form-group">
+              <label>Field Type</label>
+              <select id="fieldType-${fieldId}" onchange="toggleFieldOptions(${fieldId}); updateFormPreview();">
+                <option value="text">Text Input</option>
+                <option value="textarea">Text Area</option>
+                <option value="number">Number</option>
+                <option value="email">Email</option>
+                <option value="tel">Phone Number</option>
+                <option value="date">Date</option>
+                <option value="dropdown">Dropdown</option>
+                <option value="checkbox">Checkbox</option>
+                <option value="radio">Radio Buttons</option>
+                <option value="file">File Upload</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="fieldRequired-${fieldId}" onchange="updateFormPreview()">
+              Required Field
+            </label>
+          </div>
+          
+          <div class="form-group hidden" id="fieldOptions-${fieldId}">
+            <label>Options (comma-separated)</label>
+            <input type="text" id="fieldOptionsList-${fieldId}" placeholder="e.g., Option 1, Option 2, Option 3">
+          </div>
+        </div>
+      `;
+      
+      fieldsContainer.insertAdjacentHTML('beforeend', fieldHTML);
+      updateFormPreview();
+    }
+
+    function removeFormField(fieldId) {
+      document.getElementById(`field-${fieldId}`).remove();
+      updateFormPreview();
+    }
+
+    function toggleFieldOptions(fieldId) {
+      const fieldType = document.getElementById(`fieldType-${fieldId}`).value;
+      const optionsDiv = document.getElementById(`fieldOptions-${fieldId}`);
+      
+      if (['dropdown', 'checkbox', 'radio'].includes(fieldType)) {
+        optionsDiv.classList.remove('hidden');
+      } else {
+        optionsDiv.classList.add('hidden');
+      }
+    }
+
+    function getCustomFormData() {
+      const fields = [];
+      const fieldElements = document.querySelectorAll('.form-field');
+      
+      fieldElements.forEach(fieldEl => {
+        const id = fieldEl.id.split('-')[1];
+        const fieldName = document.getElementById(`fieldName-${id}`).value;
+        const fieldType = document.getElementById(`fieldType-${id}`).value;
+        const required = document.getElementById(`fieldRequired-${id}`).checked;
+        const optionsList = document.getElementById(`fieldOptionsList-${id}`).value;
+        
+        if (fieldName) {
+          const field = {
+            fieldName,
+            fieldType,
+            required
+          };
+          
+          if (['dropdown', 'checkbox', 'radio'].includes(fieldType) && optionsList) {
+            field.options = optionsList.split(',').map(opt => opt.trim()).filter(opt => opt);
+          }
+          
+          fields.push(field);
+        }
+      });
+      
+      return { fields };
+    }
+
+    function getRegistrationFormFields() {
+      const fields = [];
+      const fieldElements = document.querySelectorAll('.form-field');
+      
+      fieldElements.forEach(fieldEl => {
+        const id = fieldEl.id.split('-')[1];
+        const fieldLabel = document.getElementById(`fieldName-${id}`).value;
+        const fieldType = document.getElementById(`fieldType-${id}`).value;
+        const isRequired = document.getElementById(`fieldRequired-${id}`).checked;
+        
+        if (fieldLabel) {
+          fields.push({
+            fieldLabel,
+            fieldType,
+            isRequired
+          });
+        }
+      });
+      
+      return fields;
+    }
+
+    function updateFormPreview() {
+      const previewDiv = document.getElementById('formPreview');
+      const previewContent = document.getElementById('formPreviewContent');
+      const fields = getRegistrationFormFields();
+      
+      if (fields.length === 0) {
+        previewDiv.style.display = 'none';
+        return;
+      }
+      
+      previewDiv.style.display = 'block';
+      let html = '<ul style="list-style: none; padding: 0;">';
+      fields.forEach((field, index) => {
+        html += `<li style="padding: 8px; background: white; margin-bottom: 5px; border-radius: 4px;">
+          ${index + 1}. <strong>${field.fieldLabel}</strong> (${field.fieldType})${field.isRequired ? ' <span style="color: red;">*</span>' : ''}
+        </li>`;
+      });
+      html += '</ul>';
+      previewContent.innerHTML = html;
+    }
+
+    // Merchandise Builder
+    let merchandiseCounter = 0;
+
+    function addMerchandiseItem() {
+      const itemId = merchandiseCounter++;
+      const itemsContainer = document.getElementById('merchandiseItems');
+      
+      const itemHTML = `
+        <div class="merchandise-item" id="merch-${itemId}">
+          <button type="button" class="remove-btn" onclick="removeMerchandiseItem(${itemId})">Remove</button>
+          
+          <div class="form-group">
+            <label>Item Name</label>
+            <input type="text" id="merchName-${itemId}" placeholder="e.g., Event T-Shirt">
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Sizes (comma-separated)</label>
+              <input type="text" id="merchSize-${itemId}" placeholder="e.g., S, M, L, XL">
+            </div>
+            <div class="form-group">
+              <label>Colors (comma-separated)</label>
+              <input type="text" id="merchColor-${itemId}" placeholder="e.g., Black, White, Blue">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Quantity</label>
+              <input type="number" id="merchQuantity-${itemId}" min="1" value="100">
+            </div>
+            <div class="form-group">
+              <label>Price Per Item (₹)</label>
+              <input type="number" id="merchPrice-${itemId}" min="0" value="0">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Max Purchase Per Participant</label>
+            <input type="number" id="merchMax-${itemId}" min="1" value="1">
+          </div>
+        </div>
+      `;
+      
+      itemsContainer.insertAdjacentHTML('beforeend', itemHTML);
+    }
+
+    function removeMerchandiseItem(itemId) {
+      document.getElementById(`merch-${itemId}`).remove();
+    }
+
+    function getMerchandiseData() {
+      const items = [];
+      const itemElements = document.querySelectorAll('.merchandise-item');
+      
+      itemElements.forEach(itemEl => {
+        const id = itemEl.id.split('-')[1];
+        const itemName = document.getElementById(`merchName-${id}`).value;
+        const sizeList = document.getElementById(`merchSize-${id}`).value;
+        const colorList = document.getElementById(`merchColor-${id}`).value;
+        const quantity = document.getElementById(`merchQuantity-${id}`).value;
+        const price = document.getElementById(`merchPrice-${id}`).value;
+        const maxPurchase = document.getElementById(`merchMax-${id}`).value;
+        
+        if (itemName) {
+          items.push({
+            itemName,
+            size: sizeList.split(',').map(s => s.trim()).filter(s => s),
+            color: colorList.split(',').map(c => c.trim()).filter(c => c),
+            quantity: parseInt(quantity),
+            pricePerItem: parseFloat(price),
+            maxPurchasePerParticipant: parseInt(maxPurchase)
+          });
+        }
+      });
+      
+      return { items };
+    }
+
+    function getFormData() {
+      const eventType = document.getElementById('eventType').value;
+      const isTeamEvent = document.getElementById('isTeamEvent').checked;
+      
+      const data = {
+        eventName: document.getElementById('eventName').value,
+        description: document.getElementById('description').value,
+        eventType,
+        isTeamEvent,
+        venue: document.getElementById('venue').value,
+        eventStartDate: document.getElementById('eventStartDate').value,
+        eventEndDate: document.getElementById('eventEndDate').value,
+        registrationDeadline: document.getElementById('registrationDeadline').value,
+        registrationFee: parseFloat(document.getElementById('registrationFee').value) || 0,
+        registrationLimit: parseInt(document.getElementById('registrationLimit').value) || null,
+        eligibility: document.getElementById('eligibility').value,
+        eventTags
+      };
+
+      // Add team size if team event
+      if (isTeamEvent) {
+        data.minTeamSize = parseInt(document.getElementById('minTeamSize').value) || 1;
+        data.maxTeamSize = parseInt(document.getElementById('maxTeamSize').value) || 1;
+      }
+
+      if (eventType === 'Normal') {
+        // Send both formats for backward compatibility
+        data.customForm = getCustomFormData();
+        data.registrationFormFields = getRegistrationFormFields();
+        console.log('Form fields being saved:', data.registrationFormFields);
+      } else if (eventType === 'Merchandise') {
+        data.merchandise = getMerchandiseData();
+        // Merchandise events can also have custom registration form fields
+        data.customForm = getCustomFormData();
+        data.registrationFormFields = getRegistrationFormFields();
+        console.log('Merchandise form fields being saved:', data.registrationFormFields);
+      }
+
+      console.log('Complete form data:', data);
+      return data;
+    }
+
+    async function saveDraft() {
+      try {
+        const data = getFormData();
+        
+        const url = isEditMode 
+          ? `${API_URL}/organizers/events/${eventId}`
+          : `${API_URL}/organizers/events/create`;
+        
+        const method = isEditMode ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          showMessage('Event saved successfully!', 'success');
+          setTimeout(() => {
+            window.history.back();
+          }, 1000);
+        } else {
+          showMessage(result.message, 'error');
+        }
+      } catch (error) {
+        showMessage('Error saving event: ' + error.message, 'error');
+      }
+    }
+
+    async function publishEvent() {
+      try {
+        const data = getFormData();
+        
+        let createdEventId = eventId;
+        
+        // If not edit mode, create the event first
+        if (!isEditMode) {
+          const createResponse = await fetch(`${API_URL}/organizers/events/create`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+          });
+
+          const createResult = await createResponse.json();
+          
+          if (!createResponse.ok) {
+            showMessage(createResult.message, 'error');
+            return;
+          }
+          
+          createdEventId = createResult.event._id;
+        } else {
+          // In edit mode, save changes first before publishing
+          const updateResponse = await fetch(`${API_URL}/organizers/events/${createdEventId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+          });
+
+          const updateResult = await updateResponse.json();
+          
+          if (!updateResponse.ok) {
+            showMessage(updateResult.message, 'error');
+            return;
+          }
+        }
+
+        // Publish the event
+        const publishResponse = await fetch(`${API_URL}/organizers/events/${createdEventId}/publish`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const publishResult = await publishResponse.json();
+        
+        if (publishResponse.ok) {
+          showMessage('Event published successfully!', 'success');
+          setTimeout(() => {
+            window.location.href = '/organizer/dashboard';
+          }, 1500);
+        } else {
+          showMessage(publishResult.message, 'error');
+        }
+      } catch (error) {
+        showMessage('Error publishing event: ' + error.message, 'error');
+      }
+    }
+
+    async function loadEvent(id) {
+      try {
+        const response = await fetch(`${API_URL}/organizers/events/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+          const event = data.event;
+          
+          // Populate basic fields
+          document.getElementById('eventName').value = event.eventName;
+          document.getElementById('description').value = event.description || '';
+          document.getElementById('eventType').value = event.eventType;
+          document.getElementById('isTeamEvent').checked = event.isTeamEvent || false;
+          
+          // Populate team size if team event
+          if (event.isTeamEvent) {
+            document.getElementById('minTeamSize').value = event.minTeamSize || 2;
+            document.getElementById('maxTeamSize').value = event.maxTeamSize || 4;
+          }
+          
+          document.getElementById('venue').value = event.venue || '';
+          document.getElementById('eventStartDate').value = event.eventStartDate.slice(0, 16);
+          document.getElementById('eventEndDate').value = event.eventEndDate.slice(0, 16);
+          document.getElementById('registrationDeadline').value = event.registrationDeadline.slice(0, 16);
+          document.getElementById('registrationFee').value = event.registrationFee || 0;
+          document.getElementById('registrationLimit').value = event.registrationLimit || '';
+          document.getElementById('eligibility').value = event.eligibility || '';
+          
+          eventTags = event.eventTags || [];
+          renderTags();
+          
+          toggleEventTypeFields();
+          toggleTeamSizeFields();
+          
+          // Update UI based on event status
+          updateUIForStatus(event.status);
+          
+          // Load registration form fields (prioritize registrationFormFields, fallback to customForm)
+          const formFields = event.registrationFormFields || 
+                           (event.customForm && event.customForm.fields) || [];
+          
+          if (formFields.length > 0) {
+            formFields.forEach(field => {
+              const fieldId = formFieldCounter++;
+              const fieldsContainer = document.getElementById('formFields');
+              
+              const fieldLabel = field.fieldLabel || field.fieldName || '';
+              const fieldType = field.fieldType || 'text';
+              const isRequired = field.isRequired !== undefined ? field.isRequired : field.required || false;
+              
+              const fieldHTML = `
+                <div class="form-field" id="field-${fieldId}">
+                  <button type="button" class="remove-btn" onclick="removeFormField(${fieldId})">Remove</button>
+                  
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Field Name</label>
+                      <input type="text" id="fieldName-${fieldId}" value="${fieldLabel}" placeholder="e.g., College Name" onblur="updateFormPreview()">
+                    </div>
+                    <div class="form-group">
+                      <label>Field Type</label>
+                      <select id="fieldType-${fieldId}" onchange="toggleFieldOptions(${fieldId}); updateFormPreview();">
+                        <option value="text" ${fieldType === 'text' ? 'selected' : ''}>Text Input</option>
+                        <option value="textarea" ${fieldType === 'textarea' ? 'selected' : ''}>Text Area</option>
+                        <option value="number" ${fieldType === 'number' ? 'selected' : ''}>Number</option>
+                        <option value="email" ${fieldType === 'email' ? 'selected' : ''}>Email</option>
+                        <option value="tel" ${fieldType === 'tel' ? 'selected' : ''}>Phone Number</option>
+                        <option value="date" ${fieldType === 'date' ? 'selected' : ''}>Date</option>
+                        <option value="dropdown" ${fieldType === 'dropdown' ? 'selected' : ''}>Dropdown</option>
+                        <option value="checkbox" ${fieldType === 'checkbox' ? 'selected' : ''}>Checkbox</option>
+                        <option value="radio" ${fieldType === 'radio' ? 'selected' : ''}>Radio Buttons</option>
+                        <option value="file" ${fieldType === 'file' ? 'selected' : ''}>File Upload</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>
+                      <input type="checkbox" id="fieldRequired-${fieldId}" ${isRequired ? 'checked' : ''} onchange="updateFormPreview()">
+                      Required Field
+                    </label>
+                  </div>
+                  
+                  <div class="form-group hidden" id="fieldOptions-${fieldId}">
+                    <label>Options (comma-separated)</label>
+                    <input type="text" id="fieldOptionsList-${fieldId}" placeholder="e.g., Option 1, Option 2, Option 3">
+                  </div>
+                </div>
+              `;
+              
+              fieldsContainer.insertAdjacentHTML('beforeend', fieldHTML);
+            });
+            
+            updateFormPreview();
+          }
+          
+          // Load merchandise if exists
+          if (event.merchandise && event.merchandise.items) {
+            // TODO: Populate merchandise items
+          }
+          
+        } else {
+          showMessage('Error loading event', 'error');
+        }
+      } catch (error) {
+        showMessage('Error loading event: ' + error.message, 'error');
+      }
+    }
+
+    function updateUIForStatus(status) {
+      // Show status indicator
+      const statusIndicator = document.getElementById('statusIndicator');
+      statusIndicator.style.display = 'block';
+      statusIndicator.textContent = `Event Status: ${status}`;
+      
+      // Hide all action button groups
+      document.getElementById('draftActions').style.display = 'none';
+      document.getElementById('publishedActions').style.display = 'none';
+      document.getElementById('ongoingActions').style.display = 'none';
+      document.getElementById('completedActions').style.display = 'none';
+      
+      // Color code status
+      const colors = {
+        'Draft': '#ffc107',
+        'Published': '#28a745',
+        'Ongoing': '#17a2b8',
+        'Completed': '#6c757d',
+        'Closed': '#dc3545'
+      };
+      statusIndicator.style.backgroundColor = colors[status] || '#6c757d';
+      statusIndicator.style.color = 'white';
+      
+      if (status === 'Draft') {
+        // Draft: show save and publish buttons, all fields editable
+        document.getElementById('draftActions').style.display = 'block';
+        
+      } else if (status === 'Published') {
+        // Published: only description, deadline (extend), limit (increase) editable
+        document.getElementById('publishedActions').style.display = 'block';
+        
+        // Make most fields read-only
+        makeFieldReadOnly('eventName');
+        makeFieldReadOnly('eventType');
+        makeFieldReadOnly('isTeamEvent');
+        makeFieldReadOnly('minTeamSize');
+        makeFieldReadOnly('maxTeamSize');
+        makeFieldReadOnly('venue');
+        makeFieldReadOnly('eventStartDate');
+        makeFieldReadOnly('eventEndDate');
+        makeFieldReadOnly('registrationFee');
+        makeFieldReadOnly('eligibility');
+        
+        // Add helper text for editable fields
+        const deadlineLabel = document.querySelector('label[for="registrationDeadline"]') || 
+                              Array.from(document.querySelectorAll('label')).find(l => l.textContent.includes('Registration Deadline'));
+        if (deadlineLabel) {
+          deadlineLabel.innerHTML = 'Registration Deadline * <small style="color: #28a745;">(can only extend)</small>';
+        }
+        
+        const limitLabel = document.querySelector('label[for="registrationLimit"]') || 
+                           Array.from(document.querySelectorAll('label')).find(l => l.textContent.includes('Registration Limit'));
+        if (limitLabel) {
+          limitLabel.innerHTML = 'Registration Limit <small style="color: #28a745;">(can only increase)</small>';
+        }
+        
+      } else if (status === 'Ongoing') {
+        // Ongoing: only status changes allowed
+        document.getElementById('ongoingActions').style.display = 'block';
+        makeAllFieldsReadOnly();
+        
+      } else if (['Completed', 'Closed'].includes(status)) {
+        // Completed/Closed: no edits allowed
+        document.getElementById('completedActions').style.display = 'block';
+        makeAllFieldsReadOnly();
+      }
+    }
+
+    function makeFieldReadOnly(fieldId) {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        field.disabled = true;
+        field.style.backgroundColor = '#f5f5f5';
+        field.style.cursor = 'not-allowed';
+      }
+    }
+
+    function makeAllFieldsReadOnly() {
+      const inputs = document.querySelectorAll('input:not([type="button"]), select, textarea');
+      inputs.forEach(input => {
+        input.disabled = true;
+        input.style.backgroundColor = '#f5f5f5';
+        input.style.cursor = 'not-allowed';
+      });
+      
+      // Hide add/remove buttons in form builder
+      const removeButtons = document.querySelectorAll('.remove-btn');
+      removeButtons.forEach(btn => btn.style.display = 'none');
+      
+      const addButtons = document.querySelectorAll('button[onclick*="add"]');
+      addButtons.forEach(btn => btn.style.display = 'none');
+    }
+
+    async function savePublishedChanges() {
+      try {
+        // Only send editable fields for published events
+        const data = {
+          description: document.getElementById('description').value,
+          registrationDeadline: document.getElementById('registrationDeadline').value,
+          registrationLimit: parseInt(document.getElementById('registrationLimit').value) || null
+        };
+        
+        const response = await fetch(`${API_URL}/organizers/events/${eventId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          showMessage('Event updated successfully!', 'success');
+          setTimeout(() => {
+            window.history.back();
+          }, 1000);
+        } else {
+          showMessage(result.message, 'error');
+        }
+      } catch (error) {
+        showMessage('Error saving changes: ' + error.message, 'error');
+      }
+    }
+
+    async function closeRegistrations() {
+      if (!confirm('Are you sure you want to close registrations for this event?')) {
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_URL}/organizers/events/${eventId}/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ status: 'Closed' })
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          showMessage('Registrations closed successfully!', 'success');
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        } else {
+          showMessage(result.message, 'error');
+        }
+      } catch (error) {
+        showMessage('Error closing registrations: ' + error.message, 'error');
+      }
+    }
+
+    async function markCompleted() {
+      if (!confirm('Mark this event as completed?')) {
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_URL}/organizers/events/${eventId}/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ status: 'Completed' })
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          showMessage('Event marked as completed!', 'success');
+          setTimeout(() => {
+            window.location.href = '/organizer/dashboard';
+          }, 1500);
+        } else {
+          showMessage(result.message, 'error');
+        }
+      } catch (error) {
+        showMessage('Error marking event as completed: ' + error.message, 'error');
+      }
+    }
+
+    async function closeEvent() {
+      if (!confirm('Are you sure you want to close this event?')) {
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_URL}/organizers/events/${eventId}/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ status: 'Closed' })
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          showMessage('Event closed successfully!', 'success');
+          setTimeout(() => {
+            window.location.href = '/organizer/dashboard';
+          }, 1500);
+        } else {
+          showMessage(result.message, 'error');
+        }
+      } catch (error) {
+        showMessage('Error closing event: ' + error.message, 'error');
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userType');
+      window.location.href = '/auth/login';
+    }
+  </script>
+</body>
+</html>

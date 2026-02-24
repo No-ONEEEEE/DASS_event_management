@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Your Profile - Event Management</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .onboarding-container {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 700px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    .section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 8px;
+    }
+    .section h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .checkbox-item:hover {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+    .checkbox-item input[type="checkbox"] {
+      margin-right: 10px;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+    }
+    .checkbox-item label {
+      cursor: pointer;
+      flex: 1;
+      color: #333;
+      font-weight: 500;
+    }
+    .clubs-list {
+      max-height: 300px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .club-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 5px;
+      transition: all 0.3s;
+    }
+    .club-item:hover {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+    .club-info {
+      flex: 1;
+    }
+    .club-name {
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 5px;
+    }
+    .club-category {
+      font-size: 12px;
+      color: #667eea;
+      background: #e8edff;
+      padding: 2px 8px;
+      border-radius: 3px;
+      display: inline-block;
+      margin-bottom: 5px;
+    }
+    .club-desc {
+      font-size: 13px;
+      color: #666;
+    }
+    .follow-btn {
+      padding: 8px 20px;
+      border: 2px solid #667eea;
+      background: white;
+      color: #667eea;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+    .follow-btn:hover {
+      background: #667eea;
+      color: white;
+    }
+    .follow-btn.following {
+      background: #667eea;
+      color: white;
+    }
+    .button-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+    button {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 14px;
+    }
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #5568d3;
+    }
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+    .message {
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      display: none;
+      text-align: center;
+    }
+    .message.error {
+      background: #fee;
+      color: #c33;
+      border: 1px solid #fcc;
+    }
+    .message.success {
+      background: #efe;
+      color: #3c3;
+      border: 1px solid #cfc;
+    }
+    .loading {
+      text-align: center;
+      color: #666;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="onboarding-container">
+    <h1>Welcome! Let's Personalize Your Experience</h1>
+    <p class="subtitle">You can skip this and configure your preferences later in your profile</p>
+    
+    <div id="msg" class="message"></div>
+
+    <div class="section">
+      <h3>🎯 Areas of Interest</h3>
+      <p style="color: #666; font-size: 13px; margin-bottom: 15px;">Select the types of events you're interested in (select multiple)</p>
+      <div class="checkbox-grid" id="interestsGrid">
+        <div class="checkbox-item">
+          <input type="checkbox" id="interest-academic" value="Academic">
+          <label for="interest-academic">Academic</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="interest-cultural" value="Cultural">
+          <label for="interest-cultural">Cultural</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="interest-technical" value="Technical">
+          <label for="interest-technical">Technical</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="interest-sports" value="Sports">
+          <label for="interest-sports">Sports</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="interest-social" value="Social">
+          <label for="interest-social">Social</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>🎪 Clubs / Organizers to Follow</h3>
+      <p style="color: #666; font-size: 13px; margin-bottom: 15px;">Follow clubs to get notified about their events</p>
+      <div class="clubs-list" id="clubsList">
+        <div class="loading">Loading clubs...</div>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn-secondary" onclick="skipOnboarding()">Skip for Now</button>
+      <button class="btn-primary" onclick="savePreferences()">Save & Continue</button>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api';
+    let selectedClubs = [];
+
+    function showMessage(msg, type = 'error') {
+      const msgEl = document.getElementById('msg');
+      msgEl.textContent = msg;
+      msgEl.className = 'message ' + type;
+      msgEl.style.display = 'block';
+      setTimeout(() => msgEl.style.display = 'none', 5000);
+    }
+
+    async function loadClubs() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = '/auth/login';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/events/clubs/list`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.status === 401) {
+          localStorage.clear();
+          window.location.href = '/auth/login';
+          return;
+        }
+
+        const clubs = await response.json();
+        displayClubs(clubs);
+      } catch (error) {
+        console.error('Error loading clubs:', error);
+        document.getElementById('clubsList').innerHTML = '<p style="color: #c33; text-align: center;">Failed to load clubs</p>';
+      }
+    }
+
+    function displayClubs(clubs) {
+      const container = document.getElementById('clubsList');
+      
+      if (!clubs || clubs.length === 0) {
+        container.innerHTML = '<p style="color: #666; text-align: center;">No clubs available</p>';
+        return;
+      }
+
+      container.innerHTML = clubs.map(club => `
+        <div class="club-item">
+          <div class="club-info">
+            <div class="club-name">${club.organizerName}</div>
+            <span class="club-category">${club.category}</span>
+            <div class="club-desc">${club.description || 'No description available'}</div>
+          </div>
+          <button class="follow-btn" onclick="toggleFollow('${club._id}')" id="follow-${club._id}">
+            Follow
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function toggleFollow(clubId) {
+      const btn = document.getElementById(`follow-${clubId}`);
+      
+      if (selectedClubs.includes(clubId)) {
+        selectedClubs = selectedClubs.filter(id => id !== clubId);
+        btn.classList.remove('following');
+        btn.textContent = 'Follow';
+      } else {
+        selectedClubs.push(clubId);
+        btn.classList.add('following');
+        btn.textContent = 'Following';
+      }
+    }
+
+    async function savePreferences() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = '/auth/login';
+        return;
+      }
+
+      // Get selected interests
+      const interests = [];
+      document.querySelectorAll('#interestsGrid input[type="checkbox"]:checked').forEach(checkbox => {
+        interests.push(checkbox.value);
+      });
+
+      try {
+        // Save preferences
+        const prefResponse = await fetch(`${API_URL}/participants/preferences`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            interests: interests,
+            followedClubs: selectedClubs
+          })
+        });
+
+        if (prefResponse.status === 401) {
+          localStorage.clear();
+          window.location.href = '/auth/login';
+          return;
+        }
+
+        if (prefResponse.ok) {
+          showMessage('Preferences saved successfully!', 'success');
+          setTimeout(() => window.location.href = '/dashboard', 1500);
+        } else {
+          const error = await prefResponse.json();
+          showMessage(error.message || 'Failed to save preferences', 'error');
+        }
+      } catch (error) {
+        console.error('Error saving preferences:', error);
+        showMessage('Failed to save preferences: ' + error.message, 'error');
+      }
+    }
+
+    function skipOnboarding() {
+      window.location.href = '/dashboard';
+    }
+
+    // Load clubs on page load
+    loadClubs();
+  </script>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join Team - Event Management</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 700px;
+      width: 100%;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    .team-info {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+    }
+
+    .team-info h2 {
+      font-size: 22px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .team-info p {
+      color: #666;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    .event-badge {
+      display: inline-block;
+      background: #e7f3ff;
+      color: #667eea;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .members-preview {
+      background: white;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 25px;
+    }
+
+    .members-preview h3 {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .member-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .member-item:last-child {
+      border-bottom: none;
+    }
+
+    .member-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+
+    .member-icon.leader {
+      background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    }
+
+    .member-details {
+      flex: 1;
+    }
+
+    .member-name {
+      font-weight: 600;
+      color: #333;
+      font-size: 15px;
+    }
+
+    .member-role {
+      color: #999;
+      font-size: 12px;
+    }
+
+    .progress-info {
+      background: #e7f3ff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .progress-info h3 {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      background: white;
+      height: 30px;
+      border-radius: 15px;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      transition: width 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 10px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+
+    .btn-secondary:hover {
+      background: #f8f9fa;
+    }
+
+    .error-message {
+      background: #fee;
+      border: 1px solid #fcc;
+      color: #c33;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .success-message {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .loading-spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .info-box {
+      background: #fff9e6;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+
+    .info-box p {
+      color: #856404;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🤝 Join Team</h1>
+      <p>You've been invited to join a team</p>
+    </div>
+
+    <div class="content">
+      <div id="errorMessage" class="error-message" style="display: none;"></div>
+      <div id="successMessage" class="success-message" style="display: none;"></div>
+
+      <div id="loadingContent" class="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading team details...</p>
+      </div>
+
+      <div id="teamContent" style="display: none;">
+        <!-- Team content will be loaded here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let teamData = null;
+    const inviteCode = window.location.pathname.split('/').pop();
+
+    async function loadTeamDetails() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          window.location.href = '/auth/login?redirect=' + encodeURIComponent(window.location.pathname);
+          return;
+        }
+
+        const response = await fetch(`/api/teams/join/${inviteCode}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to fetch team');
+        }
+
+        teamData = data.team;
+        displayTeamDetails();
+
+        document.getElementById('loadingContent').style.display = 'none';
+        document.getElementById('teamContent').style.display = 'block';
+
+      } catch (error) {
+        document.getElementById('loadingContent').style.display = 'none';
+        showError(error.message);
+      }
+    }
+
+    function displayTeamDetails() {
+      const acceptedCount = teamData.members.filter(m => m.status === 'accepted').length + 1;
+      const progressPercent = (acceptedCount / teamData.teamSize) * 100;
+      const spotsLeft = teamData.teamSize - acceptedCount;
+
+      let html = `
+        <div class="team-info">
+          <h2>${teamData.teamName}</h2>
+          <p><strong>Team Leader:</strong> ${teamData.teamLeaderId.firstName} ${teamData.teamLeaderId.lastName}</p>
+          <span class="event-badge">${teamData.eventId.eventName}</span>
+          <p style="margin-top: 10px;"><strong>Event Date:</strong> ${new Date(teamData.eventId.eventStartDate).toLocaleDateString()}</p>
+        </div>
+
+        <div class="progress-info">
+          <h3>Team Formation Progress</h3>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${progressPercent}%">
+              ${acceptedCount} / ${teamData.teamSize} members
+            </div>
+          </div>
+          <p style="color: #666; font-size: 14px;">
+            ${spotsLeft > 0 ? `${spotsLeft} spot${spotsLeft !== 1 ? 's' : ''} remaining` : 'Team is full!'}
+          </p>
+        </div>
+
+        <div class="members-preview">
+          <h3>👥 Current Team Members</h3>
+          
+          <div class="member-item">
+            <div class="member-icon leader">👑</div>
+            <div class="member-details">
+              <div class="member-name">${teamData.teamLeaderId.firstName} ${teamData.teamLeaderId.lastName}</div>
+              <div class="member-role">Team Leader</div>
+            </div>
+          </div>
+      `;
+
+      teamData.members.filter(m => m.status === 'accepted').forEach((member, index) => {
+        html += `
+          <div class="member-item">
+            <div class="member-icon">${member.participantId.firstName.charAt(0)}</div>
+            <div class="member-details">
+              <div class="member-name">${member.participantId.firstName} ${member.participantId.lastName}</div>
+              <div class="member-role">Member</div>
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+
+      if (spotsLeft > 0) {
+        html += `
+          <div class="info-box">
+            <p><strong>✅ You're about to join this team!</strong></p>
+            <p>Once all members join, the team registration will be automatically completed.</p>
+          </div>
+          
+          <button class="btn btn-primary" id="joinBtn" onclick="joinTeam()">Join This Team</button>
+          <button class="btn btn-secondary" onclick="goToEvents()">Go Back to Events</button>
+        `;
+      } else {
+        html += `
+          <div class="error-message">
+            This team is already full. You cannot join at this time.
+          </div>
+          <button class="btn btn-secondary" onclick="goToEvents()">Go Back to Events</button>
+        `;
+      }
+
+      document.getElementById('teamContent').innerHTML = html;
+    }
+
+    async function joinTeam() {
+      const joinBtn = document.getElementById('joinBtn');
+      joinBtn.disabled = true;
+      joinBtn.textContent = 'Joining Team...';
+
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/teams/join/${inviteCode}`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to join team');
+        }
+
+        showSuccess(data.message);
+        
+        // Redirect to team management page after 2 seconds
+        setTimeout(() => {
+          window.location.href = `/team/manage/${data.team._id}`;
+        }, 2000);
+
+      } catch (error) {
+        showError(error.message);
+        joinBtn.disabled = false;
+        joinBtn.textContent = 'Join This Team';
+      }
+    }
+
+    function goToEvents() {
+      window.location.href = '/browse-events';
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+
+    function showSuccess(message) {
+      const successDiv = document.getElementById('successMessage');
+      successDiv.textContent = message;
+      successDiv.style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+
+    // Load team details on page load
+    loadTeamDetails();
+  </script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+Password Auto-Generation: A random 8-character password is automatically created using letters and numbers (excludes confusing characters like 0, O, l, 1)
+
+Password Information Displayed: Below each login email, there's now a note: "Password: Only visible at creation/reset" - this is because passwords are hashed in the database and cannot be retrieved

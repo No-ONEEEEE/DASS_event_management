@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - Event Management System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+    header {
+      background: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    header h1 {
+      color: #333;
+    }
+    nav {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    nav a {
+      text-decoration: none;
+      color: #667eea;
+      font-weight: bold;
+    }
+    .logout-btn {
+      background: #dc3545;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .logout-btn:hover {
+      background: #c82333;
+    }
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .profile-card {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    .profile-header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 15px;
+      font-weight: bold;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #667eea;
+    }
+    .section-header h3 {
+      color: #333;
+      font-size: 20px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      color: #666;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    .form-group input:disabled {
+      background: #f8f8f8;
+      cursor: not-allowed;
+    }
+    .form-group .non-editable {
+      background: #f8f8f8;
+      padding: 12px;
+      border-radius: 5px;
+      color: #333;
+      border: 1px solid #e0e0e0;
+    }
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .btn {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #5568d3;
+    }
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #c82333;
+    }
+    .badge {
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .badge-iiit {
+      background: #d4edda;
+      color: #155724;
+    }
+    .badge-non-iiit {
+      background: #cfe2ff;
+      color: #084298;
+    }
+    .loading {
+      text-align: center;
+      padding: 50px;
+      color: #666;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .success {
+      background: #d4edda;
+      color: #155724;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      background: #f8f9fa;
+      padding: 10px 15px;
+      border-radius: 5px;
+      border: 2px solid #e0e0e0;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .checkbox-item:hover {
+      border-color: #667eea;
+      background: #f0f3ff;
+    }
+    .checkbox-item input {
+      margin-right: 8px;
+      cursor: pointer;
+      width: auto;
+    }
+    .checkbox-item.selected {
+      background: #e7f3ff;
+      border-color: #667eea;
+    }
+    .clubs-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 10px;
+    }
+    .club-card {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      border: 2px solid #e0e0e0;
+      transition: all 0.3s;
+      position: relative;
+    }
+    .club-card:hover {
+      border-color: #667eea;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .club-card.followed {
+      background: #e7f3ff;
+      border-color: #667eea;
+    }
+    .club-card h4 {
+      color: #333;
+      margin-bottom: 5px;
+      font-size: 16px;
+    }
+    .club-card p {
+      color: #666;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .club-card .follow-btn {
+      background: #667eea;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      width: 100%;
+    }
+    .club-card .follow-btn.following {
+      background: #28a745;
+    }
+    .club-card .follow-btn:hover {
+      opacity: 0.9;
+    }
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      overflow-y: auto;
+    }
+    .modal-content {
+      background: white;
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 500px;
+      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .modal-header h2 {
+      color: #333;
+      font-size: 24px;
+    }
+    .close-btn {
+      font-size: 28px;
+      font-weight: bold;
+      color: #999;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+    }
+    .close-btn:hover {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Profile</h1>
+    <nav>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/browse-events">Browse Events</a>
+      <a href="/profile">Profile</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div id="loading" class="loading">Loading profile...</div>
+    <div id="error" class="error" style="display: none;"></div>
+    <div id="success" class="success" style="display: none;"></div>
+    
+    <div id="profile-content" style="display: none;">
+      <!-- Profile Information Card -->
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="profile-avatar" id="avatar"></div>
+          <h2 id="profile-name"></h2>
+          <div id="profile-badge"></div>
+        </div>
+
+        <form id="profileForm">
+          <div class="section-header">
+            <h3>Personal Information</h3>
+          </div>
+
+          <!-- Non-Editable: Email -->
+          <div class="form-group">
+            <label>Email Address <span style="color: #999; font-size: 12px;">(Non-editable)</span></label>
+            <div class="non-editable" id="email"></div>
+          </div>
+
+          <!-- Non-Editable: Participant Type -->
+          <div class="form-group">
+            <label>Participant Type <span style="color: #999; font-size: 12px;">(Non-editable)</span></label>
+            <div class="non-editable" id="participantType"></div>
+          </div>
+
+          <!-- Editable: First Name -->
+          <div class="form-group">
+            <label for="firstName">First Name <span style="color: red;">*</span></label>
+            <input type="text" id="firstName" name="firstName" required>
+          </div>
+
+          <!-- Editable: Last Name -->
+          <div class="form-group">
+            <label for="lastName">Last Name <span style="color: red;">*</span></label>
+            <input type="text" id="lastName" name="lastName" required>
+          </div>
+
+          <!-- Editable: Contact Number -->
+          <div class="form-group">
+            <label for="contactNumber">Contact Number <span style="color: red;">*</span></label>
+            <input type="tel" id="contactNumber" name="contactNumber" required>
+          </div>
+
+          <!-- Editable: College/Organization Name -->
+          <div class="form-group">
+            <label for="collegeName">College/Organization Name</label>
+            <input type="text" id="collegeName" name="collegeName">
+          </div>
+
+          <!-- Editable: Interests -->
+          <div class="form-group">
+            <label>Selected Interests</label>
+            <div class="checkbox-group" id="interestsGroup">
+              <div class="checkbox-item">
+                <input type="checkbox" name="interests" value="Academic" id="interest-academic">
+                <label for="interest-academic" style="margin: 0; font-weight: normal;">Academic</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" name="interests" value="Cultural" id="interest-cultural">
+                <label for="interest-cultural" style="margin: 0; font-weight: normal;">Cultural</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" name="interests" value="Technical" id="interest-technical">
+                <label for="interest-technical" style="margin: 0; font-weight: normal;">Technical</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" name="interests" value="Sports" id="interest-sports">
+                <label for="interest-sports" style="margin: 0; font-weight: normal;">Sports</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" name="interests" value="Social" id="interest-social">
+                <label for="interest-social" style="margin: 0; font-weight: normal;">Social</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <button type="button" class="btn btn-secondary" onclick="loadProfile()">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Followed Clubs Card -->
+      <div class="profile-card">
+        <div class="section-header">
+          <h3>Followed Clubs</h3>
+          <button type="button" class="btn btn-primary" style="flex: none; padding: 8px 20px;" onclick="showAllClubs()">Manage Clubs</button>
+        </div>
+        <div id="followedClubsList" class="clubs-list">
+          <!-- Followed clubs will be populated here -->
+        </div>
+      </div>
+
+      <!-- Security Settings Card -->
+      <div class="profile-card">
+        <div class="section-header">
+          <h3>Security Settings</h3>
+        </div>
+        <p style="color: #666; margin-bottom: 15px;">Change your account password to keep your account secure.</p>
+        <button type="button" class="btn btn-danger" onclick="openPasswordModal()">Change Password</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Password Change Modal -->
+  <div id="passwordModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Change Password</h2>
+        <button class="close-btn" onclick="closePasswordModal()">&times;</button>
+      </div>
+      <form id="passwordForm" onsubmit="changePassword(event)">
+        <div class="form-group">
+          <label for="oldPassword">Current Password <span style="color: red;">*</span></label>
+          <input type="password" id="oldPassword" required>
+        </div>
+        <div class="form-group">
+          <label for="newPassword">New Password <span style="color: red;">*</span></label>
+          <input type="password" id="newPassword" minlength="6" required>
+          <small style="color: #666;">Minimum 6 characters</small>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm New Password <span style="color: red;">*</span></label>
+          <input type="password" id="confirmPassword" minlength="6" required>
+        </div>
+        <div class="button-group">
+          <button type="submit" class="btn btn-danger">Change Password</button>
+          <button type="button" class="btn btn-secondary" onclick="closePasswordModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Manage Clubs Modal -->
+  <div id="clubsModal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+      <div class="modal-header">
+        <h2>Manage Followed Clubs</h2>
+        <button class="close-btn" onclick="closeClubsModal()">&times;</button>
+      </div>
+      <div id="allClubsList" class="clubs-list">
+        <!-- All clubs will be populated here -->
+      </div>
+      <div class="button-group" style="margin-top: 20px;">
+        <button type="button" class="btn btn-primary" onclick="closeClubsModal()">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api';
+    const token = localStorage.getItem('token');
+    let userData = null;
+    let allClubs = [];
+
+    if (!token) {
+      window.location.href = '/login.html';
+    }
+
+    // Load profile data
+    async function loadProfile() {
+      try {
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('profile-content').style.display = 'none';
+        hideMessages();
+
+        const response = await fetch(`${API_URL}/participants/profile`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.status === 401) {
+          localStorage.clear();
+          window.location.href = '/login.html';
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error('Failed to load profile');
+        }
+
+        userData = await response.json();
+        displayProfile(userData);
+      } catch (error) {
+        showError('Error loading profile: ' + error.message);
+      }
+    }
+
+    function displayProfile(data) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('profile-content').style.display = 'block';
+
+      // Set avatar
+      const name = `${data.firstName || ''} ${data.lastName || ''}`.trim() || data.email;
+      document.getElementById('avatar').textContent = name.charAt(0).toUpperCase();
+      document.getElementById('profile-name').textContent = name;
+
+      // Set badge
+      const participantTypeText = data.isIIITStudent ? 'IIIT Student' : 'Non-IIIT';
+      const badgeClass = data.isIIITStudent ? 'badge-iiit' : 'badge-non-iiit';
+      document.getElementById('profile-badge').innerHTML = `<span class="badge ${badgeClass}">${participantTypeText}</span>`;
+
+      // Populate form fields
+      document.getElementById('email').textContent = data.email;
+      document.getElementById('participantType').textContent = participantTypeText;
+      document.getElementById('firstName').value = data.firstName || '';
+      document.getElementById('lastName').value = data.lastName || '';
+      document.getElementById('contactNumber').value = data.contactNumber || '';
+      document.getElementById('collegeName').value = data.collegeName || data.organizationName || '';
+
+      // Set interests checkboxes
+      const interestCheckboxes = document.querySelectorAll('input[name="interests"]');
+      interestCheckboxes.forEach(checkbox => {
+        checkbox.checked = data.interests && data.interests.includes(checkbox.value);
+        updateCheckboxItemStyle(checkbox);
+      });
+
+      // Display followed clubs
+      displayFollowedClubs(data.followedClubs || []);
+    }
+
+    function displayFollowedClubs(clubs) {
+      const container = document.getElementById('followedClubsList');
+      
+      if (!clubs || clubs.length === 0) {
+        container.innerHTML = '<p style="color: #666; text-align: center; padding: 20px; grid-column: 1 / -1;">You are not following any clubs yet. <a href="#" onclick="showAllClubs(); return false;" style="color: #667eea;">Browse clubs</a></p>';
+        return;
+      }
+
+      container.innerHTML = clubs.map(club => `
+        <div class="club-card followed">
+          <h4>${club.organizerName || 'Club'}</h4>
+          <p>${club.category || 'General'}</p>
+          <button class="follow-btn following" onclick="unfollowClub('${club._id}')">Following ✓</button>
+        </div>
+      `).join('');
+    }
+
+    async function showAllClubs() {
+      try {
+        // Fetch all approved organizers
+        const response = await fetch(`${API_URL}/organizers`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to load clubs');
+        }
+
+        allClubs = await response.json();
+        
+        // Display in modal
+        const container = document.getElementById('allClubsList');
+        const followedIds = (userData.followedClubs || []).map(c => c._id.toString());
+
+        if (allClubs.length === 0) {
+          container.innerHTML = '<p style="color: #666; text-align: center; padding: 20px; grid-column: 1 / -1;">No clubs available at the moment.</p>';
+        } else {
+          container.innerHTML = allClubs.map(club => {
+            const isFollowing = followedIds.includes(club._id.toString());
+            return `
+              <div class="club-card ${isFollowing ? 'followed' : ''}">
+                <h4>${club.organizerName || 'Club'}</h4>
+                <p>${club.category || 'General'}</p>
+                ${club.description ? `<p style="font-size: 12px; color: #999; margin-top: 5px;">${club.description.substring(0, 60)}...</p>` : ''}
+                <button class="follow-btn ${isFollowing ? 'following' : ''}" 
+                        onclick="toggleFollow('${club._id}', this)">
+                  ${isFollowing ? 'Following ✓' : 'Follow +'}
+                </button>
+              </div>
+            `;
+          }).join('');
+        }
+
+        document.getElementById('clubsModal').style.display = 'block';
+      } catch (error) {
+        showError('Error loading clubs: ' + error.message);
+      }
+    }
+
+    async function toggleFollow(clubId, button) {
+      try {
+        const response = await fetch(`${API_URL}/participants/follow/${clubId}`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to update follow status');
+        }
+
+        const result = await response.json();
+        
+        // Update button
+        if (result.isFollowing) {
+          button.textContent = 'Following ✓';
+          button.classList.add('following');
+          button.parentElement.classList.add('followed');
+        } else {
+          button.textContent = 'Follow +';
+          button.classList.remove('following');
+          button.parentElement.classList.remove('followed');
+        }
+
+        // Reload profile to update followed clubs list
+        await loadProfile();
+      } catch (error) {
+        showError('Error updating follow status: ' + error.message);
+      }
+    }
+
+    async function unfollowClub(clubId) {
+      await toggleFollow(clubId, null);
+    }
+
+    function updateCheckboxItemStyle(checkbox) {
+      const item = checkbox.parentElement;
+      if (checkbox.checked) {
+        item.classList.add('selected');
+      } else {
+        item.classList.remove('selected');
+      }
+    }
+
+    // Add click listeners to checkbox items
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.checkbox-item').forEach(item => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        item.addEventListener('click', (e) => {
+          if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL') {
+            checkbox.checked = !checkbox.checked;
+            updateCheckboxItemStyle(checkbox);
+          } else if (e.target.tagName === 'INPUT') {
+            updateCheckboxItemStyle(checkbox);
+          }
+        });
+      });
+    });
+
+    // Handle profile form submission
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      try {
+        const formData = new FormData(e.target);
+        const interests = Array.from(document.querySelectorAll('input[name="interests"]:checked'))
+          .map(cb => cb.value);
+
+        const updateData = {
+          firstName: formData.get('firstName'),
+          lastName: formData.get('lastName'),
+          contactNumber: formData.get('contactNumber'),
+          collegeName: formData.get('collegeName'),
+          interests: interests
+        };
+
+        const response = await fetch(`${API_URL}/participants/profile`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(updateData)
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to update profile');
+        }
+
+        const result = await response.json();
+        userData = result.participant;
+        
+        showSuccess('Profile updated successfully!');
+        await loadProfile();
+        
+        // Scroll to top to show message
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (error) {
+        showError('Error updating profile: ' + error.message);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+
+    // Password change functions
+    function openPasswordModal() {
+      document.getElementById('passwordModal').style.display = 'block';
+      document.getElementById('passwordForm').reset();
+    }
+
+    function closePasswordModal() {
+      document.getElementById('passwordModal').style.display = 'none';
+      document.getElementById('passwordForm').reset();
+    }
+
+    function closeClubsModal() {
+      document.getElementById('clubsModal').style.display = 'none';
+    }
+
+    async function changePassword(e) {
+      e.preventDefault();
+
+      const oldPassword = document.getElementById('oldPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (newPassword !== confirmPassword) {
+        alert('New passwords do not match!');
+        return;
+      }
+
+      if (newPassword.length < 6) {
+        alert('Password must be at least 6 characters long!');
+        return;
+      }
+
+      if (oldPassword === newPassword) {
+        alert('New password must be different from current password!');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/participants/reset-password`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ oldPassword, newPassword })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || 'Failed to change password');
+        }
+
+        showSuccess('Password changed successfully!');
+        closePasswordModal();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('error');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      setTimeout(() => {
+        errorDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    function showSuccess(message) {
+      const successDiv = document.getElementById('success');
+      successDiv.textContent = message;
+      successDiv.style.display = 'block';
+      setTimeout(() => {
+        successDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    function hideMessages() {
+      document.getElementById('error').style.display = 'none';
+      document.getElementById('success').style.display = 'none';
+    }
+
+    function logout() {
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.replace('/login.html');
+    }
+
+    // Close modals when clicking outside
+    window.onclick = function(event) {
+      const passwordModal = document.getElementById('passwordModal');
+      const clubsModal = document.getElementById('clubsModal');
+      
+      if (event.target === passwordModal) {
+        closePasswordModal();
+      }
+      if (event.target === clubsModal) {
+        closeClubsModal();
+      }
+    }
+
+    // Load profile on page load
+    window.onload = loadProfile;
+  </script>
+</body>
+</html>

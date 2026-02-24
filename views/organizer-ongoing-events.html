@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ongoing Events - Event Management System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    nav {
+      background: white;
+      padding: 15px 30px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #667eea;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #667eea;
+    }
+    nav a.logout-link {
+      color: #dc3545;
+    }
+    nav a.logout-link:hover {
+      color: #c82333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    h1 {
+      color: white;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 25px;
+    }
+    .event-card {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    .event-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    }
+    .event-card h3 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-right: 5px;
+      margin-bottom: 10px;
+    }
+    .badge.published { background: #6bcf7f; color: white; }
+    .badge.ongoing { background: #4d9de0; color: white; }
+    .badge.normal { background: #a8dadc; color: #333; }
+    .badge.merchandise { background: #f1a9a0; color: #333; }
+    .event-info {
+      margin: 10px 0;
+    }
+    .event-info p {
+      color: #666;
+      font-size: 14px;
+      margin: 8px 0;
+    }
+    .event-info strong {
+      color: #333;
+    }
+    .progress-bar-container {
+      background: #f0f0f0;
+      border-radius: 5px;
+      height: 8px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      height: 100%;
+      border-radius: 5px;
+      transition: width 0.3s;
+    }
+    .loading {
+      text-align: center;
+      padding: 60px;
+      color: white;
+      font-size: 18px;
+    }
+    .empty-state {
+      background: white;
+      padding: 60px;
+      text-align: center;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .empty-state h2 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+    .empty-state p {
+      color: #666;
+      margin-bottom: 25px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #667eea;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background 0.3s;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .btn:hover {
+      background: #5568d3;
+    }
+    .btn-scanner {
+      background: #6bcf7f;
+    }
+    .btn-scanner:hover {
+      background: #5ab86d;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">Event Manager</div>
+    <ul>
+      <li><a href="/organizer/dashboard">Dashboard</a></li>
+      <li><a href="/organizer/create-event">Create Event</a></li>
+      <li><a href="/organizer/ongoing-events">Ongoing Events</a></li>
+      <li><a href="/organizer/profile">Profile</a></li>
+      <li><a href="#" class="logout-link" onclick="logout()">Logout</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <h1>Published & Ongoing Events</h1>
+
+    <div id="loading" class="loading">Loading events...</div>
+
+    <div id="eventsGrid" class="events-grid"></div>
+
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <h2>No Active Events</h2>
+      <p>You don't have any published or ongoing events at the moment.</p>
+      <a href="/organizer/create-event" class="btn">Create New Event</a>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api';
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      window.location.href = '/auth/login';
+    }
+
+    async function loadOngoingEvents() {
+      try {
+        const response = await fetch(`${API_URL}/organizers/events`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.status === 401 || response.status === 403) {
+          logout();
+          return;
+        }
+
+        const events = await response.json();
+
+        // Filter for published and ongoing events
+        const activeEvents = events.filter(e => 
+          e.status === 'Published' || e.status === 'Ongoing'
+        );
+
+        const eventsGrid = document.getElementById('eventsGrid');
+        const emptyState = document.getElementById('emptyState');
+        const loading = document.getElementById('loading');
+
+        if (activeEvents.length === 0) {
+          eventsGrid.style.display = 'none';
+          emptyState.style.display = 'block';
+        } else {
+          const html = activeEvents.map(event => {
+            const registrationPercentage = event.registrationLimit 
+              ? (event.currentRegistrations / event.registrationLimit) * 100
+              : 0;
+
+            return `
+              <div class="event-card">
+                <h3>${event.eventName}</h3>
+                <div>
+                  <span class="badge ${event.status.toLowerCase()}">${event.status}</span>
+                  <span class="badge ${event.eventType.toLowerCase()}">${event.eventType}</span>
+                </div>
+                
+                <div class="event-info">
+                  <p><strong>Start Date:</strong> ${new Date(event.eventStartDate).toLocaleString()}</p>
+                  <p><strong>End Date:</strong> ${new Date(event.eventEndDate).toLocaleString()}</p>
+                  <p><strong>Registration Deadline:</strong> ${new Date(event.registrationDeadline).toLocaleString()}</p>
+                  ${event.venue ? `<p><strong>Venue:</strong> ${event.venue}</p>` : ''}
+                  <p><strong>Registrations:</strong> ${event.currentRegistrations || 0}${event.registrationLimit ? '/' + event.registrationLimit : ''}</p>
+                  ${event.registrationLimit ? `
+                    <div class="progress-bar-container">
+                      <div class="progress-bar" style="width: ${registrationPercentage}%"></div>
+                    </div>
+                  ` : ''}
+                </div>
+                
+                <div style="margin-top: 15px; display: flex; gap: 10px;">
+                  <button class="btn" onclick="viewEvent('${event._id}')" style="flex: 1;">View Details</button>
+                  <button class="btn btn-scanner" onclick="openScanner('${event._id}')" style="flex: 1;">📷 QR Scanner</button>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          eventsGrid.innerHTML = html;
+        }
+
+        loading.style.display = 'none';
+
+      } catch (error) {
+        console.error('Error loading events:', error);
+        document.getElementById('loading').textContent = 'Error loading events';
+      }
+    }
+
+    function viewEvent(eventId) {
+      window.location.href = `/organizer/event/${eventId}`;
+    }
+
+    function openScanner(eventId) {
+      window.location.href = `/organizer/attendance/${eventId}`;
+    }
+
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userType');
+      window.location.href = '/auth/login';
+    }
+
+    // Load events on page load
+    loadOngoingEvents();
+  </script>
+</body>
+</html>
