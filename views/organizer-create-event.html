@@ -793,9 +793,10 @@
       `;
 
             // Add custom fields
-            const customFields = document.querySelectorAll('.custom-field');
+            const customFields = document.querySelectorAll('.custom-field:not(.merchandise-item)');
             customFields.forEach(field => {
-                const label = field.querySelector('.field-label').value || 'Untitled Field';
+                const labelElement = field.querySelector('.field-label');
+                const label = labelElement ? labelElement.value : 'Untitled Field';
                 const type = field.querySelector('.field-type').value;
                 const required = field.querySelector('.field-required').checked;
 
@@ -830,12 +831,15 @@
 
         function getCustomFormFields() {
             const fields = [];
-            const customFields = document.querySelectorAll('.custom-field');
+            const customFields = document.querySelectorAll('.custom-field:not(.merchandise-item)');
 
             customFields.forEach(field => {
+                const labelElement = field.querySelector('.field-label');
+                if (!labelElement) return; // Safeguard
+
                 const fieldData = {
                     fieldId: field.id,
-                    fieldName: field.querySelector('.field-label').value,
+                    fieldName: labelElement.value,
                     fieldType: field.querySelector('.field-type').value,
                     required: field.querySelector('.field-required').checked
                 };
