@@ -19,7 +19,7 @@ router.get('/dashboard', verifyOrganizer, async (req, res) => {
 
     // Calculate analytics for completed events
     const completedEventsAnalytics = [];
-    
+
     for (let event of events) {
       const registrations = await Registration.find({ eventId: event._id });
       totalRegistrations += registrations.length;
@@ -41,7 +41,7 @@ router.get('/dashboard', verifyOrganizer, async (req, res) => {
           eventId: event._id,
           eventName: event.eventName,
           totalRegistrations: registrations.length,
-          totalRevenue: event.eventType === 'Normal' 
+          totalRevenue: event.eventType === 'Normal'
             ? registrations.filter(r => r.paymentStatus === 'Completed').length * event.registrationFee
             : registrations.reduce((sum, r) => sum + (r.merchandisePurchase?.totalAmount || 0), 0),
           attendance: attendedCount,
@@ -167,7 +167,7 @@ router.put('/events/:eventId', verifyOrganizer, async (req, res) => {
         'registrationDeadline', 'registrationFee', 'registrationLimit',
         'eligibility', 'eventTags', 'venue', 'eventType', 'registrationFormFields', 'isTeamEvent', 'minTeamSize', 'maxTeamSize', 'merchandise'
       ];
-      
+
       // Cannot edit registration form if registrations exist
       if (hasRegistrations && req.body.registrationFormFields) {
         return res.status(400).json({ message: 'Cannot modify registration form fields after receiving registrations' });
@@ -175,19 +175,19 @@ router.put('/events/:eventId', verifyOrganizer, async (req, res) => {
     } else if (event.status === 'Published') {
       // Published: description update, extend deadline, increase limit
       allowedUpdates = ['description'];
-      
+
       // Validate and allow deadline extension
       if (req.body.registrationDeadline) {
         const newDeadline = new Date(req.body.registrationDeadline);
         const currentDeadline = new Date(event.registrationDeadline);
-        
+
         if (newDeadline > currentDeadline) {
           allowedUpdates.push('registrationDeadline');
         } else if (newDeadline.getTime() !== currentDeadline.getTime()) {
           return res.status(400).json({ message: 'Can only extend registration deadline, not reduce it' });
         }
       }
-      
+
       // Validate and allow limit increase
       if (req.body.registrationLimit !== undefined) {
         if (req.body.registrationLimit > (event.registrationLimit || 0)) {
@@ -509,7 +509,7 @@ router.put('/profile', verifyOrganizer, async (req, res) => {
 router.post('/password-reset-request', verifyOrganizer, async (req, res) => {
   try {
     const { reason } = req.body;
-    
+
     if (!reason || reason.trim().length < 10) {
       return res.status(400).json({ message: 'Please provide a detailed reason (at least 10 characters)' });
     }
@@ -531,7 +531,7 @@ router.post('/password-reset-request', verifyOrganizer, async (req, res) => {
 
     await resetRequest.save();
 
-    res.json({ 
+    res.json({
       message: 'Password reset request submitted successfully. Admin will review your request.',
       requestId: resetRequest._id
     });
@@ -557,14 +557,14 @@ router.get('/password-reset-requests', verifyOrganizer, async (req, res) => {
 router.get('/profile', verifyOrganizer, async (req, res) => {
   try {
     const organizer = await Organizer.findById(req.user.id).select('-password');
-    
+
     // Get password reset request history
     const resetRequests = await PasswordResetRequest.find({ organizerId: req.user.id })
       .sort({ requestDate: -1 })
       .select('-newPassword')
       .limit(10);
 
-    res.json({ 
+    res.json({
       organizer,
       resetRequests
     });
@@ -588,8 +588,19 @@ router.post('/events/:eventId/scan-attendance', verifyOrganizer, async (req, res
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
-    // Find registration by QR code
-    const registration = await Registration.findOne({ qrCode, eventId })
+    // Parse decoded text to get ticketId
+    let ticketIdToSearch = qrCode;
+    try {
+      const qrData = JSON.parse(qrCode);
+      if (qrData.ticketId) {
+        ticketIdToSearch = qrData.ticketId;
+      }
+    } catch (e) {
+      // Could just be raw ticketId text
+    }
+
+    // Find registration by ticketId
+    const registration = await Registration.findOne({ ticketId: ticketIdToSearch, eventId })
       .populate('participantId', 'firstName lastName email');
 
     if (!registration) {
@@ -598,7 +609,7 @@ router.post('/events/:eventId/scan-attendance', verifyOrganizer, async (req, res
 
     // Check if already scanned
     if (registration.attendance) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: 'Duplicate scan detected',
         participant: {
           name: `${registration.participantId.firstName} ${registration.participantId.lastName}`,
@@ -700,8 +711,8 @@ router.get('/events/:eventId/attendance-dashboard', verifyOrganizer, async (req,
       totalRegistrations: registrations.length,
       scannedCount: scanned.length,
       notScannedCount: notScanned.length,
-      attendanceRate: registrations.length > 0 
-        ? ((scanned.length / registrations.length) * 100).toFixed(2) 
+      attendanceRate: registrations.length > 0
+        ? ((scanned.length / registrations.length) * 100).toFixed(2)
         : 0,
       scanned: scanned.map(r => ({
         name: `${r.participantId.firstName} ${r.participantId.lastName}`,
@@ -746,19 +757,19 @@ router.get('/events/:eventId/export-attendance-csv', verifyOrganizer, async (req
 
     // Create CSV content
     let csv = 'Name,Email,Contact Number,Ticket ID,Attendance,Scan Time,Method,Notes\n';
-    
+
     registrations.forEach(r => {
       const name = `${r.participantId.firstName} ${r.participantId.lastName}`;
       const email = r.participantId.email;
       const contact = r.participantId.contactNumber || 'N/A';
       const ticketId = r.ticketId;
       const attendance = r.attendance ? 'Present' : 'Absent';
-      const scanTime = r.attendanceTimestamp 
-        ? new Date(r.attendanceTimestamp).toLocaleString() 
+      const scanTime = r.attendanceTimestamp
+        ? new Date(r.attendanceTimestamp).toLocaleString()
         : 'N/A';
       const method = r.attendanceMethod || 'N/A';
       const notes = r.attendanceNotes ? r.attendanceNotes.replace(/,/g, ';') : '';
-      
+
       csv += `"${name}","${email}","${contact}","${ticketId}","${attendance}","${scanTime}","${method}","${notes}"\n`;
     });
 

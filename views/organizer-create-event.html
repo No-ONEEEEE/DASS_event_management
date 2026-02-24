@@ -1,1 +1,1125 @@
-﻿$content
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Event - Event Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        nav {
+            background: #1c2128;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #e6edf3;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #667eea;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-draft {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-published {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-ongoing {
+            background: #dbeafe;
+            color: #1e40af;
+            font-weight: bold;
+        }
+
+        .status-completed {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .status-closed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .form-locked-notice {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            color: #92400e;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .form-locked-notice.show {
+            display: block;
+        }
+
+        .form-locked-notice strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        input:disabled,
+        select:disabled,
+        textarea:disabled {
+            background: #f3f4f6;
+            cursor: not-allowed;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        .team-size-inputs {
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .team-size-inputs.show {
+            display: grid;
+        }
+
+        .merchandise-section {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 5px;
+        }
+
+        .merchandise-section.show {
+            display: block;
+        }
+
+        .form-builder {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .form-builder h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .custom-field {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .field-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .field-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .options-container {
+            margin-top: 10px;
+        }
+
+        .option-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .option-item input {
+            flex: 1;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-primary:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .preview-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f0f9ff;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .preview-section.show {
+            display: block;
+        }
+
+        .preview-field {
+            margin-bottom: 15px;
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 14px;
+            margin-top: 20px;
+            padding: 10px;
+            background: #fee2e2;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            color: #065f46;
+            font-size: 14px;
+            margin-top: 20px;
+            padding: 10px;
+            background: #d1fae5;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" href="/dark-theme.css">
+</head>
+
+<body>
+    <nav>
+        <div class="logo">EventHub</div>
+        <ul>
+            <li><a href="/organizer/dashboard">Dashboard</a></li>
+            <li><a href="/organizer/ongoing-events">Ongoing Events</a></li>
+            <li><a href="/organizer/create-event">Create Event</a></li>
+            <li><a href="/organizer/profile">Profile</a></li>
+            <li><a href="#" class="logout-link" onclick="logout()">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container" style="background: var(--bg-card) !important; color: var(--text-primary) !important;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1 id="pageTitle" style="color: var(--text-primary) !important;">Create Event</h1>
+                <span id="statusIndicator" class="status-indicator" style="display: none;"></span>
+            </div>
+        </div>
+
+        <div id="formLockedNotice" class="form-locked-notice">
+            <strong>⚠️ Registration Form Locked</strong>
+            <p>This event has received registrations. You cannot modify the custom registration form fields.</p>
+        </div>
+
+        <form id="eventForm">
+            <div class="form-group">
+                <label style="color: var(--text-primary) !important;">Event Name *</label>
+                <input type="text" id="eventName" required>
+            </div>
+
+            <div class="form-group">
+                <label style="color: var(--text-primary) !important;">Description *</label>
+                <textarea id="description" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label style="color: var(--text-primary) !important;">Event Start Date & Time *</label>
+                <input type="datetime-local" id="eventStartDate" required>
+            </div>
+
+            <div class="form-group">
+                <label style="color: var(--text-primary) !important;">Event End Date & Time *</label>
+                <input type="datetime-local" id="eventEndDate" required>
+            </div>
+
+            <div class="form-group">
+                <label style="color: var(--text-primary) !important;">Registration Deadline *</label>
+                <input type="datetime-local" id="registrationDeadline" required>
+            </div>
+
+            <div class="form-group">
+                <label style="color: var(--text-primary) !important;">Registration Fee (₹)</label>
+                <input type="number" id="registrationFee" min="0" value="0">
+            </div>
+
+            <div class="form-group">
+                <label style="color: var(--text-primary) !important;">Registration Limit</label>
+                <input type="number" id="registrationLimit" min="1" placeholder="Leave empty for unlimited">
+            </div>
+
+            <div class="form-group">
+                <label style="color: var(--text-primary) !important;">Eligibility</label>
+                <input type="text" id="eligibility" placeholder="e.g., Open to all, Students only">
+            </div>
+
+            <div class="form-group">
+                <label style="color: var(--text-primary) !important;">Event Tags (comma separated)</label>
+                <input type="text" id="eventTags" placeholder="e.g., Workshop, Technical, Cultural">
+            </div>
+
+            <div class="form-group">
+                <label style="color: var(--text-primary) !important;">Venue *</label>
+                <input type="text" id="venue" required>
+            </div>
+
+            <div class="form-group">
+                <label style="color: var(--text-primary) !important;">Event Type *</label>
+                <select id="eventType" required>
+                    <option value="Normal">Normal</option>
+                    <option value="Merchandise">Merchandise</option>
+                </select>
+            </div>
+
+            <div id="merchandiseSection" class="merchandise-section" style="background: var(--bg-hover) !important;">
+                <h3 style="color: var(--text-primary) !important;">Merchandise Details</h3>
+                <div class="form-group">
+                    <label style="color: var(--text-primary) !important;">Item Name *</label>
+                    <input type="text" id="merchandiseName">
+                </div>
+                <div class="form-group">
+                    <label style="color: var(--text-primary) !important;">Item Description</label>
+                    <textarea id="merchandiseDescription"></textarea>
+                </div>
+                <div class="form-group">
+                    <label style="color: var(--text-primary) !important;">Price (₹) *</label>
+                    <input type="number" id="merchandisePrice" min="0">
+                </div>
+                <div class="form-group">
+                    <label style="color: var(--text-primary) !important;">Stock Quantity *</label>
+                    <input type="number" id="merchandiseStock" min="1">
+                </div>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="isTeamEvent">
+                <label for="isTeamEvent" style="color: var(--text-primary) !important;">Team Event</label>
+            </div>
+
+            <div id="teamSizeInputs" class="team-size-inputs">
+                <div class="form-group">
+                    <label style="color: var(--text-primary) !important;">Min Team Size *</label>
+                    <input type="number" id="minTeamSize" min="2" value="2">
+                </div>
+                <div class="form-group">
+                    <label style="color: var(--text-primary) !important;">Max Team Size *</label>
+                    <input type="number" id="maxTeamSize" min="2" value="5">
+                </div>
+            </div>
+
+            <!-- Custom Registration Form Builder -->
+            <div class="form-builder" style="background: var(--bg-hover) !important;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="color: var(--text-primary) !important;">Custom Registration Form Fields</h3>
+                    <button type="button" class="btn btn-primary btn-small" id="addFieldBtn">+ Add Field</button>
+                </div>
+                <p style="color: var(--text-secondary) !important; font-size: 14px; margin-bottom: 15px;">
+                    Add custom fields for participant registration (Name, Email, Phone are included by default)
+                </p>
+                <div id="customFieldsContainer"></div>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="preview-section" id="previewSection" style="background: var(--bg-hover) !important;">
+                <h3 style="color: var(--text-primary) !important;">Registration Form Preview</h3>
+                <p style="color: var(--text-secondary) !important; font-size: 14px; margin-bottom: 15px;">
+                    This is how participants will see the registration form
+                </p>
+                <div id="previewContainer">
+                    <div class="preview-field">
+                        <label style="color: var(--text-primary) !important;">Name *</label>
+                        <input type="text" disabled placeholder="(Default field)">
+                    </div>
+                    <div class="preview-field">
+                        <label style="color: var(--text-primary) !important;">Email *</label>
+                        <input type="email" disabled placeholder="(Default field)">
+                    </div>
+                    <div class="preview-field">
+                        <label style="color: var(--text-primary) !important;">Phone *</label>
+                        <input type="tel" disabled placeholder="(Default field)">
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-secondary" id="togglePreviewBtn">Show Preview</button>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-secondary" id="saveDraftBtn">Save as Draft</button>
+                <button type="button" class="btn btn-success" id="publishBtn">Publish Event</button>
+            </div>
+
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+        </form>
+    </div>
+
+    <script>
+        // Inline API Configuration
+        const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+        const API_URL = isProduction
+            ? 'https://dass-event-management.onrender.com/api'
+            : 'http://localhost:5000/api';
+
+        console.log('API_URL:', API_URL);
+
+        let customFieldsCount = 0;
+        let eventId = null;
+        let currentEvent = null;
+        let isEditMode = false;
+        let hasRegistrations = false;
+
+        // Check if editing
+        const urlParams = new URLSearchParams(window.location.search);
+        eventId = urlParams.get('id');
+
+        if (eventId) {
+            isEditMode = true;
+            document.getElementById('pageTitle').textContent = 'Edit Event';
+            loadEventData();
+        }
+
+        // Event Type Change Handler
+        document.getElementById('eventType').addEventListener('change', (e) => {
+            const merchandiseSection = document.getElementById('merchandiseSection');
+            if (e.target.value === 'Merchandise') {
+                merchandiseSection.classList.add('show');
+                document.getElementById('merchandiseName').required = true;
+                document.getElementById('merchandisePrice').required = true;
+                document.getElementById('merchandiseStock').required = true;
+            } else {
+                merchandiseSection.classList.remove('show');
+                document.getElementById('merchandiseName').required = false;
+                document.getElementById('merchandisePrice').required = false;
+                document.getElementById('merchandiseStock').required = false;
+            }
+        });
+
+        // Team Event Toggle
+        document.getElementById('isTeamEvent').addEventListener('change', (e) => {
+            const teamSizeInputs = document.getElementById('teamSizeInputs');
+            if (e.target.checked) {
+                teamSizeInputs.classList.add('show');
+                document.getElementById('minTeamSize').required = true;
+                document.getElementById('maxTeamSize').required = true;
+            } else {
+                teamSizeInputs.classList.remove('show');
+                document.getElementById('minTeamSize').required = false;
+                document.getElementById('maxTeamSize').required = false;
+            }
+        });
+
+        // Add Field Button
+        document.getElementById('addFieldBtn').addEventListener('click', () => {
+            if (hasRegistrations) {
+                showError('Cannot add fields after receiving registrations');
+                return;
+            }
+            addCustomField();
+        });
+
+        // Toggle Preview
+        document.getElementById('togglePreviewBtn').addEventListener('click', () => {
+            const preview = document.getElementById('previewSection');
+            const btn = document.getElementById('togglePreviewBtn');
+
+            if (preview.classList.contains('show')) {
+                preview.classList.remove('show');
+                btn.textContent = 'Show Preview';
+            } else {
+                updatePreview();
+                preview.classList.add('show');
+                btn.textContent = 'Hide Preview';
+            }
+        });
+
+        function addCustomField(fieldData = null) {
+            customFieldsCount++;
+            const fieldId = fieldData?.fieldId || `field_${customFieldsCount}`;
+            const fieldType = fieldData?.fieldType || 'text';
+            const fieldName = fieldData?.fieldName || '';
+            const required = fieldData?.required || false;
+            const options = fieldData?.options || [];
+
+            const fieldDiv = document.createElement('div');
+            fieldDiv.className = 'custom-field';
+            fieldDiv.style.background = 'var(--bg-card)';
+            fieldDiv.id = fieldId;
+
+            fieldDiv.innerHTML = `
+        <div class="field-header">
+          <h4 style="color: var(--text-primary) !important;">Field ${customFieldsCount}</h4>
+          <div>
+            <button type="button" class="btn btn-secondary btn-small reorder-btn" onclick="moveFieldUp('${fieldId}')">↑ Up</button>
+            <button type="button" class="btn btn-secondary btn-small reorder-btn" onclick="moveFieldDown('${fieldId}')">↓ Down</button>
+            <button type="button" class="btn btn-danger btn-small" onclick="removeField('${fieldId}')">Remove</button>
+          </div>
+        </div>
+        <div class="field-controls">
+          <div>
+            <label style="color: var(--text-primary) !important;">Field Label</label>
+            <input type="text" class="field-label" value="${fieldName}" required>
+          </div>
+          <div>
+            <label style="color: var(--text-primary) !important;">Field Type</label>
+            <select class="field-type" onchange="handleFieldTypeChange('${fieldId}')">
+              <option value="text" ${fieldType === 'text' ? 'selected' : ''}>Text</option>
+              <option value="textarea" ${fieldType === 'textarea' ? 'selected' : ''}>Textarea</option>
+              <option value="number" ${fieldType === 'number' ? 'selected' : ''}>Number</option>
+              <option value="email" ${fieldType === 'email' ? 'selected' : ''}>Email</option>
+              <option value="tel" ${fieldType === 'tel' ? 'selected' : ''}>Phone</option>
+              <option value="date" ${fieldType === 'date' ? 'selected' : ''}>Date</option>
+              <option value="dropdown" ${fieldType === 'dropdown' ? 'selected' : ''}>Dropdown</option>
+              <option value="checkbox" ${fieldType === 'checkbox' ? 'selected' : ''}>Checkbox</option>
+              <option value="radio" ${fieldType === 'radio' ? 'selected' : ''}>Radio</option>
+              <option value="file" ${fieldType === 'file' ? 'selected' : ''}>File Upload</option>
+            </select>
+          </div>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" class="field-required" ${required ? 'checked' : ''}>
+          <label style="color: var(--text-primary) !important;">Required Field</label>
+        </div>
+        <div class="options-container" id="options_${fieldId}"></div>
+      `;
+
+            document.getElementById('customFieldsContainer').appendChild(fieldDiv);
+
+            if (['dropdown', 'checkbox', 'radio'].includes(fieldType)) {
+                showOptionsInput(fieldId, options);
+            }
+        }
+
+        function removeField(fieldId) {
+            if (hasRegistrations) {
+                showError('Cannot remove fields after receiving registrations');
+                return;
+            }
+            document.getElementById(fieldId).remove();
+            updatePreview();
+        }
+
+        function moveFieldUp(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field && field.previousElementSibling) {
+                field.parentNode.insertBefore(field, field.previousElementSibling);
+                updatePreview();
+            }
+        }
+
+        function moveFieldDown(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field && field.nextElementSibling) {
+                field.parentNode.insertBefore(field.nextElementSibling, field);
+                updatePreview();
+            }
+        }
+
+        function handleFieldTypeChange(fieldId) {
+            const fieldDiv = document.getElementById(fieldId);
+            const fieldType = fieldDiv.querySelector('.field-type').value;
+            const optionsContainer = document.getElementById(`options_${fieldId}`);
+
+            if (['dropdown', 'checkbox', 'radio'].includes(fieldType)) {
+                showOptionsInput(fieldId);
+            } else {
+                optionsContainer.innerHTML = '';
+            }
+        }
+
+        function showOptionsInput(fieldId, existingOptions = []) {
+            const optionsContainer = document.getElementById(`options_${fieldId}`);
+
+            let html = `
+        <label style="color: var(--text-primary) !important;">Options (one per line)</label>
+        <button type="button" class="btn btn-primary btn-small" onclick="addOption('${fieldId}')">+ Add Option</button>
+        <div id="optionsList_${fieldId}">
+      `;
+
+            if (existingOptions.length > 0) {
+                existingOptions.forEach((opt, idx) => {
+                    html += `
+            <div class="option-item" style="margin-top: 5px;">
+              <input type="text" value="${opt}" class="option-value">
+              <button type="button" class="btn btn-danger btn-small" onclick="removeOption(this)">Remove</button>
+            </div>
+          `;
+                });
+            } else {
+                html += `
+          <div class="option-item" style="margin-top: 5px;">
+            <input type="text" class="option-value" placeholder="Option 1">
+            <button type="button" class="btn btn-danger btn-small" onclick="removeOption(this)">Remove</button>
+          </div>
+        `;
+            }
+
+            html += `</div>`;
+            optionsContainer.innerHTML = html;
+        }
+
+        function addOption(fieldId) {
+            const optionsList = document.getElementById(`optionsList_${fieldId}`);
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'option-item';
+            optionDiv.style.marginTop = '5px';
+            optionDiv.innerHTML = `
+        <input type="text" class="option-value" placeholder="New option">
+        <button type="button" class="btn btn-danger btn-small" onclick="removeOption(this)">Remove</button>
+      `;
+            optionsList.appendChild(optionDiv);
+        }
+
+        function removeOption(btn) {
+            btn.closest('.option-item').remove();
+        }
+
+        function updatePreview() {
+            const container = document.getElementById('previewContainer');
+
+            // Reset to default fields
+            container.innerHTML = `
+        <div class="preview-field">
+          <label style="color: var(--text-primary) !important;">Name *</label>
+          <input type="text" disabled placeholder="(Default field)">
+        </div>
+        <div class="preview-field">
+          <label style="color: var(--text-primary) !important;">Email *</label>
+          <input type="email" disabled placeholder="(Default field)">
+        </div>
+        <div class="preview-field">
+          <label style="color: var(--text-primary) !important;">Phone *</label>
+          <input type="tel" disabled placeholder="(Default field)">
+        </div>
+      `;
+
+            // Add custom fields
+            const customFields = document.querySelectorAll('.custom-field');
+            customFields.forEach(field => {
+                const label = field.querySelector('.field-label').value || 'Untitled Field';
+                const type = field.querySelector('.field-type').value;
+                const required = field.querySelector('.field-required').checked;
+
+                const previewDiv = document.createElement('div');
+                previewDiv.className = 'preview-field';
+
+                let inputHtml = '';
+                if (type === 'textarea') {
+                    inputHtml = `<textarea disabled placeholder="Preview"></textarea>`;
+                } else if (type === 'dropdown') {
+                    const options = Array.from(field.querySelectorAll('.option-value')).map(o => o.value).filter(v => v);
+                    inputHtml = `<select disabled><option>Select...</option>${options.map(o => `<option>${o}</option>`).join('')}</select>`;
+                } else if (type === 'checkbox' || type === 'radio') {
+                    const options = Array.from(field.querySelectorAll('.option-value')).map(o => o.value).filter(v => v);
+                    inputHtml = options.map(o => `
+            <div style="margin: 5px 0; color: var(--text-primary) !important;">
+              <input type="${type}" disabled> ${o}
+            </div>
+          `).join('');
+                } else {
+                    inputHtml = `<input type="${type}" disabled placeholder="Preview">`;
+                }
+
+                previewDiv.innerHTML = `
+          <label style="color: var(--text-primary) !important;">${label}${required ? ' *' : ''}</label>
+          ${inputHtml}
+        `;
+
+                container.appendChild(previewDiv);
+            });
+        }
+
+        function getCustomFormFields() {
+            const fields = [];
+            const customFields = document.querySelectorAll('.custom-field');
+
+            customFields.forEach(field => {
+                const fieldData = {
+                    fieldId: field.id,
+                    fieldName: field.querySelector('.field-label').value,
+                    fieldType: field.querySelector('.field-type').value,
+                    required: field.querySelector('.field-required').checked
+                };
+
+                if (['dropdown', 'checkbox', 'radio'].includes(fieldData.fieldType)) {
+                    fieldData.options = Array.from(field.querySelectorAll('.option-value'))
+                        .map(o => o.value)
+                        .filter(v => v);
+                }
+
+                fields.push(fieldData);
+            });
+
+            return fields;
+        }
+
+        function getFormData() {
+            const formData = {
+                eventName: document.getElementById('eventName').value,
+                description: document.getElementById('description').value,
+                eventStartDate: document.getElementById('eventStartDate').value,
+                eventEndDate: document.getElementById('eventEndDate').value,
+                registrationDeadline: document.getElementById('registrationDeadline').value,
+                registrationFee: parseFloat(document.getElementById('registrationFee').value) || 0,
+                registrationLimit: parseInt(document.getElementById('registrationLimit').value) || null,
+                eligibility: document.getElementById('eligibility').value,
+                eventTags: document.getElementById('eventTags').value.split(',').map(t => t.trim()).filter(t => t),
+                venue: document.getElementById('venue').value,
+                eventType: document.getElementById('eventType').value,
+                isTeamEvent: document.getElementById('isTeamEvent').checked,
+                customForm: {
+                    fields: getCustomFormFields()
+                }
+            };
+
+            if (formData.isTeamEvent) {
+                formData.minTeamSize = parseInt(document.getElementById('minTeamSize').value);
+                formData.maxTeamSize = parseInt(document.getElementById('maxTeamSize').value);
+            }
+
+            if (formData.eventType === 'Merchandise') {
+                formData.merchandise = {
+                    itemName: document.getElementById('merchandiseName').value,
+                    description: document.getElementById('merchandiseDescription').value,
+                    price: parseFloat(document.getElementById('merchandisePrice').value),
+                    stock: parseInt(document.getElementById('merchandiseStock').value)
+                };
+            }
+
+            return formData;
+        }
+
+        async function loadEventData() {
+            try {
+                const response = await fetch(`${API_URL}/organizers/events/${eventId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load event');
+                }
+
+                currentEvent = await response.json();
+                populateForm(currentEvent);
+
+                // Update status indicator
+                const statusIndicator = document.getElementById('statusIndicator');
+                statusIndicator.textContent = currentEvent.status;
+                statusIndicator.className = `status-indicator status-${currentEvent.status.toLowerCase()}`;
+                statusIndicator.style.display = 'inline-block';
+
+                // Check for registrations
+                hasRegistrations = currentEvent.currentRegistrations > 0;
+                if (hasRegistrations) {
+                    document.getElementById('formLockedNotice').classList.add('show');
+                    document.getElementById('addFieldBtn').disabled = true;
+                    document.getElementById('addFieldBtn').style.cursor = 'not-allowed';
+                }
+
+                // Apply edit restrictions based on status
+                applyEditRestrictions(currentEvent.status);
+
+            } catch (error) {
+                console.error('Error loading event:', error);
+                showError('Failed to load event data');
+            }
+        }
+
+        function populateForm(event) {
+            document.getElementById('eventName').value = event.eventName;
+            document.getElementById('description').value = event.description;
+            document.getElementById('eventStartDate').value = formatDateForInput(event.eventStartDate);
+            document.getElementById('eventEndDate').value = formatDateForInput(event.eventEndDate);
+            document.getElementById('registrationDeadline').value = formatDateForInput(event.registrationDeadline);
+            document.getElementById('registrationFee').value = event.registrationFee || 0;
+            document.getElementById('registrationLimit').value = event.registrationLimit || '';
+            document.getElementById('eligibility').value = event.eligibility || '';
+            document.getElementById('eventTags').value = (event.eventTags || []).join(', ');
+            document.getElementById('venue').value = event.venue;
+            document.getElementById('eventType').value = event.eventType;
+
+            if (event.eventType === 'Merchandise' && event.merchandise) {
+                document.getElementById('merchandiseSection').classList.add('show');
+                document.getElementById('merchandiseName').value = event.merchandise.itemName || '';
+                document.getElementById('merchandiseDescription').value = event.merchandise.description || '';
+                document.getElementById('merchandisePrice').value = event.merchandise.price || '';
+                document.getElementById('merchandiseStock').value = event.merchandise.stock || '';
+            }
+
+            document.getElementById('isTeamEvent').checked = event.isTeamEvent;
+            if (event.isTeamEvent) {
+                document.getElementById('teamSizeInputs').classList.add('show');
+                document.getElementById('minTeamSize').value = event.minTeamSize;
+                document.getElementById('maxTeamSize').value = event.maxTeamSize;
+            }
+
+            // Load custom form fields
+            if (event.customForm && event.customForm.fields && event.customForm.fields.length > 0) {
+                event.customForm.fields.forEach(field => {
+                    addCustomField(field);
+                });
+            }
+        }
+
+        function applyEditRestrictions(status) {
+            const allInputs = document.querySelectorAll('input, select, textarea');
+
+            if (status === 'Draft') {
+                // Draft: all fields editable except form fields if registrations exist
+                if (hasRegistrations) {
+                    // Disable form builder
+                    document.querySelectorAll('.custom-field input, .custom-field select, .custom-field textarea').forEach(el => {
+                        el.disabled = true;
+                    });
+                    document.querySelectorAll('.reorder-btn').forEach(btn => btn.style.display = 'none');
+                }
+            } else if (status === 'Published') {
+                // Published: only description, deadline (extend), limit (increase)
+                allInputs.forEach(el => {
+                    if (el.id !== 'description' && el.id !== 'registrationDeadline' && el.id !== 'registrationLimit') {
+                        el.disabled = true;
+                    }
+                });
+
+                document.getElementById('saveDraftBtn').style.display = 'none';
+                document.getElementById('publishBtn').textContent = 'Update Event';
+
+                // Disable form builder completely
+                document.querySelectorAll('.custom-field input, .custom-field select, .custom-field textarea').forEach(el => {
+                    el.disabled = true;
+                });
+                document.getElementById('addFieldBtn').disabled = true;
+                document.querySelectorAll('.reorder-btn').forEach(btn => btn.style.display = 'none');
+            } else if (['Ongoing', 'Completed', 'Closed'].includes(status)) {
+                // No edits allowed for these statuses
+                allInputs.forEach(el => el.disabled = true);
+                document.getElementById('saveDraftBtn').style.display = 'none';
+                document.getElementById('publishBtn').style.display = 'none';
+
+                showError('Events in Ongoing, Completed, or Closed status cannot be edited. Only status changes are allowed.');
+                document.querySelectorAll('.reorder-btn').forEach(btn => btn.style.display = 'none');
+            }
+        }
+
+        function formatDateForInput(dateString) {
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+
+        // Save as Draft
+        document.getElementById('saveDraftBtn').addEventListener('click', async () => {
+            try {
+                const formData = getFormData();
+                formData.status = 'Draft';
+
+                let response;
+                if (isEditMode) {
+                    response = await fetch(`${API_URL}/organizers/events/${eventId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                } else {
+                    response = await fetch(`${API_URL}/organizers/events`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                }
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Failed to save draft');
+                }
+
+                const result = await response.json();
+                showSuccess('Event saved as draft successfully!');
+
+                setTimeout(() => {
+                    window.location.href = '/organizer/dashboard';
+                }, 1500);
+
+            } catch (error) {
+                console.error('Error saving draft:', error);
+                showError(error.message);
+            }
+        });
+
+        // Publish Event
+        document.getElementById('publishBtn').addEventListener('click', async () => {
+            try {
+                const formData = getFormData();
+
+                if (isEditMode && currentEvent.status === 'Published') {
+                    // Update existing published event
+                    const response = await fetch(`${API_URL}/organizers/events/${eventId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.message || 'Failed to update event');
+                    }
+
+                    showSuccess('Event updated successfully!');
+                } else {
+                    // Create new event or publish draft
+                    let eventIdToPublish = eventId;
+
+                    if (!isEditMode) {
+                        // Create new event first
+                        const createResponse = await fetch(`${API_URL}/organizers/events`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            },
+                            body: JSON.stringify(formData)
+                        });
+
+                        if (!createResponse.ok) {
+                            const error = await createResponse.json();
+                            throw new Error(error.message || 'Failed to create event');
+                        }
+
+                        const result = await createResponse.json();
+                        eventIdToPublish = result.event._id;
+                    }
+
+                    // Publish the event
+                    const publishResponse = await fetch(`${API_URL}/organizers/events/${eventIdToPublish}/publish`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
+                    });
+
+                    if (!publishResponse.ok) {
+                        const error = await publishResponse.json();
+                        throw new Error(error.message || 'Failed to publish event');
+                    }
+
+                    showSuccess('Event published successfully!');
+                }
+
+                setTimeout(() => {
+                    window.location.href = '/organizer/dashboard';
+                }, 1500);
+
+            } catch (error) {
+                console.error('Error publishing event:', error);
+                showError(error.message);
+            }
+        });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+
+            setTimeout(() => {
+                errorDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.classList.add('show');
+
+            setTimeout(() => {
+                successDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userRole');
+            window.location.href = '/login';
+        }
+
+        // Check authentication
+        const token = localStorage.getItem('token');
+        const userRole = localStorage.getItem('userRole');
+
+        if (!token || userRole !== 'Organizer') {
+            window.location.href = '/auth/login?role=organizer';
+        }
+    </script>
+    <script src="/dark-enforcer.js"></script>
+    <script src="/toast.js"></script>
+</body>
+
+</html>

@@ -265,27 +265,116 @@
       color: #656d76;
       font-style: italic;
     }
-  
+
     /* === DARK THEME INLINE OVERRIDE === */
-    body { background: #0d1117 !important; color: #e6edf3 !important; }
-    header, nav, .navbar { background: #161b22 !important; border-bottom: 1px solid #30363d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.6) !important; }
-    header h1, header h2, nav a { color: #e6edf3 !important; }
-    .card, .events-section, .section, .panel, .box, .wrapper { background: #1c2128 !important; border-color: #30363d !important; color: #e6edf3 !important; box-shadow: 0 2px 10px rgba(0,0,0,0.4) !important; }
-    .card h3, .card h2, .events-section h2, .section h2, .section h3 { color: #e6edf3 !important; }
-    .card .number { color: #79c0ff !important; }
-    .event-item { border-color: #30363d !important; background: #21262d !important; }
-    .event-item:hover { background: #2d333b !important; }
-    .event-info h4 { color: #e6edf3 !important; }
-    .event-info p { color: #8b949e !important; }
-    .btn-secondary { background: #21262d !important; color: #e6edf3 !important; border: 1px solid #30363d !important; }
-    .btn-secondary:hover { background: #2d333b !important; }
-    .tabs { border-bottom-color: #30363d !important; }
-    .tab { color: #8b949e !important; border-bottom-color: transparent !important; background: transparent !important; }
-    .tab.active { color: #667eea !important; border-bottom-color: #667eea !important; }
-    .tab:hover { background: #21262d !important; color: #e6edf3 !important; }
-    table, th, td { background: #1c2128 !important; color: #e6edf3 !important; border-color: #30363d !important; }
-    tr:hover td { background: #21262d !important; }
-    .no-events, .empty, .no-data { color: #8b949e !important; }
+    body {
+      background: #0d1117 !important;
+      color: #e6edf3 !important;
+    }
+
+    header,
+    nav,
+    .navbar {
+      background: #161b22 !important;
+      border-bottom: 1px solid #30363d !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    header h1,
+    header h2,
+    nav a {
+      color: #e6edf3 !important;
+    }
+
+    .card,
+    .events-section,
+    .section,
+    .panel,
+    .box,
+    .wrapper {
+      background: #1c2128 !important;
+      border-color: #30363d !important;
+      color: #e6edf3 !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .card h3,
+    .card h2,
+    .events-section h2,
+    .section h2,
+    .section h3 {
+      color: #e6edf3 !important;
+    }
+
+    .card .number {
+      color: #79c0ff !important;
+    }
+
+    .event-item {
+      border-color: #30363d !important;
+      background: #21262d !important;
+    }
+
+    .event-item:hover {
+      background: #2d333b !important;
+    }
+
+    .event-info h4 {
+      color: #e6edf3 !important;
+    }
+
+    .event-info p {
+      color: #8b949e !important;
+    }
+
+    .btn-secondary {
+      background: #21262d !important;
+      color: #e6edf3 !important;
+      border: 1px solid #30363d !important;
+    }
+
+    .btn-secondary:hover {
+      background: #2d333b !important;
+    }
+
+    .tabs {
+      border-bottom-color: #30363d !important;
+    }
+
+    .tab {
+      color: #8b949e !important;
+      border-bottom-color: transparent !important;
+      background: transparent !important;
+    }
+
+    .tab.active {
+      color: #667eea !important;
+      border-bottom-color: #667eea !important;
+    }
+
+    .tab:hover {
+      background: #21262d !important;
+      color: #e6edf3 !important;
+    }
+
+    table,
+    th,
+    td {
+      background: #1c2128 !important;
+      color: #e6edf3 !important;
+      border-color: #30363d !important;
+    }
+
+    tr:hover td {
+      background: #21262d !important;
+    }
+
+    .no-events,
+    .empty,
+    .no-data {
+      color: #8b949e !important;
+    }
+
     /* === END DARK THEME === */
   </style>
 </head>
@@ -316,7 +405,8 @@
 
     <div class="events-section tabs-container">
       <h2>Participation History</h2>
-      <p style="color: #8b949e; font-size: 14px; margin-bottom: 15px;">Categorized record of your event participation</p>
+      <p style="color: #8b949e; font-size: 14px; margin-bottom: 15px;">Categorized record of your event participation
+      </p>
 
       <div class="tabs">
         <button class="tab active" onclick="switchTab('normal')">Normal</button>
@@ -527,7 +617,7 @@
         html += `
           <div class="event-item">
             <div class="event-info">
-              <h4>${event.eventId.eventName} <span class="badge ${statusClass}">${event.status}</span></h4>
+              <h4>${event.eventId.eventName} <span class="badge ${statusClass}">${event.status}</span>${event.eventId.status === 'Ongoing' ? ' <span class="badge" style="background: #4d9de0; color: white;">Ongoing</span>' : ''}</h4>
               <p>
                 📅 ${eventDate} | 🎯 ${event.eventId.eventType} | By: ${organizer} ${teamName}<br>
                 🎫 Ticket ID: <span class="ticket-id" onclick="viewTicket('${event._id}')">${event._id.substring(0, 8)}...</span>
