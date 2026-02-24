@@ -17,27 +17,25 @@ router.get('/dashboard', verifyOrganizer, async (req, res) => {
     let totalRevenue = 0;
     let completedEvents = 0;
 
-    // Calculate analytics for completed events ONLY
+    // Calculate analytics for completed events
     const completedEventsAnalytics = [];
     
     for (let event of events) {
       const registrations = await Registration.find({ eventId: event._id });
+      totalRegistrations += registrations.length;
 
-      // Only calculate stats for COMPLETED events
+      if (event.eventType === 'Normal' && event.registrationFee) {
+        totalRevenue += registrations.filter(r => r.paymentStatus === 'Completed').length * event.registrationFee;
+      } else if (event.eventType === 'Merchandise') {
+        registrations.forEach(r => {
+          if (r.paymentStatus === 'Completed' && r.merchandisePurchase) {
+            totalRevenue += r.merchandisePurchase.totalAmount || 0;
+          }
+        });
+      }
+
       if (event.status === 'Completed') {
         completedEvents++;
-        totalRegistrations += registrations.length;
-
-        if (event.eventType === 'Normal' && event.registrationFee) {
-          totalRevenue += registrations.filter(r => r.paymentStatus === 'Completed').length * event.registrationFee;
-        } else if (event.eventType === 'Merchandise') {
-          registrations.forEach(r => {
-            if (r.paymentStatus === 'Completed' && r.merchandisePurchase) {
-              totalRevenue += r.merchandisePurchase.totalAmount || 0;
-            }
-          });
-        }
-
         const attendedCount = registrations.filter(r => r.attendance).length;
         completedEventsAnalytics.push({
           eventId: event._id,
@@ -167,12 +165,12 @@ router.put('/events/:eventId', verifyOrganizer, async (req, res) => {
       allowedUpdates = [
         'eventName', 'description', 'eventStartDate', 'eventEndDate',
         'registrationDeadline', 'registrationFee', 'registrationLimit',
-        'eligibility', 'eventTags', 'venue', 'eventType', 'registrationFormFields', 'customForm', 'isTeamEvent', 'minTeamSize', 'maxTeamSize', 'merchandise'
+        'eligibility', 'eventTags', 'venue', 'eventType', 'registrationFormFields', 'isTeamEvent', 'minTeamSize', 'maxTeamSize', 'merchandise'
       ];
       
-      // Cannot edit registration form if registrations exist (form locking)
-      if (hasRegistrations && (req.body.registrationFormFields || req.body.customForm)) {
-        return res.status(400).json({ message: 'Registration form is locked after receiving the first registration. Cannot modify form fields.' });
+      // Cannot edit registration form if registrations exist
+      if (hasRegistrations && req.body.registrationFormFields) {
+        return res.status(400).json({ message: 'Cannot modify registration form fields after receiving registrations' });
       }
     } else if (event.status === 'Published') {
       // Published: description update, extend deadline, increase limit
