@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,10 +11,12 @@
       padding: 0;
       box-sizing: border-box;
     }
+
     body {
       font-family: Arial, sans-serif;
       background: #f5f5f5;
     }
+
     .navbar {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       padding: 15px 30px;
@@ -21,15 +24,18 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
+
     .navbar h2 {
       font-size: 24px;
     }
+
     .nav-links {
       display: flex;
       gap: 20px;
     }
+
     .nav-links a {
       color: white;
       text-decoration: none;
@@ -37,34 +43,42 @@
       border-radius: 5px;
       transition: 0.3s;
     }
-    .nav-links a:hover, .nav-links a.active {
-      background: rgba(255,255,255,0.2);
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: rgba(255, 255, 255, 0.2);
     }
+
     .nav-links a.logout-btn {
       background: #dc3545;
       font-weight: bold;
     }
+
     .nav-links a.logout-btn:hover {
       background: #c82333;
     }
+
     .container {
       max-width: 1200px;
       margin: 30px auto;
       padding: 0 20px;
     }
+
     .header-section {
       background: white;
       padding: 25px;
       border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       margin-bottom: 25px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+
     .header-section h1 {
       color: #333;
     }
+
     .btn {
       padding: 12px 25px;
       background: #667eea;
@@ -76,94 +90,116 @@
       transition: 0.3s;
       text-decoration: none;
     }
+
     .btn:hover {
       background: #5568d3;
     }
+
     .btn-danger {
       background: #dc3545;
     }
+
     .btn-danger:hover {
       background: #c82333;
     }
+
     .btn-warning {
       background: #ffc107;
       color: #333;
     }
+
     .btn-warning:hover {
       background: #e0a800;
     }
+
     .btn-success {
       background: #28a745;
     }
+
     .btn-success:hover {
       background: #218838;
     }
+
     .btn-sm {
       padding: 6px 12px;
       font-size: 12px;
       margin: 0 3px;
     }
+
     .filter-section {
       background: white;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       margin-bottom: 25px;
       display: flex;
       gap: 15px;
       align-items: center;
     }
+
     .filter-section select {
       padding: 10px;
       border: 1px solid #ddd;
       border-radius: 5px;
       font-size: 14px;
     }
+
     .organizers-list {
       background: white;
       padding: 25px;
       border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
+
     .organizers-list h2 {
       color: #333;
       margin-bottom: 20px;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
     }
-    th, td {
+
+    th,
+    td {
       padding: 12px;
       text-align: left;
       border-bottom: 1px solid #eee;
     }
+
     th {
       background: #f8f9fa;
       color: #333;
       font-weight: bold;
     }
+
     tr:hover {
       background: #f8f9fa;
     }
+
     .status-badge {
       padding: 5px 10px;
       border-radius: 15px;
       font-size: 12px;
       font-weight: bold;
     }
+
     .status-approved {
       background: #d4edda;
       color: #155724;
     }
+
     .status-pending {
       background: #fff3cd;
       color: #856404;
     }
+
     .status-disabled {
       background: #f8d7da;
       color: #721c24;
     }
+
     .modal {
       display: none;
       position: fixed;
@@ -171,9 +207,10 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0, 0, 0, 0.5);
       z-index: 1000;
     }
+
     .modal-content {
       background: white;
       padding: 30px;
@@ -182,35 +219,44 @@
       margin: 100px auto;
       position: relative;
     }
+
     .modal-content h2 {
       color: #333;
       margin-bottom: 20px;
     }
+
     .form-group {
       margin-bottom: 15px;
     }
+
     .form-group label {
       display: block;
       margin-bottom: 5px;
       color: #333;
       font-weight: bold;
     }
-    .form-group input, .form-group select, .form-group textarea {
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
       width: 100%;
       padding: 10px;
       border: 1px solid #ddd;
       border-radius: 5px;
       font-size: 14px;
     }
+
     .form-group textarea {
       resize: vertical;
       min-height: 80px;
     }
+
     .modal-actions {
       display: flex;
       gap: 10px;
       margin-top: 20px;
     }
+
     .close-modal {
       position: absolute;
       top: 15px;
@@ -219,25 +265,30 @@
       cursor: pointer;
       color: #999;
     }
+
     .close-modal:hover {
       color: #333;
     }
+
     .message {
       padding: 15px;
       margin-bottom: 20px;
       border-radius: 5px;
       display: none;
     }
+
     .message.error {
       background: #fee;
       color: #c33;
       border: 1px solid #fcc;
     }
+
     .message.success {
       background: #efe;
       color: #3c3;
       border: 1px solid #cfc;
     }
+
     .credentials-box {
       background: #f8f9fa;
       padding: 15px;
@@ -245,9 +296,11 @@
       margin-top: 15px;
       border: 1px solid #ddd;
     }
+
     .credentials-box strong {
       color: #dc3545;
     }
+
     .no-data {
       text-align: center;
       padding: 40px;
@@ -255,6 +308,7 @@
     }
   </style>
 </head>
+
 <body>
   <!-- Navigation Bar -->
   <div class="navbar">
@@ -329,11 +383,13 @@
           <label>Password (Auto-generated)</label>
           <div style="display: flex; align-items: center; gap: 10px;">
             <input type="text" id="password" required readonly style="background: #f0f0f0; flex: 1;">
-            <button type="button" onclick="copyFormPasswordToClipboard()" class="btn btn-sm" style="background: #6c757d; padding: 5px 15px; white-space: nowrap;">
+            <button type="button" onclick="copyFormPasswordToClipboard()" class="btn btn-sm"
+              style="background: #6c757d; padding: 5px 15px; white-space: nowrap;">
               📋 Copy
             </button>
           </div>
-          <div id="copySuccessForm" style="display: none; color: #28a745; margin-top: 5px; font-weight: bold; font-size: 14px;">
+          <div id="copySuccessForm"
+            style="display: none; color: #28a745; margin-top: 5px; font-weight: bold; font-size: 14px;">
             ✓ Password copied to clipboard!
           </div>
         </div>
@@ -360,10 +416,11 @@
           <strong>IMPORTANT:</strong> Please share these credentials with the organizer:
           <br><br>
           <strong>Email:</strong> <span id="displayEmail"></span><br>
-          <strong>Password:</strong> 
+          <strong>Password:</strong>
           <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
             <span id="displayPassword" style="font-size: 18px; color: #dc3545; font-weight: bold;"></span>
-            <button type="button" onclick="copyCreatedPasswordToClipboard()" class="btn btn-sm" style="background: #6c757d; padding: 5px 15px;">
+            <button type="button" onclick="copyCreatedPasswordToClipboard()" class="btn btn-sm"
+              style="background: #6c757d; padding: 5px 15px;">
               📋 Copy
             </button>
           </div>
@@ -407,15 +464,17 @@
         <p><strong>Club/Organizer:</strong> <span id="resetOrgName"></span></p>
         <p><strong>Login Email:</strong> <span id="resetOrgEmail"></span></p>
       </div>
-      <p style="color: #666; margin-bottom: 15px;">Click the button below to generate a new password for this organizer.</p>
+      <p style="color: #666; margin-bottom: 15px;">Click the button below to generate a new password for this organizer.
+      </p>
       <div id="newPasswordDisplay" class="credentials-box" style="display: none;">
         <strong>New Password Generated:</strong>
         <br><br>
         <strong>Login Email:</strong> <span id="displayResetEmail"></span><br>
-        <strong>New Password:</strong> 
+        <strong>New Password:</strong>
         <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
           <span id="displayResetPassword" style="font-size: 18px; color: #dc3545; font-weight: bold;"></span>
-          <button type="button" onclick="copyResetPasswordToClipboard()" class="btn btn-sm" style="background: #6c757d; padding: 5px 15px;">
+          <button type="button" onclick="copyResetPasswordToClipboard()" class="btn btn-sm"
+            style="background: #6c757d; padding: 5px 15px;">
             📋 Copy
           </button>
         </div>
@@ -426,7 +485,8 @@
         <small style="color: #666;">Please copy and share these credentials with the organizer immediately.</small>
       </div>
       <div class="modal-actions">
-        <button id="generatePasswordBtn" class="btn btn-success" onclick="generateAndResetPassword()">Generate New Password</button>
+        <button id="generatePasswordBtn" class="btn btn-success" onclick="generateAndResetPassword()">Generate New
+          Password</button>
         <button class="btn" onclick="closePasswordResetModal()">Close</button>
       </div>
     </div>
@@ -439,7 +499,7 @@
     const API_URL = isProduction ? 'https://dass-event-management.onrender.com/api' : 'http://localhost:5000/api';
     const SOCKET_URL = isProduction ? 'https://dass-event-management.onrender.com' : 'http://localhost:5000';
     console.log('API_URL:', API_URL);
-    
+
     let allOrganizers = [];
     let currentFilter = 'all';
     let deleteTargetId = null;
@@ -456,7 +516,7 @@
     function checkAuth() {
       const token = localStorage.getItem('token');
       const userType = localStorage.getItem('userType');
-      
+
       if (!token || userType !== 'admin') {
         window.location.href = '/auth/login';
         return false;
@@ -474,16 +534,16 @@
         .replace(/[^a-z0-9\s]/g, '')
         .replace(/\s+/g, '.')
         .substring(0, 30); // Limit length
-      
+
       const email = `${cleanName}@event.system.com`;
-      
+
       // Generate random password (8 characters: letters and numbers)
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
       let password = '';
       for (let i = 0; i < 8; i++) {
         password += chars.charAt(Math.floor(Math.random() * chars.length));
       }
-      
+
       // Set the auto-generated values
       document.getElementById('email').value = email;
       document.getElementById('password').value = password;
@@ -538,7 +598,7 @@
 
     function displayOrganizers(organizers) {
       const tbody = document.getElementById('organizersBody');
-      
+
       if (organizers.length === 0) {
         tbody.innerHTML = '<tr><td colspan="6" class="no-data">No organizers found</td></tr>';
         return;
@@ -668,7 +728,7 @@
           document.getElementById('displayEmail').textContent = data.credentials.email;
           document.getElementById('displayPassword').textContent = data.credentials.password;
           document.getElementById('credentialsDisplay').style.display = 'block';
-          
+
           setTimeout(() => {
             closeAddModal();
             loadOrganizers();
@@ -815,11 +875,12 @@
     function logout() {
       localStorage.removeItem('token');
       localStorage.removeItem('userType');
-      window.location.href = '/auth/login';
+      window.location.href = '/auth/login?role=admin';
     }
 
     // Load organizers on page load
     window.addEventListener('DOMContentLoaded', loadOrganizers);
   </script>
 </body>
+
 </html>

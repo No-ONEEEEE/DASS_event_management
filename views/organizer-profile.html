@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,102 +11,127 @@
       padding: 0;
       box-sizing: border-box;
     }
+
     body {
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
     }
+
     nav {
       background: white;
       padding: 15px 30px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+
     nav .logo {
       font-size: 24px;
       font-weight: bold;
       color: #667eea;
     }
+
     nav ul {
       list-style: none;
       display: flex;
       gap: 20px;
     }
+
     nav a {
       text-decoration: none;
       color: #333;
       font-weight: 500;
       transition: color 0.3s;
     }
+
     nav a:hover {
       color: #667eea;
     }
+
     nav a.logout-link {
       color: #dc3545;
     }
+
     nav a.logout-link:hover {
       color: #c82333;
     }
+
     .container {
       max-width: 800px;
       margin: 30px auto;
       padding: 0 20px;
     }
+
     .profile-container {
       background: white;
       padding: 40px;
       border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+
     h1 {
       color: #333;
       margin-bottom: 30px;
       text-align: center;
     }
+
     .section {
       margin-bottom: 30px;
       padding-bottom: 30px;
       border-bottom: 1px solid #eee;
     }
+
     .section:last-child {
       border-bottom: none;
     }
+
     .section h2 {
       color: #667eea;
       margin-bottom: 20px;
       font-size: 20px;
     }
+
     .form-group {
       margin-bottom: 20px;
     }
+
     label {
       display: block;
       margin-bottom: 5px;
       color: #333;
       font-weight: bold;
     }
-    input, select, textarea {
+
+    input,
+    select,
+    textarea {
       width: 100%;
       padding: 10px;
       border: 1px solid #ddd;
       border-radius: 5px;
       font-size: 14px;
     }
+
     textarea {
       min-height: 100px;
       resize: vertical;
     }
-    input:focus, select:focus, textarea:focus {
+
+    input:focus,
+    select:focus,
+    textarea:focus {
       outline: none;
       border-color: #667eea;
     }
+
     input:disabled {
       background: #f5f5f5;
       color: #999;
       cursor: not-allowed;
     }
+
     .readonly-field {
       padding: 10px;
       background: #f5f5f5;
@@ -113,6 +139,7 @@
       border-radius: 5px;
       color: #666;
     }
+
     .btn {
       padding: 12px 24px;
       background: #667eea;
@@ -124,37 +151,45 @@
       transition: background 0.3s;
       margin-right: 10px;
     }
+
     .btn:hover {
       background: #5568d3;
     }
+
     .btn-secondary {
       background: #888;
     }
+
     .btn-secondary:hover {
       background: #777;
     }
+
     .message {
       padding: 15px;
       margin-bottom: 20px;
       border-radius: 5px;
       display: none;
     }
+
     .message.error {
       background: #fee;
       color: #c33;
       border: 1px solid #fcc;
     }
+
     .message.success {
       background: #efe;
       color: #3c3;
       border: 1px solid #cfc;
     }
+
     .loading {
       text-align: center;
       padding: 40px;
       color: #667eea;
       font-size: 18px;
     }
+
     .info-box {
       background: #f0f7ff;
       border-left: 4px solid #667eea;
@@ -162,17 +197,20 @@
       margin-bottom: 20px;
       border-radius: 5px;
     }
+
     .info-box p {
       color: #333;
       margin: 0;
       font-size: 14px;
     }
+
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 15px;
       margin-bottom: 20px;
     }
+
     .stat-card {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
@@ -180,17 +218,21 @@
       border-radius: 8px;
       text-align: center;
     }
+
     .stat-card h3 {
       font-size: 32px;
       margin-bottom: 5px;
     }
+
     .stat-card p {
       font-size: 14px;
       opacity: 0.9;
     }
+
     .request-history {
       margin-top: 20px;
     }
+
     .request-card {
       background: #f9f9f9;
       border-left: 4px solid #667eea;
@@ -198,15 +240,18 @@
       margin-bottom: 15px;
       border-radius: 5px;
     }
+
     .request-card h4 {
       margin-bottom: 8px;
       color: #333;
     }
+
     .request-card p {
       margin: 5px 0;
       font-size: 14px;
       color: #666;
     }
+
     .badge {
       display: inline-block;
       padding: 4px 12px;
@@ -215,9 +260,22 @@
       font-weight: bold;
       margin-left: 10px;
     }
-    .badge.pending { background: #ffd93d; color: #333; }
-    .badge.approved { background: #6bcf7f; color: white; }
-    .badge.rejected { background: #e15554; color: white; }
+
+    .badge.pending {
+      background: #ffd93d;
+      color: #333;
+    }
+
+    .badge.approved {
+      background: #6bcf7f;
+      color: white;
+    }
+
+    .badge.rejected {
+      background: #e15554;
+      color: white;
+    }
+
     .empty-state {
       text-align: center;
       padding: 40px 20px;
@@ -226,6 +284,7 @@
     }
   </style>
 </head>
+
 <body>
   <nav>
     <div class="logo">Event Manager</div>
@@ -306,7 +365,8 @@
           <h2>Discord Integration</h2>
 
           <div class="info-box">
-            <p><strong>Info:</strong> Add your Discord webhook URL to automatically post new events to your Discord server when they are published.</p>
+            <p><strong>Info:</strong> Add your Discord webhook URL to automatically post new events to your Discord
+              server when they are published.</p>
           </div>
 
           <div class="form-group">
@@ -323,12 +383,14 @@
           <h2>Request Password Reset from Admin</h2>
 
           <div class="info-box">
-            <p><strong>Forgot your password?</strong> Submit a request to the admin for password reset. Provide a detailed reason, and the admin will review your request.</p>
+            <p><strong>Forgot your password?</strong> Submit a request to the admin for password reset. Provide a
+              detailed reason, and the admin will review your request.</p>
           </div>
 
           <div class="form-group">
             <label>Reason for Password Reset *</label>
-            <textarea id="resetReason" placeholder="Please provide a detailed reason (at least 10 characters)..." minlength="10"></textarea>
+            <textarea id="resetReason" placeholder="Please provide a detailed reason (at least 10 characters)..."
+              minlength="10"></textarea>
           </div>
 
           <button class="btn" onclick="submitPasswordResetRequest()">Submit Request</button>
@@ -352,7 +414,7 @@
     const API_URL = isProduction ? 'https://dass-event-management.onrender.com/api' : 'http://localhost:5000';
     const SOCKET_URL = isProduction ? 'https://dass-event-management.onrender.com' : 'http://localhost:5000';
     console.log('API_URL:', API_URL);
-    
+
     const token = localStorage.getItem('token');
     let organizerData = null;
 
@@ -525,7 +587,7 @@
     function logout() {
       localStorage.removeItem('token');
       localStorage.removeItem('userType');
-      window.location.href = '/auth/login';
+      window.location.href = '/auth/login?role=organizer';
     }
 
     async function submitPasswordResetRequest() {
@@ -586,4 +648,5 @@
     loadProfile();
   </script>
 </body>
+
 </html>

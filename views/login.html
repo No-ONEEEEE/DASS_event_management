@@ -155,9 +155,9 @@
 
     <!-- User Type Tabs -->
     <div class="user-type-tabs">
-      <button class="tab active" onclick="switchTab('participant')">Participant</button>
-      <button class="tab" onclick="switchTab('organizer')">Organizer</button>
-      <button class="tab" onclick="switchTab('admin')">Admin</button>
+      <button class="tab active" id="tab-participant" onclick="switchTab('participant', this)">Participant</button>
+      <button class="tab" id="tab-organizer" onclick="switchTab('organizer', this)">Organizer</button>
+      <button class="tab" id="tab-admin" onclick="switchTab('admin', this)">Admin</button>
     </div>
 
     <div id="msg" class="message"></div>
@@ -216,12 +216,13 @@
       }
     }
 
-    function switchTab(userType) {
+    function switchTab(userType, tabEl) {
       currentUserType = userType;
       
       // Update tab active state
       document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-      event.target.classList.add('active');
+      const activeTab = tabEl || document.getElementById('tab-' + userType);
+      if (activeTab) activeTab.classList.add('active');
       
       // Show/hide signup link (only for participants)
       const signupLink = document.getElementById('signupLink');
@@ -240,6 +241,15 @@
         grecaptcha.reset();
       }
     }
+
+    // Auto-select tab based on ?role= query param (set by logout)
+    document.addEventListener('DOMContentLoaded', function() {
+      const params = new URLSearchParams(window.location.search);
+      const role = params.get('role');
+      if (role === 'organizer' || role === 'admin' || role === 'participant') {
+        switchTab(role);
+      }
+    });
 
     async function login() {
       const email = document.getElementById('email').value;
