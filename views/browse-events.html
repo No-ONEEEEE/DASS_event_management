@@ -18,11 +18,11 @@
 
     body {
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      background: #21262d;
     }
 
     header {
-      background: white;
+      background: #1c2128;
       padding: 20px;
       display: flex;
       justify-content: space-between;
@@ -40,7 +40,7 @@
     }
 
     .sidebar {
-      background: white;
+      background: #1c2128;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -48,7 +48,7 @@
     }
 
     .sidebar h3 {
-      color: #333;
+      color: #e6edf3;
       margin-bottom: 15px;
       font-size: 16px;
     }
@@ -60,7 +60,7 @@
     .filter-group label {
       display: block;
       margin-bottom: 8px;
-      color: #666;
+      color: #8b949e;
       font-size: 14px;
     }
 
@@ -68,7 +68,7 @@
     .filter-group select {
       width: 100%;
       padding: 8px;
-      border: 1px solid #ddd;
+      border: 1px solid #30363d;
       border-radius: 4px;
       font-size: 14px;
     }
@@ -80,7 +80,7 @@
     }
 
     .event-card {
-      background: white;
+      background: #1c2128;
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -113,7 +113,7 @@
     }
 
     .event-body p {
-      color: #666;
+      color: #8b949e;
       margin-bottom: 10px;
       font-size: 14px;
     }
@@ -153,7 +153,7 @@
     .search-box input {
       width: 100%;
       padding: 12px;
-      border: 1px solid #ddd;
+      border: 1px solid #30363d;
       border-radius: 5px;
       font-size: 14px;
     }
@@ -162,7 +162,7 @@
       grid-column: 1 / -1;
       text-align: center;
       padding: 40px;
-      color: #999;
+      color: #656d76;
     }
 
     .nav a {
@@ -199,7 +199,7 @@
     }
 
     .modal-content {
-      background: white;
+      background: #1c2128;
       margin: 50px auto;
       padding: 30px;
       border-radius: 10px;
@@ -217,14 +217,14 @@
     }
 
     .modal-header h2 {
-      color: #333;
+      color: #e6edf3;
       font-size: 24px;
     }
 
     .close-btn {
       font-size: 28px;
       font-weight: bold;
-      color: #999;
+      color: #656d76;
       cursor: pointer;
       background: none;
       border: none;
@@ -235,7 +235,7 @@
     }
 
     .close-btn:hover {
-      color: #333;
+      color: #e6edf3;
     }
 
     .form-group {
@@ -245,7 +245,7 @@
     .form-group label {
       display: block;
       margin-bottom: 8px;
-      color: #333;
+      color: #e6edf3;
       font-weight: bold;
     }
 
@@ -254,7 +254,7 @@
     .form-group textarea {
       width: 100%;
       padding: 10px;
-      border: 1px solid #ddd;
+      border: 1px solid #30363d;
       border-radius: 5px;
       font-size: 14px;
       font-family: Arial, sans-serif;
@@ -266,7 +266,7 @@
     }
 
     .event-details {
-      background: #f8f9fa;
+      background: #21262d;
       padding: 15px;
       border-radius: 5px;
       margin-bottom: 20px;
@@ -274,7 +274,7 @@
 
     .event-details p {
       margin-bottom: 8px;
-      color: #555;
+      color: #8b949e;
     }
 
     .modal-actions {
@@ -589,7 +589,7 @@
         // Add merchandise items selector if it's a merchandise event
         if (event.eventType === 'Merchandise' && event.merchandise && event.merchandise.items && event.merchandise.items.length > 0) {
           formFieldsHtml += `
-            <h3 style="color: #333; margin-bottom: 15px; border-bottom: 2px solid #667eea; padding-bottom: 10px;">🛒 Select Items to Purchase</h3>
+            <h3 style="color: #e6edf3; margin-bottom: 15px; border-bottom: 2px solid #667eea; padding-bottom: 10px;">🛒 Select Items to Purchase</h3>
             <div id="merchandiseSelection">
           `;
 
@@ -601,7 +601,7 @@
             formFieldsHtml += `
               <div style="background: ${backgroundColor}; border: 2px solid ${borderColor}; border-radius: 8px; padding: 15px; margin-bottom: 20px; opacity: ${isOutOfStock ? '0.6' : '1'};" id="merch_item_${itemIndex}">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                  <h4 style="color: #333; margin: 0;">${item.itemName} ${isOutOfStock ? '<span style="color: #dc3545; font-size: 14px; font-weight: bold;">[OUT OF STOCK]</span>' : ''}</h4>
+                  <h4 style="color: #e6edf3; margin: 0;">${item.itemName} ${isOutOfStock ? '<span style="color: #dc3545; font-size: 14px; font-weight: bold;">[OUT OF STOCK]</span>' : ''}</h4>
                   <span style="color: #667eea; font-size: 18px; font-weight: bold;">₹${item.pricePerItem}</span>
                 </div>
                 
@@ -617,10 +617,10 @@
                 <div id="merch_options_${itemIndex}" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
                   ${item.size && item.size.length > 0 ? `
                     <div style="margin-bottom: 15px;">
-                      <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                      <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e6edf3;">
                         Size <span style="color: red;">*</span>
                       </label>
-                      <select id="merch_size_${itemIndex}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                      <select id="merch_size_${itemIndex}" style="width: 100%; padding: 10px; border: 1px solid #30363d; border-radius: 5px;">
                         <option value="">Select Size</option>
                         ${item.size.map(s => `<option value="${s}">${s}</option>`).join('')}
                       </select>
@@ -629,10 +629,10 @@
                   
                   ${item.color && item.color.length > 0 ? `
                     <div style="margin-bottom: 15px;">
-                      <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                      <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e6edf3;">
                         Color <span style="color: red;">*</span>
                       </label>
-                      <select id="merch_color_${itemIndex}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                      <select id="merch_color_${itemIndex}" style="width: 100%; padding: 10px; border: 1px solid #30363d; border-radius: 5px;">
                         <option value="">Select Color</option>
                         ${item.color.map(c => `<option value="${c}">${c}</option>`).join('')}
                       </select>
@@ -640,7 +640,7 @@
                   ` : ''}
                   
                   <div style="margin-bottom: 10px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e6edf3;">
                       Quantity <span style="color: red;">*</span>
                     </label>
                     <input type="number" 
@@ -648,7 +648,7 @@
                            min="1" 
                            max="${Math.min(item.maxPurchasePerParticipant || item.quantity, item.quantity)}" 
                            value="1"
-                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                           style="width: 100%; padding: 10px; border: 1px solid #30363d; border-radius: 5px;">
                     <small style="color: ${item.quantity < 10 && item.quantity > 0 ? '#dc3545' : '#666'};">
                       Available: <strong>${item.quantity}</strong> ${item.quantity < 10 && item.quantity > 0 ? '(Limited Stock!)' : ''} | 
                       ${item.maxPurchasePerParticipant ? `Max per person: ${item.maxPurchasePerParticipant}` : 'No limit per person'}
@@ -673,12 +673,12 @@
                                      ${field.isRequired ? 'required' : ''}
                                      placeholder="Enter ${field.fieldLabel.toLowerCase()}"
                                      rows="4"
-                                     style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>`;
+                                     style="width: 100%; padding: 10px; border: 1px solid #30363d; border-radius: 5px;"></textarea>`;
             } else if (fieldType === 'dropdown') {
               fieldHtml = `<select id="field_${index}" 
                                    data-field-label="${field.fieldLabel}"
                                    ${field.isRequired ? 'required' : ''}
-                                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                   style="width: 100%; padding: 10px; border: 1px solid #30363d; border-radius: 5px;">
                              <option value="">Select ${field.fieldLabel}</option>
                              ${field.options ? field.options.map(opt => `<option value="${opt}">${opt}</option>`).join('') : ''}
                            </select>`;
@@ -709,12 +709,12 @@
                                   data-field-label="${field.fieldLabel}"
                                   ${field.isRequired ? 'required' : ''}
                                   placeholder="Enter ${field.fieldLabel.toLowerCase()}"
-                                  style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">`;
+                                  style="width: 100%; padding: 10px; border: 1px solid #30363d; border-radius: 5px;">`;
             }
 
             formFieldsHtml += `
               <div class="form-group" style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e6edf3;">
                   ${field.fieldLabel}${field.isRequired ? ' <span style="color: red;">*</span>' : ''}
                 </label>
                 ${fieldHtml}
@@ -723,7 +723,7 @@
           });
         } else if (!currentEvent.eventType || currentEvent.eventType !== 'Merchandise') {
           // Only show "no info required" if it's NOT a merchandise event
-          formFieldsHtml += '<p style="color: #666;">No additional information required.</p>';
+          formFieldsHtml += '<p style="color: #8b949e;">No additional information required.</p>';
         }
         document.getElementById('formFieldsContainer').innerHTML = formFieldsHtml;
 

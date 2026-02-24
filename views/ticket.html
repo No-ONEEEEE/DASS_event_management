@@ -23,7 +23,7 @@
       margin: 30px auto;
     }
     .ticket {
-      background: white;
+      background: #1c2128;
       border-radius: 15px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
       overflow: hidden;
@@ -55,7 +55,7 @@
     #qrcode {
       display: inline-block;
       padding: 20px;
-      background: white;
+      background: #1c2128;
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
@@ -79,10 +79,10 @@
     }
     .info-label {
       font-weight: bold;
-      color: #666;
+      color: #8b949e;
     }
     .info-value {
-      color: #333;
+      color: #e6edf3;
       text-align: right;
     }
     .ticket-id {
@@ -168,7 +168,7 @@
     }
     @media print {
       body {
-        background: white;
+        background: #1c2128;
       }
       .btn {
         display: none;
@@ -235,7 +235,7 @@
 
           <!-- Event Details -->
           <div class="info-section">
-            <h3 style="margin-bottom: 15px; color: #333;">Event Details</h3>
+            <h3 style="margin-bottom: 15px; color: #e6edf3;">Event Details</h3>
             <div class="info-row">
               <span class="info-label">Event</span>
               <span class="info-value" id="eventNameDetail"></span>
@@ -260,7 +260,7 @@
 
           <!-- Participant Details -->
           <div class="info-section">
-            <h3 style="margin-bottom: 15px; color: #333;">Participant Details</h3>
+            <h3 style="margin-bottom: 15px; color: #e6edf3;">Participant Details</h3>
             <div class="info-row">
               <span class="info-label">Name</span>
               <span class="info-value" id="participantName"></span>
@@ -277,7 +277,7 @@
 
           <!-- Team Details (if applicable) -->
           <div class="info-section" id="teamSection" style="display: none;">
-            <h3 style="margin-bottom: 15px; color: #333;">👥 Team Details</h3>
+            <h3 style="margin-bottom: 15px; color: #e6edf3;">👥 Team Details</h3>
             <div class="info-row">
               <span class="info-label">Team Name</span>
               <span class="info-value" id="teamName"></span>
@@ -287,9 +287,9 @@
 
           <!-- Merchandise Purchase (if applicable) -->
           <div class="info-section" id="merchandiseSection" style="display: none;">
-            <h3 style="margin-bottom: 15px; color: #333;">🛒 Merchandise Purchased</h3>
+            <h3 style="margin-bottom: 15px; color: #e6edf3;">🛒 Merchandise Purchased</h3>
             <div id="merchandiseContainer"></div>
-            <div class="info-row" style="background: #f0f8ff; font-weight: bold; margin-top: 10px;">
+            <div class="info-row" style="background: #21262d; font-weight: bold; margin-top: 10px;">
               <span class="info-label">Total Amount</span>
               <span class="info-value" id="merchandiseTotal">₹0</span>
             </div>

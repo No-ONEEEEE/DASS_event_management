@@ -18,11 +18,11 @@
 
     body {
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      background: #21262d;
     }
 
     header {
-      background: white;
+      background: #1c2128;
       padding: 20px;
       display: flex;
       justify-content: space-between;
@@ -31,7 +31,7 @@
     }
 
     header h1 {
-      color: #333;
+      color: #e6edf3;
     }
 
     nav {
@@ -60,7 +60,7 @@
     }
 
     .card {
-      background: white;
+      background: #1c2128;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -74,24 +74,24 @@
     .card .number {
       font-size: 32px;
       font-weight: bold;
-      color: #333;
+      color: #e6edf3;
     }
 
     .events-section {
-      background: white;
+      background: #1c2128;
       padding: 30px;
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .events-section h2 {
-      color: #333;
+      color: #e6edf3;
       margin-bottom: 20px;
     }
 
     .event-item {
       padding: 15px;
-      border: 1px solid #e0e0e0;
+      border: 1px solid #30363d;
       border-radius: 5px;
       margin-bottom: 15px;
       display: flex;
@@ -104,12 +104,12 @@
     }
 
     .event-info h4 {
-      color: #333;
+      color: #e6edf3;
       margin-bottom: 5px;
     }
 
     .event-info p {
-      color: #999;
+      color: #656d76;
       font-size: 14px;
     }
 
@@ -137,8 +137,8 @@
     }
 
     .btn-secondary {
-      background: #f0f0f0;
-      color: #333;
+      background: #21262d;
+      color: #e6edf3;
     }
 
     .btn-secondary:hover {
@@ -165,7 +165,7 @@
     .loading {
       text-align: center;
       padding: 40px;
-      color: #999;
+      color: #656d76;
     }
 
     /* Tabs Style */
@@ -176,7 +176,7 @@
     .tabs {
       display: flex;
       gap: 0;
-      border-bottom: 2px solid #e0e0e0;
+      border-bottom: 2px solid #30363d;
       margin-bottom: 20px;
     }
 
@@ -184,7 +184,7 @@
       padding: 12px 24px;
       background: transparent;
       border: none;
-      color: #666;
+      color: #8b949e;
       font-weight: 500;
       cursor: pointer;
       border-bottom: 3px solid transparent;
@@ -212,7 +212,7 @@
 
     .ticket-id {
       font-family: monospace;
-      background: #f0f0f0;
+      background: #21262d;
       padding: 2px 6px;
       border-radius: 3px;
       font-size: 12px;
@@ -256,13 +256,13 @@
 
     .badge.pending {
       background: #ffc107;
-      color: #333;
+      color: #e6edf3;
     }
 
     .empty-state {
       text-align: center;
       padding: 40px 20px;
-      color: #999;
+      color: #656d76;
       font-style: italic;
     }
   
@@ -316,7 +316,7 @@
 
     <div class="events-section tabs-container">
       <h2>Participation History</h2>
-      <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Categorized record of your event participation</p>
+      <p style="color: #8b949e; font-size: 14px; margin-bottom: 15px;">Categorized record of your event participation</p>
 
       <div class="tabs">
         <button class="tab active" onclick="switchTab('normal')">Normal</button>
@@ -344,7 +344,7 @@
 
     <div class="events-section" style="margin-top: 20px;">
       <h2>Recommended for You</h2>
-      <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Based on your interests and followed clubs</p>
+      <p style="color: #8b949e; font-size: 14px; margin-bottom: 15px;">Based on your interests and followed clubs</p>
       <div id="recommendedContainer">
         <div class="loading">Loading recommendations...</div>
       </div>
@@ -581,7 +581,7 @@
           const events = await response.json();
           displayRecommendedEvents(events);
         } else {
-          document.getElementById('recommendedContainer').innerHTML = '<p style="color: #666;">Set your preferences to get personalized recommendations</p>';
+          document.getElementById('recommendedContainer').innerHTML = '<p style="color: #8b949e;">Set your preferences to get personalized recommendations</p>';
         }
       } catch (error) {
         console.error('Error loading recommended events:', error);
@@ -591,7 +591,7 @@
 
     function displayRecommendedEvents(events) {
       if (events.length === 0) {
-        document.getElementById('recommendedContainer').innerHTML = '<p style="color: #666;">No recommendations yet. <a href="/onboarding" style="color: #667eea;">Set your preferences</a> or <a href="/browse-events" style="color: #667eea;">browse all events</a></p>';
+        document.getElementById('recommendedContainer').innerHTML = '<p style="color: #8b949e;">No recommendations yet. <a href="/onboarding" style="color: #667eea;">Set your preferences</a> or <a href="/browse-events" style="color: #667eea;">browse all events</a></p>';
         return;
       }
 
@@ -676,23 +676,23 @@
         // Create modal HTML
         const modalHTML = `
           <div id="merchandiseShopModal" style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; overflow-y: auto;">
-            <div style="background: white; max-width: 900px; margin: 50px auto; border-radius: 15px; padding: 30px; position: relative;">
+            <div style="background: #1c2128; max-width: 900px; margin: 50px auto; border-radius: 15px; padding: 30px; position: relative;">
               <button onclick="closeMerchandiseShop()" style="position: absolute; top: 20px; right: 20px; background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">✕ Close</button>
               
-              <h2 style="color: #333; margin-bottom: 10px; padding-right: 80px;">🛒 ${event.eventName} - Shop</h2>
-              <p style="color: #666; margin-bottom: 30px;">Select items and quantities to purchase</p>
+              <h2 style="color: #e6edf3; margin-bottom: 10px; padding-right: 80px;">🛒 ${event.eventName} - Shop</h2>
+              <p style="color: #8b949e; margin-bottom: 30px;">Select items and quantities to purchase</p>
               
               <div id="merchandiseItemsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
                 ${renderMerchandiseItems(event.merchandise.items)}
               </div>
               
-              <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #667eea;">
-                <h3 style="color: #333; margin-bottom: 15px;">🛍️ Shopping Cart</h3>
+              <div style="background: #21262d; padding: 20px; border-radius: 10px; border: 2px solid #667eea;">
+                <h3 style="color: #e6edf3; margin-bottom: 15px;">🛍️ Shopping Cart</h3>
                 <div id="cartItemsContainer" style="min-height: 60px;">
-                  <p style="color: #999; text-align: center; padding: 20px;">Your cart is empty</p>
+                  <p style="color: #656d76; text-align: center; padding: 20px;">Your cart is empty</p>
                 </div>
                 <div style="border-top: 2px solid #ddd; margin-top: 15px; padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                  <h3 style="color: #333;">Total: ₹<span id="cartTotal">0</span></h3>
+                  <h3 style="color: #e6edf3;">Total: ₹<span id="cartTotal">0</span></h3>
                   <button onclick="submitMerchandisePurchase()" id="checkoutBtn" disabled style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border: none; padding: 15px 40px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s;">
                     Checkout & Pay
                   </button>
@@ -711,14 +711,14 @@
 
     function renderMerchandiseItems(items) {
       return items.map((item, index) => `
-        <div style="background: white; border: 2px solid #ddd; border-radius: 10px; padding: 20px; transition: all 0.3s;" onmouseover="this.style.borderColor='#667eea'; this.style.boxShadow='0 4px 12px rgba(102,126,234,0.3)';" onmouseout="this.style.borderColor='#ddd'; this.style.boxShadow='none';">
-          <h4 style="color: #333; margin-bottom: 10px; font-size: 18px;">${item.itemName}</h4>
+        <div style="background: #1c2128; border: 2px solid #ddd; border-radius: 10px; padding: 20px; transition: all 0.3s;" onmouseover="this.style.borderColor='#667eea'; this.style.boxShadow='0 4px 12px rgba(102,126,234,0.3)';" onmouseout="this.style.borderColor='#ddd'; this.style.boxShadow='none';">
+          <h4 style="color: #e6edf3; margin-bottom: 10px; font-size: 18px;">${item.itemName}</h4>
           <p style="color: #667eea; font-size: 24px; font-weight: bold; margin-bottom: 15px;">₹${item.pricePerItem}</p>
           
           ${item.size && item.size.length > 0 ? `
             <div style="margin-bottom: 15px;">
-              <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333; font-size: 13px;">Size:</label>
-              <select id="size_${index}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+              <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #e6edf3; font-size: 13px;">Size:</label>
+              <select id="size_${index}" style="width: 100%; padding: 8px; border: 1px solid #30363d; border-radius: 5px;">
                 <option value="">Select Size</option>
                 ${item.size.map(s => `<option value="${s}">${s}</option>`).join('')}
               </select>
@@ -727,8 +727,8 @@
           
           ${item.color && item.color.length > 0 ? `
             <div style="margin-bottom: 15px;">
-              <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333; font-size: 13px;">Color:</label>
-              <select id="color_${index}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+              <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #e6edf3; font-size: 13px;">Color:</label>
+              <select id="color_${index}" style="width: 100%; padding: 8px; border: 1px solid #30363d; border-radius: 5px;">
                 <option value="">Select Color</option>
                 ${item.color.map(c => `<option value="${c}">${c}</option>`).join('')}
               </select>
@@ -736,13 +736,13 @@
           ` : ''}
           
           <div style="margin-bottom: 15px;">
-            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333; font-size: 13px;">Quantity:</label>
+            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #e6edf3; font-size: 13px;">Quantity:</label>
             <div style="display: flex; align-items: center; gap: 10px;">
               <button onclick="changeQuantity(${index}, -1)" style="background: #dc3545; color: white; border: none; width: 35px; height: 35px; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold;">−</button>
-              <input type="number" id="qty_${index}" value="0" min="0" max="${item.maxPurchasePerParticipant || item.quantity}" readonly style="width: 60px; text-align: center; padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; font-weight: bold;">
+              <input type="number" id="qty_${index}" value="0" min="0" max="${item.maxPurchasePerParticipant || item.quantity}" readonly style="width: 60px; text-align: center; padding: 8px; border: 1px solid #30363d; border-radius: 5px; font-size: 16px; font-weight: bold;">
               <button onclick="changeQuantity(${index}, 1)" style="background: #28a745; color: white; border: none; width: 35px; height: 35px; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold;">+</button>
             </div>
-            <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+            <small style="color: #8b949e; font-size: 12px; margin-top: 5px; display: block;">
               Available: ${item.quantity} | Max: ${item.maxPurchasePerParticipant || item.quantity}
             </small>
           </div>
@@ -827,7 +827,7 @@
       const checkoutBtn = document.getElementById('checkoutBtn');
 
       if (shoppingCart.length === 0) {
-        cartContainer.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Your cart is empty</p>';
+        cartContainer.innerHTML = '<p style="color: #656d76; text-align: center; padding: 20px;">Your cart is empty</p>';
         totalElement.textContent = '0';
         checkoutBtn.disabled = true;
         checkoutBtn.style.opacity = '0.5';
@@ -842,12 +842,12 @@
         total += item.subtotal;
         const sizeColor = [item.size, item.color].filter(Boolean).join(', ');
         html += `
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border-radius: 5px; margin-bottom: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #1c2128; border-radius: 5px; margin-bottom: 10px;">
             <div style="flex: 1;">
-              <strong style="color: #333;">${item.itemName}</strong>
-              ${sizeColor ? `<span style="color: #666; font-size: 13px;"> (${sizeColor})</span>` : ''}
+              <strong style="color: #e6edf3;">${item.itemName}</strong>
+              ${sizeColor ? `<span style="color: #8b949e; font-size: 13px;"> (${sizeColor})</span>` : ''}
               <br>
-              <small style="color: #666;">₹${item.pricePerItem} × ${item.quantity} = ₹${item.subtotal}</small>
+              <small style="color: #8b949e;">₹${item.pricePerItem} × ${item.quantity} = ₹${item.subtotal}</small>
             </div>
             <button onclick="removeFromCart(${index})" style="background: #dc3545; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer;">Remove</button>
           </div>

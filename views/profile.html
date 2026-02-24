@@ -15,11 +15,11 @@
 
     body {
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      background: #21262d;
     }
 
     header {
-      background: white;
+      background: #1c2128;
       padding: 20px;
       display: flex;
       justify-content: space-between;
@@ -28,7 +28,7 @@
     }
 
     header h1 {
-      color: #333;
+      color: #e6edf3;
     }
 
     nav {
@@ -64,7 +64,7 @@
     }
 
     .profile-card {
-      background: white;
+      background: #1c2128;
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -102,7 +102,7 @@
     }
 
     .section-header h3 {
-      color: #333;
+      color: #e6edf3;
       font-size: 20px;
     }
 
@@ -113,7 +113,7 @@
     .form-group label {
       display: block;
       font-weight: bold;
-      color: #666;
+      color: #8b949e;
       margin-bottom: 8px;
       font-size: 14px;
     }
@@ -122,22 +122,22 @@
     .form-group select {
       width: 100%;
       padding: 12px;
-      border: 1px solid #ddd;
+      border: 1px solid #30363d;
       border-radius: 5px;
       font-size: 14px;
     }
 
     .form-group input:disabled {
-      background: #f8f8f8;
+      background: #21262d;
       cursor: not-allowed;
     }
 
     .form-group .non-editable {
-      background: #f8f8f8;
+      background: #21262d;
       padding: 12px;
       border-radius: 5px;
-      color: #333;
-      border: 1px solid #e0e0e0;
+      color: #e6edf3;
+      border: 1px solid #30363d;
     }
 
     .button-group {
@@ -205,7 +205,7 @@
     .loading {
       text-align: center;
       padding: 50px;
-      color: #666;
+      color: #8b949e;
     }
 
     .error {
@@ -234,7 +234,7 @@
     .checkbox-item {
       display: flex;
       align-items: center;
-      background: #f8f9fa;
+      background: #21262d;
       padding: 10px 15px;
       border-radius: 5px;
       border: 2px solid #e0e0e0;
@@ -266,7 +266,7 @@
     }
 
     .club-card {
-      background: #f8f9fa;
+      background: #21262d;
       padding: 15px;
       border-radius: 8px;
       border: 2px solid #e0e0e0;
@@ -286,13 +286,13 @@
     }
 
     .club-card h4 {
-      color: #333;
+      color: #e6edf3;
       margin-bottom: 5px;
       font-size: 16px;
     }
 
     .club-card p {
-      color: #666;
+      color: #8b949e;
       font-size: 13px;
       margin-bottom: 10px;
     }
@@ -330,7 +330,7 @@
     }
 
     .modal-content {
-      background: white;
+      background: #1c2128;
       margin: 50px auto;
       padding: 30px;
       border-radius: 10px;
@@ -348,14 +348,14 @@
     }
 
     .modal-header h2 {
-      color: #333;
+      color: #e6edf3;
       font-size: 24px;
     }
 
     .close-btn {
       font-size: 28px;
       font-weight: bold;
-      color: #999;
+      color: #656d76;
       cursor: pointer;
       background: none;
       border: none;
@@ -366,7 +366,7 @@
     }
 
     .close-btn:hover {
-      color: #333;
+      color: #e6edf3;
     }
   
     /* === DARK THEME INLINE OVERRIDE === */
@@ -426,13 +426,13 @@
 
           <!-- Non-Editable: Email -->
           <div class="form-group">
-            <label>Email Address <span style="color: #999; font-size: 12px;">(Non-editable)</span></label>
+            <label>Email Address <span style="color: #656d76; font-size: 12px;">(Non-editable)</span></label>
             <div class="non-editable" id="email"></div>
           </div>
 
           <!-- Non-Editable: Participant Type -->
           <div class="form-group">
-            <label>Participant Type <span style="color: #999; font-size: 12px;">(Non-editable)</span></label>
+            <label>Participant Type <span style="color: #656d76; font-size: 12px;">(Non-editable)</span></label>
             <div class="non-editable" id="participantType"></div>
           </div>
 
@@ -511,7 +511,7 @@
         <div class="section-header">
           <h3>Security Settings</h3>
         </div>
-        <p style="color: #666; margin-bottom: 15px;">Change your account password to keep your account secure.</p>
+        <p style="color: #8b949e; margin-bottom: 15px;">Change your account password to keep your account secure.</p>
         <button type="button" class="btn btn-danger" onclick="openPasswordModal()">Change Password</button>
       </div>
     </div>
@@ -532,7 +532,7 @@
         <div class="form-group">
           <label for="newPassword">New Password <span style="color: red;">*</span></label>
           <input type="password" id="newPassword" minlength="6" required>
-          <small style="color: #666;">Minimum 6 characters</small>
+          <small style="color: #8b949e;">Minimum 6 characters</small>
         </div>
         <div class="form-group">
           <label for="confirmPassword">Confirm New Password <span style="color: red;">*</span></label>
@@ -643,7 +643,7 @@
       const container = document.getElementById('followedClubsList');
 
       if (!clubs || clubs.length === 0) {
-        container.innerHTML = '<p style="color: #666; text-align: center; padding: 20px; grid-column: 1 / -1;">You are not following any clubs yet. <a href="#" onclick="showAllClubs(); return false;" style="color: #667eea;">Browse clubs</a></p>';
+        container.innerHTML = '<p style="color: #8b949e; text-align: center; padding: 20px; grid-column: 1 / -1;">You are not following any clubs yet. <a href="#" onclick="showAllClubs(); return false;" style="color: #667eea;">Browse clubs</a></p>';
         return;
       }
 
@@ -674,7 +674,7 @@
         const followedIds = (userData.followedClubs || []).map(c => c._id.toString());
 
         if (allClubs.length === 0) {
-          container.innerHTML = '<p style="color: #666; text-align: center; padding: 20px; grid-column: 1 / -1;">No clubs available at the moment.</p>';
+          container.innerHTML = '<p style="color: #8b949e; text-align: center; padding: 20px; grid-column: 1 / -1;">No clubs available at the moment.</p>';
         } else {
           container.innerHTML = allClubs.map(club => {
             const isFollowing = followedIds.includes(club._id.toString());
@@ -682,7 +682,7 @@
               <div class="club-card ${isFollowing ? 'followed' : ''}">
                 <h4>${club.organizerName || 'Club'}</h4>
                 <p>${club.category || 'General'}</p>
-                ${club.description ? `<p style="font-size: 12px; color: #999; margin-top: 5px;">${club.description.substring(0, 60)}...</p>` : ''}
+                ${club.description ? `<p style="font-size: 12px; color: #656d76; margin-top: 5px;">${club.description.substring(0, 60)}...</p>` : ''}
                 <button class="follow-btn ${isFollowing ? 'following' : ''}" 
                         onclick="toggleFollow('${club._id}', this)">
                   ${isFollowing ? 'Following ✓' : 'Follow +'}

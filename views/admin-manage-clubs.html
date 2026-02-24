@@ -15,7 +15,7 @@
 
     body {
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      background: #21262d;
     }
 
     .navbar {
@@ -66,7 +66,7 @@
     }
 
     .header-section {
-      background: white;
+      background: #1c2128;
       padding: 25px;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -77,7 +77,7 @@
     }
 
     .header-section h1 {
-      color: #333;
+      color: #e6edf3;
     }
 
     .btn {
@@ -106,7 +106,7 @@
 
     .btn-warning {
       background: #ffc107;
-      color: #333;
+      color: #e6edf3;
     }
 
     .btn-warning:hover {
@@ -128,7 +128,7 @@
     }
 
     .filter-section {
-      background: white;
+      background: #1c2128;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -140,20 +140,20 @@
 
     .filter-section select {
       padding: 10px;
-      border: 1px solid #ddd;
+      border: 1px solid #30363d;
       border-radius: 5px;
       font-size: 14px;
     }
 
     .organizers-list {
-      background: white;
+      background: #1c2128;
       padding: 25px;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .organizers-list h2 {
-      color: #333;
+      color: #e6edf3;
       margin-bottom: 20px;
     }
 
@@ -166,17 +166,17 @@
     td {
       padding: 12px;
       text-align: left;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid #30363d;
     }
 
     th {
-      background: #f8f9fa;
-      color: #333;
+      background: #21262d;
+      color: #e6edf3;
       font-weight: bold;
     }
 
     tr:hover {
-      background: #f8f9fa;
+      background: #21262d;
     }
 
     .status-badge {
@@ -213,7 +213,7 @@
     }
 
     .modal-content {
-      background: white;
+      background: #1c2128;
       padding: 30px;
       border-radius: 10px;
       max-width: 500px;
@@ -222,7 +222,7 @@
     }
 
     .modal-content h2 {
-      color: #333;
+      color: #e6edf3;
       margin-bottom: 20px;
     }
 
@@ -233,7 +233,7 @@
     .form-group label {
       display: block;
       margin-bottom: 5px;
-      color: #333;
+      color: #e6edf3;
       font-weight: bold;
     }
 
@@ -242,7 +242,7 @@
     .form-group textarea {
       width: 100%;
       padding: 10px;
-      border: 1px solid #ddd;
+      border: 1px solid #30363d;
       border-radius: 5px;
       font-size: 14px;
     }
@@ -264,11 +264,11 @@
       right: 20px;
       font-size: 28px;
       cursor: pointer;
-      color: #999;
+      color: #656d76;
     }
 
     .close-modal:hover {
-      color: #333;
+      color: #e6edf3;
     }
 
     .message {
@@ -291,11 +291,11 @@
     }
 
     .credentials-box {
-      background: #f8f9fa;
+      background: #21262d;
       padding: 15px;
       border-radius: 5px;
       margin-top: 15px;
-      border: 1px solid #ddd;
+      border: 1px solid #30363d;
     }
 
     .credentials-box strong {
@@ -305,7 +305,7 @@
     .no-data {
       text-align: center;
       padding: 40px;
-      color: #666;
+      color: #8b949e;
     }
   
     /* === DARK THEME INLINE OVERRIDE === */
@@ -396,16 +396,16 @@
         <div class="form-group">
           <label>Club/Organizer Name *</label>
           <input type="text" id="organizerName" required onblur="generateCredentials()">
-          <small style="color: #666;">Credentials will be auto-generated based on this name</small>
+          <small style="color: #8b949e;">Credentials will be auto-generated based on this name</small>
         </div>
         <div class="form-group">
           <label>Login Email (Auto-generated)</label>
-          <input type="email" id="email" required readonly style="background: #f0f0f0;">
+          <input type="email" id="email" required readonly style="background: #21262d;">
         </div>
         <div class="form-group">
           <label>Password (Auto-generated)</label>
           <div style="display: flex; align-items: center; gap: 10px;">
-            <input type="text" id="password" required readonly style="background: #f0f0f0; flex: 1;">
+            <input type="text" id="password" required readonly style="background: #21262d; flex: 1;">
             <button type="button" onclick="copyFormPasswordToClipboard()" class="btn btn-sm"
               style="background: #6c757d; padding: 5px 15px; white-space: nowrap;">
               📋 Copy
@@ -483,11 +483,11 @@
     <div class="modal-content">
       <span class="close-modal" onclick="closePasswordResetModal()">&times;</span>
       <h2>Reset Organizer Password</h2>
-      <div id="resetOrgInfo" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+      <div id="resetOrgInfo" style="margin-bottom: 20px; padding: 15px; background: #21262d; border-radius: 5px;">
         <p><strong>Club/Organizer:</strong> <span id="resetOrgName"></span></p>
         <p><strong>Login Email:</strong> <span id="resetOrgEmail"></span></p>
       </div>
-      <p style="color: #666; margin-bottom: 15px;">Click the button below to generate a new password for this organizer.
+      <p style="color: #8b949e; margin-bottom: 15px;">Click the button below to generate a new password for this organizer.
       </p>
       <div id="newPasswordDisplay" class="credentials-box" style="display: none;">
         <strong>New Password Generated:</strong>
@@ -505,7 +505,7 @@
           ✓ Password copied to clipboard!
         </div>
         <br>
-        <small style="color: #666;">Please copy and share these credentials with the organizer immediately.</small>
+        <small style="color: #8b949e;">Please copy and share these credentials with the organizer immediately.</small>
       </div>
       <div class="modal-actions">
         <button id="generatePasswordBtn" class="btn btn-success" onclick="generateAndResetPassword()">Generate New
@@ -630,7 +630,7 @@
       tbody.innerHTML = organizers.map(org => `
         <tr>
           <td><strong>${org.organizerName}</strong></td>
-          <td><strong>${org.email}</strong><br><small style="color: #666;">Password: Only visible at creation/reset</small></td>
+          <td><strong>${org.email}</strong><br><small style="color: #8b949e;">Password: Only visible at creation/reset</small></td>
           <td>${org.category || 'N/A'}</td>
           <td>${org.contactEmail || 'N/A'}</td>
           <td>

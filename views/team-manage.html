@@ -23,7 +23,7 @@
     .container {
       max-width: 900px;
       margin: 30px auto;
-      background: white;
+      background: #1c2128;
       border-radius: 15px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
       overflow: hidden;
@@ -70,7 +70,7 @@
     }
 
     .team-info {
-      background: #f8f9fa;
+      background: #21262d;
       padding: 25px;
       border-radius: 10px;
       margin-bottom: 30px;
@@ -78,12 +78,12 @@
 
     .team-info h2 {
       font-size: 22px;
-      color: #333;
+      color: #e6edf3;
       margin-bottom: 15px;
     }
 
     .team-info p {
-      color: #666;
+      color: #8b949e;
       margin: 8px 0;
       font-size: 15px;
     }
@@ -98,7 +98,7 @@
 
     .invite-section h3 {
       font-size: 18px;
-      color: #333;
+      color: #e6edf3;
       margin-bottom: 15px;
     }
 
@@ -112,7 +112,7 @@
     .invite-code {
       flex: 1;
       padding: 12px 15px;
-      background: white;
+      background: #1c2128;
       border: 2px solid #667eea;
       border-radius: 8px;
       font-size: 18px;
@@ -140,7 +140,7 @@
     .invite-link {
       margin-top: 10px;
       font-size: 13px;
-      color: #666;
+      color: #8b949e;
       word-break: break-all;
     }
 
@@ -150,7 +150,7 @@
 
     .members-section h3 {
       font-size: 20px;
-      color: #333;
+      color: #e6edf3;
       margin-bottom: 15px;
       display: flex;
       align-items: center;
@@ -158,7 +158,7 @@
     }
 
     .member-card {
-      background: #f8f9fa;
+      background: #21262d;
       padding: 15px 20px;
       border-radius: 8px;
       margin-bottom: 10px;
@@ -178,12 +178,12 @@
 
     .member-name {
       font-weight: 600;
-      color: #333;
+      color: #e6edf3;
       font-size: 16px;
     }
 
     .member-email {
-      color: #666;
+      color: #8b949e;
       font-size: 13px;
       margin-top: 3px;
     }
@@ -318,7 +318,7 @@
     .empty-state {
       text-align: center;
       padding: 40px 20px;
-      color: #999;
+      color: #656d76;
     }
 
     .empty-state i {
@@ -364,7 +364,7 @@
       <div id="errorMessage" class="error-message" style="display: none;"></div>
 
       <div id="teamContent">
-        <p style="text-align: center; color: #999; padding: 40px;">Loading team details...</p>
+        <p style="text-align: center; color: #656d76; padding: 40px;">Loading team details...</p>
       </div>
     </div>
   </div>
@@ -469,7 +469,7 @@
       html += '<div class="members-section"><h3>👥 Team Members';
 
       if (teamData.status !== 'registered') {
-        html += ` <span style="font-size: 14px; font-weight: normal; color: #666;">${acceptedCount} / ${teamData.teamSize}</span>`;
+        html += ` <span style="font-size: 14px; font-weight: normal; color: #8b949e;">${acceptedCount} / ${teamData.teamSize}</span>`;
       }
 
       html += '</h3>';
@@ -516,8 +516,8 @@
           html += `
             <div class="member-card" style="opacity: 0.5; border: 2px dashed #ddd;">
               <div class="member-info">
-                <div class="member-name" style="color: #999;">Empty Slot</div>
-                <div class="member-email" style="color: #999;">Waiting for member to join...</div>
+                <div class="member-name" style="color: #656d76;">Empty Slot</div>
+                <div class="member-email" style="color: #656d76;">Waiting for member to join...</div>
               </div>
             </div>
           `;
