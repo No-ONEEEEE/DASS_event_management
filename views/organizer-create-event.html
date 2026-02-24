@@ -1046,7 +1046,7 @@
                         body: JSON.stringify(formData)
                     });
                 } else {
-                    response = await fetch(`${API_URL}/organizers/events`, {
+                    response = await fetch(`${API_URL}/organizers/events/create`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1102,7 +1102,7 @@
 
                     if (!isEditMode) {
                         // Create new event first
-                        const createResponse = await fetch(`${API_URL}/organizers/events`, {
+                        const createResponse = await fetch(`${API_URL}/organizers/events/create`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
