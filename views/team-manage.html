@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +24,7 @@
       margin: 30px auto;
       background: white;
       border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
       overflow: hidden;
     }
 
@@ -325,6 +326,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="header">
@@ -345,6 +347,12 @@
   </div>
 
   <script>
+    // API URL — auto-detect environment
+    const hostname = window.location.hostname;
+    const API_BASE = (hostname === 'localhost' || hostname === '127.0.0.1')
+      ? 'http://localhost:5000/api'
+      : 'https://dass-event-management.onrender.com/api';
+
     let teamData = null;
     let isLeader = false;
     const teamId = window.location.pathname.split('/').pop();
@@ -357,7 +365,7 @@
           return;
         }
 
-        const response = await fetch(`/api/teams/${teamId}`, {
+        const response = await fetch(`${API_BASE}/teams/${teamId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -370,11 +378,11 @@
 
         const data = await response.json();
         teamData = data.team;
-        
+
         // Check if current user is the leader
         const userId = JSON.parse(atob(token.split('.')[1])).id;
         isLeader = teamData.teamLeaderId._id === userId;
-        
+
         displayTeamDetails();
 
       } catch (error) {
@@ -384,13 +392,13 @@
 
     function displayTeamDetails() {
       const content = document.getElementById('teamContent');
-      
+
       const acceptedCount = teamData.members.filter(m => m.status === 'accepted').length + 1;
       const progressPercent = (acceptedCount / teamData.teamSize) * 100;
 
       let statusClass = 'status-forming';
       let statusText = 'Forming';
-      
+
       if (teamData.status === 'complete') {
         statusClass = 'status-complete';
         statusText = 'Complete';
@@ -436,11 +444,11 @@
       }
 
       html += '<div class="members-section"><h3>👥 Team Members';
-      
+
       if (teamData.status !== 'registered') {
         html += ` <span style="font-size: 14px; font-weight: normal; color: #666;">${acceptedCount} / ${teamData.teamSize}</span>`;
       }
-      
+
       html += '</h3>';
 
       // Display team leader
@@ -460,7 +468,7 @@
         teamData.members.forEach(member => {
           const statusClass = member.status === 'accepted' ? 'status-accepted' : 'status-pending';
           const statusText = member.status === 'accepted' ? '✓ Joined' : '⏳ Pending';
-          
+
           html += `
             <div class="member-card">
               <div class="member-info">
@@ -498,29 +506,29 @@
       // Action buttons
       if (isLeader) {
         html += '<div class="action-buttons">';
-        
+
         if (teamData.status === 'complete' || teamData.status === 'registered') {
           html += '<button class="btn btn-primary" onclick="goToChat()">💬 Team Chat</button>';
           html += '<button class="btn btn-primary" onclick="goToTicket()">View Team Tickets</button>';
         }
-        
+
         if (teamData.status !== 'registered') {
           html += '<button class="btn btn-danger" onclick="deleteTeam()">Delete Team</button>';
         }
-        
+
         html += '</div>';
       } else {
         // Member can access chat and leave team
         html += '<div class="action-buttons">';
-        
+
         if (teamData.status === 'complete' || teamData.status === 'registered') {
           html += '<button class="btn btn-primary" onclick="goToChat()">💬 Team Chat</button>';
         }
-        
+
         if (teamData.status !== 'registered') {
           html += '<button class="btn btn-danger" onclick="leaveTeam()">Leave Team</button>';
         }
-        
+
         html += '</div>';
       }
 
@@ -544,7 +552,7 @@
 
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`/api/teams/${teamId}/members/${memberId}`, {
+        const response = await fetch(`${API_BASE}/teams/${teamId}/members/${memberId}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -570,7 +578,7 @@
 
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`/api/teams/${teamId}/leave`, {
+        const response = await fetch(`${API_BASE}/teams/${teamId}/leave`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -598,7 +606,7 @@
 
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`/api/teams/${teamId}`, {
+        const response = await fetch(`${API_BASE}/teams/${teamId}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -662,4 +670,5 @@
     }, 10000);
   </script>
 </body>
+
 </html>

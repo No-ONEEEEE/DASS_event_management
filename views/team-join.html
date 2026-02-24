@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,7 +27,7 @@
       width: 100%;
       background: white;
       border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
       overflow: hidden;
     }
 
@@ -247,8 +248,13 @@
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     .info-box {
@@ -266,6 +272,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="header">
@@ -289,6 +296,12 @@
   </div>
 
   <script>
+    // API URL — auto-detect environment
+    const hostname = window.location.hostname;
+    const API_BASE = (hostname === 'localhost' || hostname === '127.0.0.1')
+      ? 'http://localhost:5000/api'
+      : 'https://dass-event-management.onrender.com/api';
+
     let teamData = null;
     const inviteCode = window.location.pathname.split('/').pop();
 
@@ -300,7 +313,7 @@
           return;
         }
 
-        const response = await fetch(`/api/teams/join/${inviteCode}`, {
+        const response = await fetch(`${API_BASE}/teams/join/${inviteCode}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -404,7 +417,7 @@
 
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`/api/teams/join/${inviteCode}`, {
+        const response = await fetch(`${API_BASE}/teams/join/${inviteCode}`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -418,7 +431,7 @@
         }
 
         showSuccess(data.message);
-        
+
         // Redirect to team management page after 2 seconds
         setTimeout(() => {
           window.location.href = `/team/manage/${data.team._id}`;
@@ -453,4 +466,5 @@
     loadTeamDetails();
   </script>
 </body>
+
 </html>
