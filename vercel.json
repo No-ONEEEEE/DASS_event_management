@@ -16,6 +16,14 @@
       "dest": "/public/config.js"
     },
     {
+      "src": "/dark-theme.css",
+      "dest": "/public/dark-theme.css"
+    },
+    {
+      "src": "/toast.js",
+      "dest": "/public/toast.js"
+    },
+    {
       "src": "/public/(.*)",
       "dest": "/public/$1"
     },
