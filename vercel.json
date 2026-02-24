@@ -36,32 +36,64 @@
       "dest": "/views/profile.html"
     },
     {
+      "src": "/browse-events",
+      "dest": "/views/browse-events.html"
+    },
+    {
       "src": "/events",
       "dest": "/views/browse-events.html"
+    },
+    {
+      "src": "/event/(.*)",
+      "dest": "/views/event-details.html"
     },
     {
       "src": "/events/(.*)",
       "dest": "/views/event-details.html"
     },
     {
+      "src": "/ticket/(.*)",
+      "dest": "/views/ticket.html"
+    },
+    {
       "src": "/ticket",
       "dest": "/views/ticket.html"
+    },
+    {
+      "src": "/my-teams",
+      "dest": "/views/my-teams.html"
     },
     {
       "src": "/teams",
       "dest": "/views/my-teams.html"
     },
     {
+      "src": "/team/create/(.*)",
+      "dest": "/views/team-create.html"
+    },
+    {
       "src": "/teams/create",
       "dest": "/views/team-create.html"
+    },
+    {
+      "src": "/team/join/(.*)",
+      "dest": "/views/team-join.html"
     },
     {
       "src": "/teams/join",
       "dest": "/views/team-join.html"
     },
     {
+      "src": "/team/manage/(.*)",
+      "dest": "/views/team-manage.html"
+    },
+    {
       "src": "/teams/manage",
       "dest": "/views/team-manage.html"
+    },
+    {
+      "src": "/team/(.*)/chat",
+      "dest": "/views/team-chat.html"
     },
     {
       "src": "/teams/chat",
@@ -76,8 +108,16 @@
       "dest": "/views/organizer-create-event.html"
     },
     {
+      "src": "/organizer/ongoing-events",
+      "dest": "/views/organizer-ongoing-events.html"
+    },
+    {
       "src": "/organizer/events",
       "dest": "/views/organizer-ongoing-events.html"
+    },
+    {
+      "src": "/organizer/event/(.*)",
+      "dest": "/views/organizer-event-detail.html"
     },
     {
       "src": "/organizer/events/(.*)",
@@ -88,12 +128,20 @@
       "dest": "/views/organizer-profile.html"
     },
     {
+      "src": "/organizer/attendance/(.*)",
+      "dest": "/views/organizer-attendance-scanner.html"
+    },
+    {
       "src": "/organizer/attendance",
       "dest": "/views/organizer-attendance-scanner.html"
     },
     {
       "src": "/admin/dashboard",
       "dest": "/views/admin-dashboard.html"
+    },
+    {
+      "src": "/admin/manage-clubs",
+      "dest": "/views/admin-manage-clubs.html"
     },
     {
       "src": "/admin/clubs",

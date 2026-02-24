@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 const http = require('http');
@@ -30,6 +31,13 @@ mongoose.connect(mongoUri, {
 })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log('MongoDB connection error:', err));
+
+// CORS middleware
+app.use(cors({
+  origin: process.env.FRONTEND_URL || '*',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
+}));
 
 // Middleware
 app.use(express.json());
@@ -139,6 +147,16 @@ app.get('/my-teams', (req, res) => {
 
 app.get('/team/:teamId/chat', (req, res) => {
   res.sendFile(path.join(__dirname, '../views/team-chat.html'));
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'Server is running',
+    timestamp: new Date().toISOString(),
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  });
 });
 
 // API Routes

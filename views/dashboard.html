@@ -278,18 +278,39 @@
       window.location.href = '/auth/login';
     }
 
+    // Helper function with timeout
+    async function fetchWithTimeout(url, options = {}, timeout = 30000) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      
+      try {
+        const response = await fetch(url, {
+          ...options,
+          signal: controller.signal
+        });
+        clearTimeout(id);
+        return response;
+      } catch (error) {
+        clearTimeout(id);
+        throw error;
+      }
+    }
+
     async function loadDashboard() {
       try {
-        const response = await fetch(`${API_URL}/participants/dashboard`, {
+        // Show initial loading message
+        document.getElementById('statsGrid').innerHTML = '<div class="loading">Connecting to server... This may take 30-60 seconds if the backend was idle.</div>';
+        
+        const response = await fetchWithTimeout(`${API_URL}/participants/dashboard`, {
           headers: { 'Authorization': `Bearer ${token}` }
-        });
+        }, 60000); // 60 second timeout for Render cold start
 
         if (!response.ok) {
           if (response.status === 401) {
             localStorage.clear();
             window.location.href = '/auth/login';
           }
-          return;
+          throw new Error(`API returned ${response.status}`);
         }
 
         const data = await response.json();
@@ -299,6 +320,22 @@
         loadRecommendedEvents();
       } catch (error) {
         console.error('Error loading dashboard:', error);
+        
+        // Show error message
+        document.getElementById('statsGrid').innerHTML = `
+          <div style="grid-column: 1/-1; padding: 20px; background: #fee; border: 1px solid #fcc; border-radius: 5px; color: #c33;">
+            <h3>⚠️ Unable to load dashboard</h3>
+            <p>${error.message || 'Failed to connect to server'}</p>
+            <p style="font-size: 14px; margin-top: 10px;">
+              ${error.name === 'AbortError' ? 'The request timed out. The backend server might be starting up (this can take 30-60 seconds on free hosting).' : 'Please check your internet connection or try again later.'}
+            </p>
+            <button onclick="location.reload()" style="margin-top: 10px; padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">
+              Retry
+            </button>
+          </div>
+        `;
+        
+        document.getElementById('eventsContainer').innerHTML = '<div class="empty-state">Unable to load events</div>';
       }
     }
 
@@ -444,9 +481,9 @@
 
     async function loadRecommendedEvents() {
       try {
-        const response = await fetch(`${API_URL}/participants/recommended-events`, {
+        const response = await fetchWithTimeout(`${API_URL}/participants/recommended-events`, {
           headers: { 'Authorization': `Bearer ${token}` }
-        });
+        }, 30000);
 
         if (response.status === 401) {
           return;
@@ -460,7 +497,7 @@
         }
       } catch (error) {
         console.error('Error loading recommended events:', error);
-        document.getElementById('recommendedContainer').innerHTML = '<p style="color: #c33;">Failed to load recommendations</p>';
+        document.getElementById('recommendedContainer').innerHTML = '<p style="color: #c33;">Failed to load recommendations. <button onclick="loadRecommendedEvents()" style="border: none; background: none; color: #667eea; cursor: pointer; text-decoration: underline;">Retry</button></p>';
       }
     }
 
