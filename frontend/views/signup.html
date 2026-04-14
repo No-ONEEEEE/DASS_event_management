@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/dark-theme.css">
+  <title>Sign Up - Event Management System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0d1117;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #e6edf3;
+    }
+
+    .signup-container {
+      width: 100%;
+      max-width: 520px;
+      background: #1c2128;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 8px;
+      color: #e6edf3;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #8b949e;
+      margin-bottom: 22px;
+      font-size: 14px;
+    }
+
+    .message {
+      display: none;
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .message.error {
+      display: block;
+      background: #2d1117;
+      color: #ffb3bd;
+      border: 1px solid #f85149;
+    }
+
+    .message.success {
+      display: block;
+      background: #0f2a1f;
+      color: #8ddbaf;
+      border: 1px solid #3fb950;
+    }
+
+    .input-group {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: #c9d1d9;
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 8px;
+      border: 1px solid #30363d;
+      background: #0d1117;
+      color: #e6edf3;
+      font-size: 14px;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0 14px;
+      color: #c9d1d9;
+      font-size: 14px;
+    }
+
+    .checkbox-row input {
+      width: auto;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #667eea;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #5568d3;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 16px;
+      color: #8b949e;
+      font-size: 14px;
+    }
+
+    .login-link a {
+      color: #8fa8ff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .section-title {
+      margin: 16px 0 8px;
+      color: #c9d1d9;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .helper-text {
+      margin-top: -4px;
+      margin-bottom: 10px;
+      color: #8b949e;
+      font-size: 12px;
+    }
+
+    .chip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      background: #0d1117;
+      color: #c9d1d9;
+      font-size: 13px;
+    }
+
+    .chip input {
+      width: auto;
+    }
+
+    .clubs-box {
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      max-height: 180px;
+      overflow-y: auto;
+      padding: 8px;
+      background: #0d1117;
+      margin-bottom: 12px;
+    }
+
+    .club-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 6px;
+    }
+
+    .club-item:hover {
+      background: #161b22;
+    }
+
+    .club-meta {
+      flex: 1;
+    }
+
+    .club-name {
+      color: #e6edf3;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .club-cat {
+      color: #8b949e;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    @media (max-width: 600px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      .signup-container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="signup-container">
+    <h1>Participant Sign Up</h1>
+    <p class="subtitle">Create your account to register for events</p>
+
+    <div id="message" class="message"></div>
+
+    <form id="signupForm">
+      <div class="row">
+        <div class="input-group">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" required>
+        </div>
+        <div class="input-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" required>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" required>
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" minlength="6" required>
+      </div>
+
+      <div class="row">
+        <div class="input-group">
+          <label for="participantType">Participant Type</label>
+          <select id="participantType" required>
+            <option value="Student">Student</option>
+            <option value="Professional">Professional</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="contactNumber">Contact Number</label>
+          <input type="text" id="contactNumber" required>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="collegeName">College / Organization Name</label>
+        <input type="text" id="collegeName" placeholder="e.g., IIIT Hyderabad" required>
+      </div>
+
+      <label class="checkbox-row" for="isIIITStudent">
+        <input type="checkbox" id="isIIITStudent">
+        I am an IIIT student
+      </label>
+
+      <p class="section-title">Areas of Interest (optional)</p>
+      <p class="helper-text">You can choose multiple now or skip and set later in Profile.</p>
+      <div class="chip-grid" id="interestsGrid">
+        <label class="chip"><input type="checkbox" value="Academic"> Academic</label>
+        <label class="chip"><input type="checkbox" value="Cultural"> Cultural</label>
+        <label class="chip"><input type="checkbox" value="Technical"> Technical</label>
+        <label class="chip"><input type="checkbox" value="Sports"> Sports</label>
+        <label class="chip"><input type="checkbox" value="Social"> Social</label>
+      </div>
+
+      <p class="section-title">Clubs / Organizers to Follow (optional)</p>
+      <p class="helper-text">Select clubs now or skip and follow later from Profile.</p>
+      <div id="clubsBox" class="clubs-box">
+        <p id="clubsLoading" class="helper-text" style="margin: 6px 0;">Loading clubs...</p>
+      </div>
+
+      <button type="submit">Create Account</button>
+    </form>
+
+    <p class="login-link">Already have an account? <a href="/auth/login">Login</a></p>
+  </div>
+
+  <script>
+    const hostname = window.location.hostname;
+    const isProduction = hostname !== 'localhost' && hostname !== '127.0.0.1';
+    const API_URL = isProduction ? 'https://dass-event-management.onrender.com/api' : 'http://localhost:5000/api';
+
+    const form = document.getElementById('signupForm');
+    const messageEl = document.getElementById('message');
+    const clubsBox = document.getElementById('clubsBox');
+
+    async function loadClubs() {
+      try {
+        const response = await fetch(`${API_URL}/auth/public/clubs`);
+        if (!response.ok) {
+          throw new Error('Failed to load clubs');
+        }
+
+        const clubs = await response.json();
+        if (!Array.isArray(clubs) || clubs.length === 0) {
+          clubsBox.innerHTML = '<p class="helper-text" style="margin: 6px 0;">No clubs available right now.</p>';
+          return;
+        }
+
+        clubsBox.innerHTML = clubs.map((club) => `
+          <label class="club-item">
+            <input type="checkbox" class="club-follow" value="${club._id}">
+            <div class="club-meta">
+              <div class="club-name">${club.organizerName || 'Club'}</div>
+              <div class="club-cat">${club.category || 'General'}</div>
+            </div>
+          </label>
+        `).join('');
+      } catch (error) {
+        clubsBox.innerHTML = '<p class="helper-text" style="margin: 6px 0;">Could not load clubs now. You can follow later from Profile.</p>';
+      }
+    }
+
+    function showMessage(text, type) {
+      messageEl.textContent = text;
+      messageEl.className = `message ${type}`;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        password: document.getElementById('password').value,
+        participantType: document.getElementById('participantType').value,
+        collegeName: document.getElementById('collegeName').value.trim(),
+        contactNumber: document.getElementById('contactNumber').value.trim(),
+        isIIITStudent: document.getElementById('isIIITStudent').checked,
+        interests: Array.from(document.querySelectorAll('#interestsGrid input[type="checkbox"]:checked')).map((cb) => cb.value),
+        followedClubs: Array.from(document.querySelectorAll('.club-follow:checked')).map((cb) => cb.value)
+      };
+
+      try {
+        const response = await fetch(`${API_URL}/auth/participant/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          showMessage(result.message || 'Signup failed', 'error');
+          return;
+        }
+
+        showMessage('Account created successfully. Redirecting to login...', 'success');
+        setTimeout(() => {
+          window.location.href = '/auth/login?role=participant';
+        }, 1400);
+      } catch (error) {
+        showMessage('Signup failed: ' + error.message, 'error');
+      }
+    });
+
+    loadClubs();
+  </script>
+
+  <script src="/dark-enforcer.js"></script>
+  <script src="/toast.js"></script>
+</body>
+
+</html>

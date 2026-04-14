@@ -1,0 +1,772 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/dark-theme.css">
+  <title>Team Management - Event Management</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background: #1c2128;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin: 10px 0;
+    }
+
+    .status-forming {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-complete {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-registered {
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+
+    .team-info {
+      background: #21262d;
+      padding: 25px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .team-info h2 {
+      font-size: 22px;
+      color: #e6edf3;
+      margin-bottom: 15px;
+    }
+
+    .team-info p {
+      color: #8b949e;
+      margin: 8px 0;
+      font-size: 15px;
+    }
+
+    .invite-section {
+      background: #e7f3ff;
+      border-left: 4px solid #667eea;
+      padding: 20px;
+      border-radius: 5px;
+      margin-bottom: 30px;
+    }
+
+    .invite-section h3 {
+      font-size: 18px;
+      color: #e6edf3;
+      margin-bottom: 15px;
+    }
+
+    .invite-code-box {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    .invite-code {
+      flex: 1;
+      padding: 12px 15px;
+      background: #1c2128;
+      border: 2px solid #667eea;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #667eea;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+
+    .copy-btn {
+      padding: 12px 20px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .copy-btn:hover {
+      background: #5568d3;
+    }
+
+    .invite-link {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #8b949e;
+      word-break: break-all;
+    }
+
+    .members-section {
+      margin-bottom: 30px;
+    }
+
+    .members-section h3 {
+      font-size: 20px;
+      color: #e6edf3;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .member-card {
+      background: #21262d;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .member-card.leader {
+      background: linear-gradient(135deg, #fff9e6 0%, #ffe6cc 100%);
+      border: 2px solid #ffc107;
+    }
+
+    .member-info {
+      flex: 1;
+    }
+
+    .member-name {
+      font-weight: 600;
+      color: #e6edf3;
+      font-size: 16px;
+    }
+
+    .member-email {
+      color: #8b949e;
+      font-size: 13px;
+      margin-top: 3px;
+    }
+
+    .member-role {
+      color: #ffc107;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 3px;
+    }
+
+    .member-status {
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+
+    .status-accepted {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .remove-btn {
+      padding: 8px 15px;
+      background: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 13px;
+      margin-left: 10px;
+    }
+
+    .remove-btn:hover {
+      background: #c82333;
+    }
+
+    .progress-bar {
+      background: #e9ecef;
+      height: 25px;
+      border-radius: 15px;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      transition: width 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-right: 10px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c82333;
+    }
+
+    .action-buttons {
+      margin-top: 30px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .ticket-links-section {
+      margin-top: 25px;
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .ticket-links-section h4 {
+      color: #e6edf3;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+
+    .ticket-link-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-top: 1px solid #30363d;
+    }
+
+    .ticket-link-row:first-of-type {
+      border-top: none;
+    }
+
+    .ticket-link-meta {
+      color: #8b949e;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .ticket-link-btn {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #667eea;
+      color: #e6edf3;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .ticket-link-btn:hover {
+      background: #667eea;
+    }
+
+    .success-message {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .error-message {
+      background: #fee;
+      border: 1px solid #fcc;
+      color: #c33;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #656d76;
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+  
+    /* === DARK THEME INLINE OVERRIDE === */
+    body { background: #0d1117 !important; color: #e6edf3 !important; }
+    header, nav, .navbar { background: #161b22 !important; border-bottom: 1px solid #30363d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.6) !important; }
+    header h1, header h2, nav a { color: #e6edf3 !important; }
+    .card, .events-section, .section, .panel, .box, .wrapper { background: #1c2128 !important; border-color: #30363d !important; color: #e6edf3 !important; box-shadow: 0 2px 10px rgba(0,0,0,0.4) !important; }
+    .card h3, .card h2, .events-section h2, .section h2, .section h3 { color: #e6edf3 !important; }
+    .card .number { color: #79c0ff !important; }
+    .event-item { border-color: #30363d !important; background: #21262d !important; }
+    .event-item:hover { background: #2d333b !important; }
+    .event-info h4 { color: #e6edf3 !important; }
+    .event-info p { color: #8b949e !important; }
+    .btn-secondary { background: #21262d !important; color: #e6edf3 !important; border: 1px solid #30363d !important; }
+    .btn-secondary:hover { background: #2d333b !important; }
+    .tabs { border-bottom-color: #30363d !important; }
+    .tab { color: #8b949e !important; border-bottom-color: transparent !important; background: transparent !important; }
+    .tab.active { color: #667eea !important; border-bottom-color: #667eea !important; }
+    .tab:hover { background: #21262d !important; color: #e6edf3 !important; }
+    table, th, td { background: #1c2128 !important; color: #e6edf3 !important; border-color: #30363d !important; }
+    tr:hover td { background: #21262d !important; }
+    .no-events, .empty, .no-data { color: #8b949e !important; }
+    /* === END DARK THEME === */
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎯 Team Management</h1>
+      <p>Manage your team and track member invitations</p>
+    </div>
+
+    <div class="content">
+      <a href="/my-teams" class="back-link">← Back to My Teams</a>
+
+      <div id="successMessage" class="success-message" style="display: none;"></div>
+      <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+      <div id="teamContent">
+        <p style="text-align: center; color: #656d76; padding: 40px;">Loading team details...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // API URL — auto-detect environment
+    const hostname = window.location.hostname;
+    const API_BASE = (hostname === 'localhost' || hostname === '127.0.0.1')
+      ? 'http://localhost:5000/api'
+      : 'https://dass-event-management.onrender.com/api';
+
+    let teamData = null;
+    let currentUserId = null;
+    let isLeader = false;
+    const teamId = window.location.pathname.split('/').pop();
+
+    async function loadTeamDetails() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          window.location.href = '/auth/login';
+          return;
+        }
+
+        const response = await fetch(`${API_BASE}/teams/${teamId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.message || 'Failed to fetch team');
+        }
+
+        const data = await response.json();
+        teamData = data.team;
+
+        // Check if current user is the leader
+        currentUserId = JSON.parse(atob(token.split('.')[1])).id;
+        isLeader = teamData.teamLeaderId._id === currentUserId;
+
+        displayTeamDetails();
+
+      } catch (error) {
+        showError('Error loading team: ' + error.message);
+      }
+    }
+
+    function displayTeamDetails() {
+      const content = document.getElementById('teamContent');
+
+      const acceptedCount = teamData.members.filter(m => m.status === 'accepted').length + 1;
+      const progressPercent = (acceptedCount / teamData.teamSize) * 100;
+
+      let statusClass = 'status-forming';
+      let statusText = 'Forming';
+
+      if (teamData.status === 'complete') {
+        statusClass = 'status-complete';
+        statusText = 'Complete';
+      } else if (teamData.status === 'registered') {
+        statusClass = 'status-registered';
+        statusText = 'Registered';
+      }
+
+      let html = `
+        <div class="team-info">
+          <h2>${teamData.teamName} <span class="status-badge ${statusClass}">${statusText}</span></h2>
+          <p><strong>Event:</strong> ${teamData.eventId.eventName}</p>
+          <p><strong>Team Leader:</strong> ${teamData.teamLeaderId.firstName} ${teamData.teamLeaderId.lastName}</p>
+          <p><strong>Team Size:</strong> ${teamData.teamSize} members</p>
+          <p><strong>Current Members:</strong> ${acceptedCount} / ${teamData.teamSize}</p>
+          
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${progressPercent}%">
+              ${acceptedCount} / ${teamData.teamSize}
+            </div>
+          </div>
+        </div>
+      `;
+
+      if (teamData.status === 'forming' && isLeader) {
+        html += `
+          <div class="invite-section">
+            <h3>📧 Invite Team Members</h3>
+            <p>Share this code or link with your team members to invite them:</p>
+            
+            <div class="invite-code-box">
+              <div class="invite-code" id="inviteCode">${teamData.inviteCode}</div>
+              <button class="copy-btn" onclick="copyInviteCode()">Copy Code</button>
+            </div>
+            
+            <div class="invite-link">
+              <strong>Invite Link:</strong> 
+              <span id="inviteLink">${teamData.inviteLink}</span>
+              <button class="copy-btn" onclick="copyInviteLink()" style="margin-left: 10px; padding: 8px 12px; font-size: 12px;">Copy Link</button>
+            </div>
+          </div>
+        `;
+      }
+
+      html += '<div class="members-section"><h3>👥 Team Members';
+
+      if (teamData.status !== 'registered') {
+        html += ` <span style="font-size: 14px; font-weight: normal; color: #8b949e;">${acceptedCount} / ${teamData.teamSize}</span>`;
+      }
+
+      html += '</h3>';
+
+      // Display team leader
+      html += `
+        <div class="member-card leader">
+          <div class="member-info">
+            <div class="member-name">👑 ${teamData.teamLeaderId.firstName} ${teamData.teamLeaderId.lastName}</div>
+            <div class="member-email">${teamData.teamLeaderId.email}</div>
+            <div class="member-role">Team Leader</div>
+          </div>
+          <span class="member-status status-accepted">✓ Joined</span>
+        </div>
+      `;
+
+      // Display team members
+      if (teamData.members.length > 0) {
+        teamData.members.forEach(member => {
+          const statusClass = member.status === 'accepted' ? 'status-accepted' : 'status-pending';
+          const statusText = member.status === 'accepted' ? '✓ Joined' : '⏳ Pending';
+
+          html += `
+            <div class="member-card">
+              <div class="member-info">
+                <div class="member-name">${member.participantId.firstName} ${member.participantId.lastName}</div>
+                <div class="member-email">${member.participantId.email}</div>
+              </div>
+              <div style="display: flex; align-items: center;">
+                <span class="member-status ${statusClass}">${statusText}</span>
+                ${isLeader && teamData.status !== 'registered' ? `
+                  <button class="remove-btn" onclick="removeMember('${member.participantId._id}')">Remove</button>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      // Show empty slots if team is still forming
+      if (teamData.status === 'forming') {
+        const emptySlots = teamData.teamSize - acceptedCount;
+        for (let i = 0; i < emptySlots; i++) {
+          html += `
+            <div class="member-card" style="opacity: 0.5; border: 2px dashed #ddd;">
+              <div class="member-info">
+                <div class="member-name" style="color: #656d76;">Empty Slot</div>
+                <div class="member-email" style="color: #656d76;">Waiting for member to join...</div>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      html += '</div>';
+
+      if (teamData.status === 'registered' && Array.isArray(teamData.memberTickets) && teamData.memberTickets.length > 0) {
+        html += '<div class="ticket-links-section">';
+        html += '<h4>🎫 Member Ticket Links</h4>';
+
+        teamData.memberTickets.forEach(ticket => {
+          const isMine = ticket.participantId && ticket.participantId.toString() === currentUserId;
+          html += `
+            <div class="ticket-link-row">
+              <div>
+                <div style="color:#e6edf3;font-weight:600;">
+                  ${ticket.participantName}${isMine ? ' (You)' : ''}
+                </div>
+                <div class="ticket-link-meta">${ticket.ticketId}</div>
+              </div>
+              ${isMine
+                ? `<a class="ticket-link-btn" href="${ticket.ticketLink}">Open Ticket</a>`
+                : `<span class="ticket-link-meta">Member specific ticket</span>`}
+            </div>
+          `;
+        });
+
+        html += '</div>';
+      }
+
+      // Action buttons
+      if (isLeader) {
+        html += '<div class="action-buttons">';
+
+        if (teamData.status === 'complete' || teamData.status === 'registered') {
+          html += '<button class="btn btn-primary" onclick="goToChat()">💬 Team Chat</button>';
+          html += '<button class="btn btn-primary" onclick="goToTicket()">View Team Tickets</button>';
+        }
+
+        if (teamData.status !== 'registered') {
+          html += '<button class="btn btn-danger" onclick="deleteTeam()">Delete Team</button>';
+        }
+
+        html += '</div>';
+      } else {
+        // Member can access chat and leave team
+        html += '<div class="action-buttons">';
+
+        if (teamData.status === 'complete' || teamData.status === 'registered') {
+          html += '<button class="btn btn-primary" onclick="goToChat()">💬 Team Chat</button>';
+        }
+
+        if (teamData.status !== 'registered') {
+          html += '<button class="btn btn-danger" onclick="leaveTeam()">Leave Team</button>';
+        }
+
+        html += '</div>';
+      }
+
+      content.innerHTML = html;
+    }
+
+    async function copyInviteCode() {
+      const code = document.getElementById('inviteCode').textContent;
+      await navigator.clipboard.writeText(code);
+      showSuccess('Invite code copied to clipboard!');
+    }
+
+    async function copyInviteLink() {
+      const link = document.getElementById('inviteLink').textContent;
+      await navigator.clipboard.writeText(link);
+      showSuccess('Invite link copied to clipboard!');
+    }
+
+    async function removeMember(memberId) {
+      if (!confirm('Are you sure you want to remove this member?')) return;
+
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_BASE}/teams/${teamId}/members/${memberId}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to remove member');
+        }
+
+        showSuccess('Member removed successfully');
+        await loadTeamDetails();
+
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    async function leaveTeam() {
+      if (!confirm('Are you sure you want to leave this team?')) return;
+
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_BASE}/teams/${teamId}/leave`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to leave team');
+        }
+
+        showSuccess('Successfully left the team');
+        setTimeout(() => {
+          window.location.href = '/my-teams';
+        }, 1500);
+
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    async function deleteTeam() {
+      if (!confirm('Are you sure you want to delete this team? This action cannot be undone.')) return;
+
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_BASE}/teams/${teamId}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to delete team');
+        }
+
+        showSuccess('Team deleted successfully');
+        setTimeout(() => {
+          window.location.href = '/browse-events';
+        }, 1500);
+
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    function goToTicket() {
+      if (teamData.registrationId) {
+        window.location.href = `/ticket/${teamData.registrationId}`;
+      } else {
+        showError('Tickets not yet generated');
+      }
+    }
+
+    function goToChat() {
+      window.location.href = `/team/${teamId}/chat`;
+    }
+
+    function showSuccess(message) {
+      const successDiv = document.getElementById('successMessage');
+      successDiv.textContent = message;
+      successDiv.style.display = 'block';
+      setTimeout(() => {
+        successDiv.style.display = 'none';
+      }, 3000);
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      setTimeout(() => {
+        errorDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    // Load team details on page load
+    loadTeamDetails();
+
+    // Auto-refresh every 10 seconds if team is still forming
+    setInterval(() => {
+      if (teamData && teamData.status === 'forming') {
+        loadTeamDetails();
+      }
+    }, 10000);
+  </script>
+  <script src="/dark-enforcer.js"></script>
+  <script src="/toast.js"></script>
+</body>
+
+</html>
