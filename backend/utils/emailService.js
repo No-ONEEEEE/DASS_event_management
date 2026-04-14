@@ -1,46 +1,41 @@
 const nodemailer = require('nodemailer');
 
+const getSmtpConfig = () => {
+  const host = process.env.SMTP_HOST || process.env.EMAIL_HOST || '';
+  const port = Number(process.env.SMTP_PORT || process.env.EMAIL_PORT || 587);
+  const user = process.env.SMTP_USERNAME || process.env.EMAIL_USER || '';
+  const pass = process.env.SMTP_PASSWORD || process.env.EMAIL_PASS || '';
+  const secureFromEnv = String(process.env.SMTP_SECURE || '').toLowerCase();
+  const secure = secureFromEnv ? secureFromEnv === 'true' : port === 465;
+
+  return {
+    host,
+    port,
+    secure,
+    user,
+    pass,
+    fromEmail: process.env.FROM_EMAIL || user || 'noreply@eventmanagement.com',
+    fromName: process.env.FROM_NAME || 'Event Management System'
+  };
+};
+
 // Create transporter
 const createTransporter = () => {
-  // Skip email if no configuration exists
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+  const smtpConfig = getSmtpConfig();
+
+  // Skip email if required SMTP configuration is missing
+  if (!smtpConfig.host || !smtpConfig.user || !smtpConfig.pass) {
     console.log('ℹ️ Email not configured - emails will be skipped');
     return null;
   }
 
-  // For development, use Gmail, Outlook, or a test service
-  // For production, use a proper email service (SendGrid, AWS SES, etc.)
-
-  if (process.env.EMAIL_SERVICE === 'gmail') {
-    return nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS // Use App Password for Gmail
-      }
-    });
-  }
-
-  if (process.env.EMAIL_SERVICE === 'outlook' || process.env.EMAIL_SERVICE === 'hotmail') {
-    return nodemailer.createTransport({
-      host: 'smtp-mail.outlook.com',
-      port: 587,
-      secure: false, // Use STARTTLS
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS // Use your Outlook/Hotmail password
-      }
-    });
-  }
-
-  // Fallback to custom SMTP
   return nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-    port: process.env.EMAIL_PORT || 587,
-    secure: false,
+    host: smtpConfig.host,
+    port: smtpConfig.port,
+    secure: smtpConfig.secure,
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
+      user: smtpConfig.user,
+      pass: smtpConfig.pass
     }
   });
 };
@@ -155,8 +150,9 @@ const sendTicketEmail = async (participantEmail, participantName, eventDetails, 
       </html>
     `;
 
+    const smtpConfig = getSmtpConfig();
     const mailOptions = {
-      from: `"Event Management System" <${process.env.EMAIL_USER || 'noreply@eventmanagement.com'}>`,
+      from: `"${smtpConfig.fromName}" <${smtpConfig.fromEmail}>`,
       to: participantEmail,
       subject: `🎫 Your Ticket for ${eventDetails.eventName}`,
       html: htmlContent
@@ -310,8 +306,9 @@ const sendMerchandiseConfirmationEmail = async (participantEmail, participantNam
       </html>
     `;
 
+    const smtpConfig = getSmtpConfig();
     const mailOptions = {
-      from: `"Event Management System" <${process.env.EMAIL_USER || 'noreply@eventmanagement.com'}>`,
+      from: `"${smtpConfig.fromName}" <${smtpConfig.fromEmail}>`,
       to: participantEmail,
       subject: `🛒 Order Confirmation: ${eventDetails.eventName}`,
       html: htmlContent

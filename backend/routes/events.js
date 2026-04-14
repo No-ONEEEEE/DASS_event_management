@@ -240,12 +240,16 @@ router.post('/:eventId/register', verifyParticipant, async (req, res) => {
 
     // Get participant details for email
     const participant = await Participant.findById(req.user.id);
+    let emailSent = false;
     
     // Send confirmation email
     try {
+      const participantName = `${participant?.firstName || ''} ${participant?.lastName || ''}`.trim() || 'Participant';
+      let emailResult = null;
+
       if (event.eventType === 'Merchandise' && merchandisePurchase) {
         // Send merchandise confirmation email
-        const merchandiseItemsWithNames = merchandisePurchase.items.map(item => {
+        const merchandiseItemsWithNames = (merchandisePurchase.items || []).map(item => {
           const merchandiseItem = event.merchandise.items.find(m => m._id.toString() === item.itemId);
           return {
             itemName: merchandiseItem ? merchandiseItem.itemName : 'Item',
@@ -254,10 +258,10 @@ router.post('/:eventId/register', verifyParticipant, async (req, res) => {
             selectedColor: item.selectedColor
           };
         });
-        
-        await sendMerchandiseConfirmationEmail(
-          participant.email,
-          `${participant.firstName} ${participant.lastName}`,
+
+        emailResult = await sendMerchandiseConfirmationEmail(
+          participant?.email,
+          participantName,
           {
             eventName: event.eventName,
             eventType: event.eventType,
@@ -274,9 +278,9 @@ router.post('/:eventId/register', verifyParticipant, async (req, res) => {
         );
       } else {
         // Send normal event ticket email
-        await sendTicketEmail(
-          participant.email,
-          `${participant.firstName} ${participant.lastName}`,
+        emailResult = await sendTicketEmail(
+          participant?.email,
+          participantName,
           {
             eventName: event.eventName,
             eventType: event.eventType,
@@ -290,7 +294,14 @@ router.post('/:eventId/register', verifyParticipant, async (req, res) => {
           }
         );
       }
-      console.log(`✅ Confirmation email sent to ${participant.email}`);
+
+      emailSent = Boolean(emailResult && emailResult.messageId);
+      registration.emailSent = emailSent;
+      await registration.save();
+
+      if (emailSent) {
+        console.log(`✅ Confirmation email sent to ${participant?.email || 'unknown recipient'}`);
+      }
     } catch (emailError) {
       // Don't fail registration if email fails
       console.error('⚠️ Failed to send confirmation email:', emailError.message);

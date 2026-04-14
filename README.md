@@ -513,9 +513,14 @@ NODE_ENV=development
 # Frontend URL (for CORS)
 FRONTEND_URL=http://localhost:5000
 
-# Email Configuration (optional - for password resets)
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
+# Email Configuration (optional - standard SMTP)
+SMTP_HOST=smtp.your-provider.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USERNAME=your-email@domain.com
+SMTP_PASSWORD=your-email-password-or-app-password
+FROM_EMAIL=your-email@domain.com
+FROM_NAME=Event Management System
 
 # App URL (for invite links)
 APP_URL=http://localhost:5000
